@@ -506,6 +506,7 @@ Variables CSS :
 | 2026-02-26 | Phase 2 | **Palette 1 "Centrafrique Moderne"** — Bleu RCA #003189 + Vert #289728 + Jaune #EAB308 | Utilisateur |
 | 2026-02-26 | Phase 2 | **Direction design** — Digital Science × LinkedIn : fond blanc dominant, whitespace généreux, pill buttons (border-radius 9999px), ombres teintées bleu, typography bold | Utilisateur |
 | 2026-02-26 | Phase 3 | **REFACTOR AUTH — Remplacement de NextAuth.js v5 par Supabase Auth + @supabase/ssr** — Raison : les politiques RLS utilisent `auth.uid()` qui ne fonctionne QU'avec Supabase Auth. NextAuth.js génère ses propres JWTs non reconnus par PostgREST, rendant toutes les politiques RLS inefficaces. Solution : Supabase Auth gère les sessions via cookies httpOnly, le middleware utilise `updateSession()` pour rafraîchir les tokens à chaque requête. L'auth admin reste séparée (table `admin_users` + argon2 + speakeasy TOTP + JWT custom signé avec `ADMIN_JWT_SECRET`). | Utilisateur |
+| 2026-02-26 | Phase 6 | **Direction design finale** — LinkedIn × Digital Science (https://www.digital-science.com/) : fond blanc dominant, whitespace agressif, pill buttons 9999px, ombres teintées bleu, typography Plus Jakarta Sans bold, animations Lottie + Framer Motion, icônes Lucide (pas d'emojis), skeleton loaders, transitions 60fps, tendances 2026 (glassmorphism subtil, gradients doux, micro-interactions). | Utilisateur |
 
 ---
 
