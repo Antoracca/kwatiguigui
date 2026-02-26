@@ -143,6 +143,22 @@ const config: Config = {
           { lineHeight: "1.5", fontWeight: "400" },
         ],
       },
+      // Breakpoints — mobile-first, content-driven (Netflix/Apple/LinkedIn pattern)
+      // xs: très petits mobiles (iPhone SE, Galaxy A series)
+      // sm: mobiles standard (iPhone 14, Pixel)
+      // md: tablettes portrait
+      // lg: tablettes paysage + petits laptops
+      // xl: desktops
+      // 2xl: grands écrans (iMac, 4K)
+      screens: {
+        xs: "375px",
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1536px",
+      },
+
       borderRadius: {
         none: "0px",
         sm: "4px",
