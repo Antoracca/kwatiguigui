@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { ArrowLeft, Phone, Send } from "lucide-react";
+import { KeyRound } from "lucide-react";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ForgotPasswordForm } from "@/components/forms/forgot-password-form";
 
 export const metadata: Metadata = {
   title: "Mot de passe oublie",
@@ -15,37 +14,25 @@ export default function ForgotPasswordPage() {
   return (
     <>
       <div className="mb-6 text-center">
+        <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-warning-50 dark:bg-warning-950">
+          <KeyRound size={28} className="text-warning-500" />
+        </div>
         <h1 className="text-heading-lg font-heading text-neutral-900 dark:text-neutral-100">
           Mot de passe oublie
         </h1>
         <p className="mt-2 text-body-sm text-neutral-500">
-          Entrez votre numero WhatsApp. Vous recevrez un code de
+          Entrez votre numero WhatsApp. Nous vous enverrons un lien de
           reinitialisation.
         </p>
       </div>
 
-      <form className="space-y-4">
-        <Input
-          label="Numero WhatsApp"
-          type="tel"
-          placeholder="+236 74 XX XX XX"
-          leftIcon={<Phone size={18} />}
-          required
-          autoComplete="tel"
-        />
-
-        <Button type="submit" variant="primary" size="lg" className="w-full">
-          <Send size={18} />
-          Envoyer le code
-        </Button>
-      </form>
+      <ForgotPasswordForm />
 
       <div className="mt-6 text-center">
         <Link
           href="/login"
           className="inline-flex items-center gap-2 text-body-sm text-primary-500 hover:text-primary-600"
         >
-          <ArrowLeft size={16} />
           Retour a la connexion
         </Link>
       </div>
