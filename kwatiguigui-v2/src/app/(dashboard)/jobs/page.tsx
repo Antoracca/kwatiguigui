@@ -1,43 +1,59 @@
+import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { Plus } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { createClient } from "@/lib/supabase/server";
+import { PRICING } from "@/lib/constants";
+import { MyJobsClient } from "@/components/dashboard/my-jobs-client";
 
 export const metadata: Metadata = {
-  title: "Mes annonces",
+  title: "Mes annonces — KWATIGUIGUI",
   robots: { index: false, follow: false },
 };
 
-export default function MyJobsPage() {
-  return (
-    <div>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-heading-lg font-heading text-neutral-900 dark:text-neutral-100">
-          Mes annonces
-        </h1>
-        <Button variant="primary" size="sm">
-          <Plus size={16} />
-          Nouvelle annonce
-        </Button>
-      </div>
+export default async function MyJobsPage() {
+  const supabase = await createClient();
 
-      <Card>
-        <CardContent className="py-12 text-center">
-          <p className="text-body-md text-neutral-500">
-            Vous n'avez pas encore publie d'annonce.
-          </p>
-          <p className="mt-2 text-body-sm text-neutral-400">
-            Creez votre premiere annonce pour etre visible par les employeurs
-            et chercheurs d'emploi.
-          </p>
-          <Button variant="primary" size="md" className="mt-6">
-            <Plus size={18} />
-            Publier une annonce
-          </Button>
-        </CardContent>
-      </Card>
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    redirect("/login");
+  }
+
+  // Fetch profile for subscription status
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("subscription_paid, expiry_date")
+    .eq("id", user.id)
+    .single();
+
+  // Fetch user jobs
+  const { data: jobs } = await supabase
+    .from("jobs")
+    .select("id, job_type, region, city, publication_status, is_active, created_at, expires_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  const isPremium =
+    (profile?.subscription_paid ?? false) &&
+    !!profile?.expiry_date &&
+    new Date(profile.expiry_date) > new Date();
+
+  const activeJobs = (jobs ?? []).filter((j) => j.is_active);
+  const freeJobsUsed = isPremium
+    ? 0
+    : Math.min(activeJobs.length, PRICING.FREE_JOB_LIMIT);
+
+  return (
+    <div className="max-w-3xl">
+      <MyJobsClient
+        jobs={jobs ?? []}
+        isPremium={isPremium}
+        freeJobsUsed={freeJobsUsed}
+        freeJobLimit={PRICING.FREE_JOB_LIMIT}
+      />
     </div>
   );
 }
