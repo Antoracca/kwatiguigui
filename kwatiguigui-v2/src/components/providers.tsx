@@ -4,6 +4,8 @@ import { ThemeProvider } from "next-themes";
 import * as React from "react";
 import { Toaster } from "sonner";
 
+import { AuthProvider } from "@/components/providers/auth-provider";
+
 interface ProvidersProps {
   children: React.ReactNode;
 }
@@ -16,7 +18,9 @@ export function Providers({ children }: ProvidersProps) {
       enableSystem
       disableTransitionOnChange={false}
     >
-      {children}
+      <AuthProvider>
+        {children}
+      </AuthProvider>
       <Toaster
         position="top-right"
         toastOptions={{
