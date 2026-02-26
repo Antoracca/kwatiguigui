@@ -1,53 +1,72 @@
 import type { Metadata } from "next";
-import { Search, UserPlus } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { SkeletonTableRow } from "@/components/ui/skeleton";
+import { supabaseAdmin } from "@/lib/supabase/admin";
+import { AdminUsersClient } from "@/components/admin/admin-users-client";
 
 export const metadata: Metadata = {
-  title: "Gestion utilisateurs",
+  title: "Utilisateurs — Admin KWATIGUIGUI",
   robots: { index: false, follow: false },
 };
 
-export default function AdminUsersPage() {
-  return (
-    <div>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-heading-lg font-heading text-neutral-900 dark:text-neutral-100">
-          Gestion des utilisateurs
-        </h1>
-        <Button variant="primary" size="sm">
-          <UserPlus size={16} /> Ajouter
-        </Button>
-      </div>
+interface PageProps {
+  searchParams: Promise<{
+    q?: string;
+    user_type?: string;
+    subscription?: string;
+    region?: string;
+    page?: string;
+  }>;
+}
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between gap-4">
-            <CardTitle>Liste des utilisateurs</CardTitle>
-            <div className="w-64">
-              <Input placeholder="Rechercher..." leftIcon={<Search size={16} />} />
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {/* Table header */}
-          <div className="mb-2 flex items-center gap-4 border-b border-neutral-200 px-4 py-3 text-body-xs font-semibold text-neutral-500 dark:border-neutral-700">
-            <span className="w-8" />
-            <span className="flex-1">Nom</span>
-            <span className="w-32">Region</span>
-            <span className="w-24">Type</span>
-            <span className="w-24">Statut</span>
-            <span className="w-20">Actions</span>
-          </div>
-          {/* Skeleton rows */}
-          {Array.from({ length: 5 }).map((_, i) => (
-            <SkeletonTableRow key={i} />
-          ))}
-        </CardContent>
-      </Card>
-    </div>
+const PAGE_SIZE = 20;
+
+export default async function AdminUsersPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const page = Math.max(1, parseInt(params.page ?? "1", 10));
+  const offset = (page - 1) * PAGE_SIZE;
+
+  let query = supabaseAdmin
+    .from("profiles")
+    .select(
+      "id, first_name, whatsapp, region, user_type, subscription_paid, is_active, created_at",
+      { count: "exact" },
+    );
+
+  if (params.q) {
+    query = query.or(
+      `first_name.ilike.%${params.q}%,whatsapp.ilike.%${params.q}%`,
+    );
+  }
+  if (params.user_type && ["seeker", "employer"].includes(params.user_type)) {
+    query = query.eq("user_type", params.user_type);
+  }
+  if (params.subscription === "premium") {
+    query = query.eq("subscription_paid", true);
+  } else if (params.subscription === "free") {
+    query = query.eq("subscription_paid", false);
+  }
+  if (params.region) {
+    query = query.eq("region", params.region);
+  }
+
+  const { data: users, count } = await query
+    .order("created_at", { ascending: false })
+    .range(offset, offset + PAGE_SIZE - 1);
+
+  const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
+
+  return (
+    <AdminUsersClient
+      users={users ?? []}
+      totalUsers={count ?? 0}
+      currentPage={page}
+      totalPages={totalPages}
+      filters={{
+        q: params.q ?? "",
+        user_type: params.user_type ?? "",
+        subscription: params.subscription ?? "",
+        region: params.region ?? "",
+      }}
+    />
   );
 }

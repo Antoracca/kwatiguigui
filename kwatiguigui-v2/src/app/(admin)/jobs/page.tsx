@@ -1,47 +1,71 @@
 import type { Metadata } from "next";
-import { Search } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { SkeletonTableRow } from "@/components/ui/skeleton";
+import { supabaseAdmin } from "@/lib/supabase/admin";
+import { AdminJobsModerationClient } from "@/components/admin/admin-jobs-moderation-client";
 
 export const metadata: Metadata = {
-  title: "Gestion annonces",
+  title: "Annonces — Admin KWATIGUIGUI",
   robots: { index: false, follow: false },
 };
 
-export default function AdminJobsPage() {
+interface PageProps {
+  searchParams: Promise<{ status?: string; page?: string }>;
+}
+
+const PAGE_SIZE = 25;
+
+export default async function AdminJobsPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const statusFilter = params.status ?? "all";
+  const page = Math.max(1, parseInt(params.page ?? "1", 10));
+  const offset = (page - 1) * PAGE_SIZE;
+
+  // Count pending for badge
+  const { count: pendingCount } = await supabaseAdmin
+    .from("jobs")
+    .select("id", { count: "exact", head: true })
+    .eq("publication_status", "pending");
+
+  let query = supabaseAdmin
+    .from("jobs")
+    .select(
+      `id, job_type, region, city, user_type, publication_status, is_active,
+       created_at, expires_at,
+       author:profiles!user_id(first_name)`,
+      { count: "exact" },
+    );
+
+  if (statusFilter !== "all") {
+    query = query.eq("publication_status", statusFilter);
+  }
+
+  const { data: jobs, count } = await query
+    .order("created_at", { ascending: false })
+    .range(offset, offset + PAGE_SIZE - 1);
+
+  const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
+
   return (
-    <div>
-      <h1 className="mb-6 text-heading-lg font-heading text-neutral-900 dark:text-neutral-100">
-        Gestion des annonces
-      </h1>
-
-      {/* Moderation filters */}
-      <div className="mb-6 flex flex-wrap gap-2">
-        <Badge variant="primary" className="cursor-pointer">Toutes</Badge>
-        <Badge variant="outline" className="cursor-pointer">En attente</Badge>
-        <Badge variant="outline" className="cursor-pointer">Publiees</Badge>
-        <Badge variant="outline" className="cursor-pointer">Rejetees</Badge>
-        <Badge variant="outline" className="cursor-pointer">Brouillons</Badge>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between gap-4">
-            <CardTitle>Annonces</CardTitle>
-            <div className="w-64">
-              <Input placeholder="Rechercher..." leftIcon={<Search size={16} />} />
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {Array.from({ length: 5 }).map((_, i) => (
-            <SkeletonTableRow key={i} />
-          ))}
-        </CardContent>
-      </Card>
-    </div>
+    <AdminJobsModerationClient
+      jobs={(jobs ?? []).map((j: Record<string, unknown>) => ({
+        ...(j as {
+          id: string;
+          job_type: string | null;
+          region: string | null;
+          city: string | null;
+          user_type: string | null;
+          publication_status: string | null;
+          is_active: boolean | null;
+          created_at: string | null;
+          expires_at: string | null;
+        }),
+        author_name: (j.author as { first_name: string } | null)?.first_name ?? null,
+      }))}
+      statusFilter={statusFilter}
+      currentPage={page}
+      totalPages={totalPages}
+      totalJobs={count ?? 0}
+      pendingCount={pendingCount ?? 0}
+    />
   );
 }

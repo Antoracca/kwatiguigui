@@ -1,16 +1,27 @@
-import { AdminSidebar } from "@/components/layout/sidebar";
+import { redirect } from "next/navigation";
 
-export default function AdminLayout({
+import { verifyAdminSession } from "@/lib/auth/admin-actions";
+import { AdminLayoutClient } from "@/components/admin/admin-layout-client";
+
+/**
+ * Admin layout — server-side JWT guard.
+ * Verifies the kwt-admin-session httpOnly cookie on every request.
+ * If absent or expired → redirect to /admin/login.
+ */
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await verifyAdminSession();
+
+  if (!session) {
+    redirect("/admin/login");
+  }
+
   return (
-    <div className="flex min-h-screen">
-      <AdminSidebar />
-      <main className="flex-1 bg-neutral-50 p-4 sm:p-6 lg:p-8 dark:bg-neutral-950">
-        {children}
-      </main>
-    </div>
+    <AdminLayoutClient adminEmail={session.email} adminRole={session.role}>
+      {children}
+    </AdminLayoutClient>
   );
 }
