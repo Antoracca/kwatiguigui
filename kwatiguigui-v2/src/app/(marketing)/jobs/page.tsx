@@ -10,11 +10,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PaginationWithLinks } from "@/components/ui/pagination";
 import { createClient } from "@/lib/supabase/server";
+import type { Database } from "@/types/database";
 
 export const metadata: Metadata = {
   title: "Offres d'emploi",
   description:
-    "Parcourez les offres d'emploi disponibles en Republique Centrafricaine. Filtrez par region, type d'emploi et profil.",
+    "Parcourez les offres d'emploi disponibles en Republique Centrafricaine. Filtrez par ville, type d'emploi et profil.",
   alternates: { canonical: "/jobs" },
   openGraph: {
     title: "Offres d'emploi | KWATIGUIGUI",
@@ -28,7 +29,6 @@ export const metadata: Metadata = {
 // ---------------------------------------------------------------------------
 interface SearchParams {
   q?: string;
-  region?: string;
   job_type?: string;
   user_type?: string;
   sort?: string;
@@ -56,12 +56,11 @@ async function getJobs(params: SearchParams) {
   // Filters
   if (params.q) {
     query = query.or(
-      `job_type.ilike.%${params.q}%,city.ilike.%${params.q}%,region.ilike.%${params.q}%`,
+      `job_type.ilike.%${params.q}%,city.ilike.%${params.q}%`,
     );
   }
-  if (params.region) query = query.eq("region", params.region);
   if (params.job_type) query = query.eq("job_type", params.job_type);
-  if (params.user_type) query = query.eq("user_type", params.user_type);
+  if (params.user_type) query = query.eq("user_type", params.user_type as "seeker" | "employer");
 
   // Sorting
   switch (params.sort) {
@@ -83,12 +82,13 @@ async function getJobs(params: SearchParams) {
     return { jobs: [], total: 0, page, totalPages: 0 };
   }
 
-  const jobs = (data ?? []).map((row) => ({
+  const resultData = data as Database["public"]["Tables"]["jobs"]["Row"][] | null;
+
+  const jobs = (resultData ?? []).map((row) => ({
     id: row.id,
     firstName: row.first_name,
     age: row.age,
     whatsapp: null as null, // never expose to unauthenticated viewers
-    region: row.region,
     city: row.city,
     neighborhood: row.neighborhood ?? null,
     jobType: row.job_type,
@@ -175,7 +175,6 @@ function buildUrl(params: SearchParams): string {
   const base = "/jobs";
   const query = new URLSearchParams();
   if (params.q) query.set("q", params.q);
-  if (params.region) query.set("region", params.region);
   if (params.job_type) query.set("job_type", params.job_type);
   if (params.user_type) query.set("user_type", params.user_type);
   if (params.sort) query.set("sort", params.sort);
@@ -205,7 +204,7 @@ export default async function JobListingsPage({
           Trouvez votre emploi
         </h1>
         <p className="mt-2 text-body-md text-neutral-500">
-          Parcourez les offres disponibles dans les 20 regions de la RCA.
+          Parcourez les offres disponibles partout en Republique Centrafricaine.
         </p>
       </div>
 
@@ -228,7 +227,6 @@ export default async function JobListingsPage({
           />
         </div>
         {/* Preserve other filters */}
-        {params.region && <input type="hidden" name="region" value={params.region} />}
         {params.job_type && <input type="hidden" name="job_type" value={params.job_type} />}
         {params.user_type && <input type="hidden" name="user_type" value={params.user_type} />}
         <Button type="submit" variant="primary" size="md">

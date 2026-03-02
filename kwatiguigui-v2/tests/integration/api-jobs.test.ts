@@ -5,8 +5,8 @@ import { NextRequest } from "next/server";
 // Mock Supabase server client before importing the route
 // ---------------------------------------------------------------------------
 const mockRange = vi.fn();
-const mockOrder = vi.fn(() => ({ range: mockRange }));
-const mockGt = vi.fn(() => ({ order: mockOrder }));
+const mockOrder = vi.fn();
+const mockGt = vi.fn();
 const mockEq = vi.fn();
 const mockOr = vi.fn();
 const mockSelect = vi.fn();

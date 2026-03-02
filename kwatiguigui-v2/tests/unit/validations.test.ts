@@ -9,7 +9,7 @@ import { initiatePaymentSchema } from "@/lib/validations/payments";
 // ---------------------------------------------------------------------------
 describe("loginSchema", () => {
   const validLogin = {
-    whatsapp: "+236 74 14 34 34",
+    email: "maelis@gmail.com",
     password: "MotDePasse1!",
   };
 
@@ -17,15 +17,11 @@ describe("loginSchema", () => {
     expect(loginSchema.safeParse(validLogin).success).toBe(true);
   });
 
-  it("accepte un numero sans prefixe +", () => {
-    expect(loginSchema.safeParse({ ...validLogin, whatsapp: "74143434" }).success).toBe(true);
-  });
-
-  it("rejette un numero WhatsApp trop court (< 8 chars)", () => {
-    const result = loginSchema.safeParse({ ...validLogin, whatsapp: "1234" });
+  it("rejette un email invalide", () => {
+    const result = loginSchema.safeParse({ ...validLogin, email: "pas-un-email" });
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.flatten().fieldErrors.whatsapp).toBeDefined();
+      expect(result.error.flatten().fieldErrors.email).toBeDefined();
     }
   });
 
@@ -41,8 +37,8 @@ describe("loginSchema", () => {
     expect(loginSchema.safeParse({}).success).toBe(false);
   });
 
-  it("rejette un numero avec lettres uniquement", () => {
-    const result = loginSchema.safeParse({ ...validLogin, whatsapp: "abcdefgh" });
+  it("rejette un email vide", () => {
+    const result = loginSchema.safeParse({ ...validLogin, email: "" });
     expect(result.success).toBe(false);
   });
 });
@@ -54,11 +50,14 @@ describe("registerSchema", () => {
   const validRegister = {
     userType: "seeker" as const,
     firstName: "Marie",
-    age: 25,
-    whatsapp: "+236 74 14 34 34",
+    lastName: "Ngbangui",
+    username: "marie_ngb",
+    dateOfBirth: "1995-06-15",   // 30 ans, valide
+    email: "marie@gmail.com",
     region: "Bangui",
     city: "Bangui",
     jobType: "Aide menagere",
+    experience: "3+" as const,
     password: "SecretMot1!",
     confirmPassword: "SecretMot1!",
   };
@@ -76,16 +75,29 @@ describe("registerSchema", () => {
     expect(result.success).toBe(false);
   });
 
-  it("rejette un age < 18", () => {
-    const result = registerSchema.safeParse({ ...validRegister, age: 16 });
+  it("rejette une date de naissance < 18 ans", () => {
+    const today = new Date();
+    today.setFullYear(today.getFullYear() - 16);
+    const dob = today.toISOString().split("T")[0];
+    const result = registerSchema.safeParse({ ...validRegister, dateOfBirth: dob });
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.flatten().fieldErrors.age?.[0]).toContain("18 ans");
+      expect(result.error.flatten().fieldErrors.dateOfBirth?.[0]).toContain("18 ans");
     }
   });
 
-  it("rejette un age > 99", () => {
-    const result = registerSchema.safeParse({ ...validRegister, age: 100 });
+  it("rejette un username trop court", () => {
+    const result = registerSchema.safeParse({ ...validRegister, username: "ab" });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejette un username avec caracteres speciaux", () => {
+    const result = registerSchema.safeParse({ ...validRegister, username: "marie@nb" });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejette une experience invalide", () => {
+    const result = registerSchema.safeParse({ ...validRegister, experience: "2+" });
     expect(result.success).toBe(false);
   });
 
@@ -161,12 +173,16 @@ describe("registerSchema", () => {
 // forgotPasswordSchema
 // ---------------------------------------------------------------------------
 describe("forgotPasswordSchema", () => {
-  it("valide un numero WhatsApp correct", () => {
-    expect(forgotPasswordSchema.safeParse({ whatsapp: "+236 74 14 34 34" }).success).toBe(true);
+  it("valide un email correct", () => {
+    expect(forgotPasswordSchema.safeParse({ email: "maelis@gmail.com" }).success).toBe(true);
   });
 
-  it("rejette un numero trop court", () => {
-    expect(forgotPasswordSchema.safeParse({ whatsapp: "123" }).success).toBe(false);
+  it("rejette un email invalide", () => {
+    expect(forgotPasswordSchema.safeParse({ email: "pas-un-email" }).success).toBe(false);
+  });
+
+  it("rejette un email vide", () => {
+    expect(forgotPasswordSchema.safeParse({ email: "" }).success).toBe(false);
   });
 });
 
@@ -257,14 +273,6 @@ describe("searchJobsSchema", () => {
 
   it("rejette page = 0", () => {
     expect(searchJobsSchema.safeParse({ page: "0" }).success).toBe(false);
-  });
-
-  it("valide un filtre par region", () => {
-    const result = searchJobsSchema.safeParse({ region: "Bangui" });
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.data.region).toBe("Bangui");
-    }
   });
 
   it("valide un userType seeker", () => {

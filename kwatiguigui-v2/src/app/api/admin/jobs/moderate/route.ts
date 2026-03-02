@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { verifyAdminSession } from "@/lib/auth/admin-actions";
+import type { Database } from "@/types/database";
 
 const moderateSchema = z.object({
   jobId: z.string().uuid(),
@@ -42,8 +43,7 @@ export async function POST(req: NextRequest) {
   }
 
   const newStatus = action === "publish" ? "published" : "rejected";
-  const { error } = await supabaseAdmin
-    .from("jobs")
+  const { error } = await (supabaseAdmin.from("jobs") as Record<string, any>)
     .update({ publication_status: newStatus })
     .eq("id", jobId);
 

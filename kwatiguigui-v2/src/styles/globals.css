@@ -1,6 +1,13 @@
 @import "tailwindcss";
 @config "../../tailwind.config.ts";
 
+/* ---------------------------------------------------------------------------
+   Dark mode : Tailwind v4 ne supporte PAS darkMode:"class" via @config.
+   On configure la variante ici pour que dark: réponde à la classe .dark
+   posée par next-themes sur <html>, pas à prefers-color-scheme.
+   --------------------------------------------------------------------------- */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ============================================================================
    KWATIGUIGUI V2 — Global Styles
    Palette: Centrafrique Moderne
@@ -144,12 +151,16 @@
     text-wrap: balance;
   }
 
-  h1 { font-size: var(--text-7xl); }
-  h2 { font-size: var(--text-5xl); }
-  h3 { font-size: var(--text-4xl); }
-  h4 { font-size: var(--text-3xl); }
-  h5 { font-size: var(--text-2xl); }
-  h6 { font-size: var(--text-xl); }
+  /* Tailles de titres par défaut — mobile-first, conservatrices.
+     Les pages hero et marketing écrasent ces valeurs avec text-[clamp(...)]
+     sur leurs propres balises. Ces defaults servent aux pages secondaires
+     (formulaires, dashboard, erreurs, CGU). */
+  h1 { font-size: var(--text-5xl); }   /* 32px mobile → 48px desktop */
+  h2 { font-size: var(--text-4xl); }   /* 28px mobile → 36px desktop */
+  h3 { font-size: var(--text-3xl); }   /* 24px mobile → 30px desktop */
+  h4 { font-size: var(--text-2xl); }   /* 20px mobile → 24px desktop */
+  h5 { font-size: var(--text-xl); }    /* 18px mobile → 20px desktop */
+  h6 { font-size: var(--text-lg); }    /* 16px mobile → 18px desktop */
 
   p {
     font-size: var(--text-base);
@@ -163,22 +174,22 @@
   }
 
   /* -------------------------------------------------------------------------
-     Touch Targets — Apple HIG minimum 44x44px
-     Netflix, Apple, LinkedIn respectent tous cette règle
+     Touch Targets — Apple HIG minimum 44px
+     On applique min-height uniquement aux éléments interactifs autonomes.
+     NE PAS mettre min-width sur <a> : cela brise les liens inline et les
+     pills de tags (qui ne sont pas des CTAs).
      -------------------------------------------------------------------------*/
   button,
   [role="button"],
-  a,
   input[type="checkbox"],
   input[type="radio"],
   select {
     min-height: 44px;
-    min-width: 44px;
   }
 
-  /* Exceptions : icônes décoratives sans action directe */
-  button[data-icon-only="true"] {
-    min-height: 44px;
+  /* Checkboxes et radios ont aussi besoin de min-width pour être cliquables */
+  input[type="checkbox"],
+  input[type="radio"] {
     min-width: 44px;
   }
 
@@ -526,6 +537,11 @@
   to   { opacity: 1; transform: translateX(0); }
 }
 
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 @keyframes scaleIn {
   from { opacity: 0; transform: scale(0.94); }
   to   { opacity: 1; transform: scale(1); }
@@ -544,6 +560,7 @@
   .animate-slide-left    { animation: slideInLeft 0.3s ease-out both; }
   .animate-scale-in      { animation: scaleIn 0.2s ease-out both; }
   .animate-pulse-dot     { animation: pulse-dot 1.5s ease-in-out infinite; }
+  .animate-marquee       { animation: marquee 45s linear infinite; }
 
   /* Délais pour les staggered animations */
   .delay-100 { animation-delay: 100ms; }

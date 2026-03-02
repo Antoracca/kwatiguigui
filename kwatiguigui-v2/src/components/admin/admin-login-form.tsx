@@ -4,9 +4,10 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { Eye, EyeOff, Mail, Lock, ShieldCheck, AlertCircle } from "lucide-react";
 
 import { adminLogin } from "@/lib/auth/admin-actions";
+import type { ActionResult } from "@/lib/auth/actions";
 import { Button } from "@/components/ui/button";
 
-const initialState = { success: false };
+const initialState: ActionResult = { success: false };
 
 export function AdminLoginForm() {
   const [state, action, isPending] = useActionState(adminLogin, initialState);

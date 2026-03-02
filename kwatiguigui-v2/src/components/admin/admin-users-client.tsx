@@ -14,7 +14,6 @@ import {
 
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { maskWhatsApp, formatRelativeDate } from "@/lib/utils";
-import { RCA_REGIONS } from "@/lib/constants";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PaginationWithLinks } from "@/components/ui/pagination";
@@ -23,7 +22,6 @@ interface AdminUser {
   id: string;
   first_name: string | null;
   whatsapp: string | null;
-  region: string | null;
   user_type: string | null;
   subscription_paid: boolean | null;
   is_active: boolean | null;
@@ -39,7 +37,6 @@ interface AdminUsersClientProps {
     q: string;
     user_type: string;
     subscription: string;
-    region: string;
   };
 }
 
@@ -61,7 +58,6 @@ export function AdminUsersClient({
       params.set("user_type", filters.user_type);
     if (key !== "subscription" && filters.subscription)
       params.set("subscription", filters.subscription);
-    if (key !== "region" && filters.region) params.set("region", filters.region);
     if (value) params.set(key, value);
     params.delete("page");
     router.push(`/admin/users?${params.toString()}`);
@@ -73,12 +69,11 @@ export function AdminUsersClient({
   }
 
   function exportCSV() {
-    const headers = ["ID", "Prenom", "WhatsApp", "Region", "Type", "Abonnement", "Actif", "Inscription"];
+    const headers = ["ID", "Prenom", "WhatsApp", "Type", "Abonnement", "Actif", "Inscription"];
     const rows = users.map((u) => [
       u.id,
       u.first_name ?? "",
       u.whatsapp ?? "",
-      u.region ?? "",
       u.user_type ?? "",
       u.subscription_paid ? "Premium" : "Gratuit",
       u.is_active ? "Oui" : "Non",
@@ -97,7 +92,7 @@ export function AdminUsersClient({
   }
 
   const hasFilters =
-    filters.q || filters.user_type || filters.subscription || filters.region;
+    filters.q || filters.user_type || filters.subscription;
 
   return (
     <div className="space-y-6">
@@ -185,9 +180,6 @@ export function AdminUsersClient({
                 <th className="hidden px-5 py-3 text-left font-heading text-xs font-semibold uppercase tracking-wide text-neutral-500 sm:table-cell">
                   WhatsApp
                 </th>
-                <th className="hidden px-5 py-3 text-left font-heading text-xs font-semibold uppercase tracking-wide text-neutral-500 md:table-cell">
-                  Region
-                </th>
                 <th className="px-5 py-3 text-left font-heading text-xs font-semibold uppercase tracking-wide text-neutral-500">
                   Type
                 </th>
@@ -205,7 +197,7 @@ export function AdminUsersClient({
             <tbody className="divide-y divide-neutral-50 dark:divide-neutral-800">
               {users.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-5 py-12 text-center text-neutral-400">
+                  <td colSpan={6} className="px-5 py-12 text-center text-neutral-400">
                     Aucun utilisateur trouve.
                   </td>
                 </tr>
@@ -230,9 +222,6 @@ export function AdminUsersClient({
                     </td>
                     <td className="hidden px-5 py-3 font-mono text-xs text-neutral-500 dark:text-neutral-400 sm:table-cell">
                       {user.whatsapp ? maskWhatsApp(user.whatsapp) : "—"}
-                    </td>
-                    <td className="hidden px-5 py-3 text-neutral-600 dark:text-neutral-400 md:table-cell">
-                      {user.region ?? "—"}
                     </td>
                     <td className="px-5 py-3">
                       <span className="text-xs text-neutral-500">

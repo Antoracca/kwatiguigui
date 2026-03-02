@@ -15,7 +15,6 @@ export interface JobCardData {
   firstName: string;
   age: number;
   whatsapp: string | null; // null = non-premium viewer cannot see it
-  region: string;
   city: string;
   neighborhood: string | null;
   jobType: string;
@@ -150,10 +149,6 @@ export function JobCard({ job, isPremium = false, featured = false, className }:
           <span>
             {job.city}
             {job.neighborhood ? `, ${job.neighborhood}` : ""}
-            {" — "}
-            <span className="font-medium text-neutral-600 dark:text-neutral-400">
-              {job.region}
-            </span>
           </span>
         </div>
 

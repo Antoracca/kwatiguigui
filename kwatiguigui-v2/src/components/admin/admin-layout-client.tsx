@@ -48,7 +48,7 @@ export function AdminLayoutClient({
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   function isActive(item: (typeof NAV_ITEMS)[number]) {
-    if (item.exact) return pathname === item.href;
+    if ("exact" in item && item.exact) return pathname === item.href;
     return pathname.startsWith(item.href);
   }
 

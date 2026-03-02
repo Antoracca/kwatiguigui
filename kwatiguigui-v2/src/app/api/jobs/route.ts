@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { maskWhatsApp } from "@/lib/utils";
 import { searchJobsSchema } from "@/lib/validations/jobs";
+import type { Database } from "@/types/database";
 
 /**
  * GET /api/jobs — Search and list published job postings.
@@ -35,7 +36,6 @@ export async function GET(request: NextRequest) {
 
     const {
       query,
-      region,
       jobType,
       userType,
       page,
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
     let dbQuery = supabase
       .from("jobs")
       .select(
-        "id, first_name, age, whatsapp, region, city, neighborhood, job_type, experience, user_type, is_active, publication_status, created_at, expires_at",
+        "id, first_name, age, whatsapp, city, neighborhood, job_type, experience, user_type, is_active, publication_status, created_at, expires_at",
         { count: "exact" },
       )
       .eq("is_active", true)
@@ -61,10 +61,9 @@ export async function GET(request: NextRequest) {
 
     if (query) {
       dbQuery = dbQuery.or(
-        `first_name.ilike.%${query}%,job_type.ilike.%${query}%,city.ilike.%${query}%,region.ilike.%${query}%`,
+        `first_name.ilike.%${query}%,job_type.ilike.%${query}%,city.ilike.%${query}%`,
       );
     }
-    if (region) dbQuery = dbQuery.eq("region", region);
     if (jobType) dbQuery = dbQuery.eq("job_type", jobType);
     if (userType) dbQuery = dbQuery.eq("user_type", userType);
 
@@ -85,11 +84,13 @@ export async function GET(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (user) {
-      const { data: profile } = await supabase
+      const { data } = await supabase
         .from("profiles")
         .select("subscription_paid, expiry_date")
         .eq("id", user.id)
         .single();
+
+      const profile = data as Database["public"]["Tables"]["profiles"]["Row"] | null;
 
       if (profile?.subscription_paid && profile.expiry_date) {
         requesterIsPremium = new Date(profile.expiry_date) > new Date();
@@ -97,12 +98,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Mask whatsapp for non-premium viewers
-    const sanitizedJobs = (jobs ?? []).map((job) => ({
+    const typedJobs = jobs as Database["public"]["Tables"]["jobs"]["Row"][] | null;
+    const sanitizedJobs = (typedJobs ?? []).map((job) => ({
       id: job.id,
       firstName: job.first_name,
       age: job.age,
       whatsapp: requesterIsPremium ? job.whatsapp : maskWhatsApp(job.whatsapp ?? ""),
-      region: job.region,
       city: job.city,
       neighborhood: job.neighborhood,
       jobType: job.job_type,

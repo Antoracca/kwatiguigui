@@ -22,10 +22,11 @@ export type Database = {
         Row: {
           id: string;
           first_name: string;
-          age: number;
+          last_name: string;
+          username: string | null;
+          date_of_birth: string | null;
           whatsapp: string;
           phone: string | null;
-          region: string;
           city: string;
           neighborhood: string | null;
           job_type: string;
@@ -34,16 +35,26 @@ export type Database = {
           is_active: boolean;
           subscription_paid: boolean;
           expiry_date: string | null;
+          avatar_url: string | null;
+          linkedin_url: string;
+          facebook_url: string;
+          instagram_url: string;
+          github_url: string;
+          cv_path: string | null;
+          cv_filename: string | null;
+          cv_size: number | null;
+          cv_public: boolean;
           created_at: string;
           updated_at: string;
         };
         Insert: {
           id: string;
           first_name: string;
-          age: number;
+          last_name?: string;
+          username?: string | null;
+          date_of_birth?: string | null;
           whatsapp: string;
           phone?: string | null;
-          region: string;
           city: string;
           neighborhood?: string | null;
           job_type: string;
@@ -52,16 +63,26 @@ export type Database = {
           is_active?: boolean;
           subscription_paid?: boolean;
           expiry_date?: string | null;
+          avatar_url?: string | null;
+          linkedin_url?: string;
+          facebook_url?: string;
+          instagram_url?: string;
+          github_url?: string;
+          cv_path?: string | null;
+          cv_filename?: string | null;
+          cv_size?: number | null;
+          cv_public?: boolean;
           created_at?: string;
           updated_at?: string;
         };
         Update: {
           id?: string;
           first_name?: string;
-          age?: number;
+          last_name?: string;
+          username?: string | null;
+          date_of_birth?: string | null;
           whatsapp?: string;
           phone?: string | null;
-          region?: string;
           city?: string;
           neighborhood?: string | null;
           job_type?: string;
@@ -70,8 +91,18 @@ export type Database = {
           is_active?: boolean;
           subscription_paid?: boolean;
           expiry_date?: string | null;
+          avatar_url?: string | null;
+          linkedin_url?: string;
+          facebook_url?: string;
+          instagram_url?: string;
+          github_url?: string;
+          cv_path?: string | null;
+          cv_filename?: string | null;
+          cv_size?: number | null;
+          cv_public?: boolean;
           updated_at?: string;
         };
+        Relationships: [];
       };
       jobs: {
         Row: {
@@ -80,7 +111,6 @@ export type Database = {
           first_name: string;
           age: number;
           whatsapp: string | null;
-          region: string;
           city: string;
           neighborhood: string | null;
           job_type: string;
@@ -101,7 +131,6 @@ export type Database = {
           first_name: string;
           age: number;
           whatsapp?: string | null;
-          region: string;
           city: string;
           neighborhood?: string | null;
           job_type: string;
@@ -122,7 +151,6 @@ export type Database = {
           first_name?: string;
           age?: number;
           whatsapp?: string | null;
-          region?: string;
           city?: string;
           neighborhood?: string | null;
           job_type?: string;
@@ -136,6 +164,7 @@ export type Database = {
             | "rejected";
           expires_at?: string;
         };
+        Relationships: [];
       };
       payments: {
         Row: {
@@ -167,6 +196,7 @@ export type Database = {
           transaction_id?: string | null;
           processed_at?: string | null;
         };
+        Relationships: [];
       };
       messages: {
         Row: {
@@ -198,6 +228,7 @@ export type Database = {
           is_starred?: boolean;
           is_archived?: boolean;
         };
+        Relationships: [];
       };
       job_types: {
         Row: {
@@ -222,6 +253,7 @@ export type Database = {
           description?: string | null;
           is_active?: boolean;
         };
+        Relationships: [];
       };
       info_contents: {
         Row: {
@@ -264,6 +296,7 @@ export type Database = {
           is_published?: boolean;
           featured?: boolean;
         };
+        Relationships: [];
       };
       admin_users: {
         Row: {
@@ -297,21 +330,7 @@ export type Database = {
           is_active?: boolean;
           last_login_at?: string | null;
         };
-      };
-      regions: {
-        Row: {
-          id: string;
-          name: string;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          name: string;
-          created_at?: string;
-        };
-        Update: {
-          name?: string;
-        };
+        Relationships: [];
       };
       sectors: {
         Row: {
@@ -327,6 +346,7 @@ export type Database = {
         Update: {
           name?: string;
         };
+        Relationships: [];
       };
       subscriptions: {
         Row: {
@@ -353,6 +373,7 @@ export type Database = {
           start_date?: string;
           end_date?: string;
         };
+        Relationships: [];
       };
       audit_logs: {
         Row: {
@@ -371,7 +392,8 @@ export type Database = {
           ip_address?: string | null;
           created_at?: string;
         };
-        Update: never;
+        Update: Record<string, never>;
+        Relationships: [];
       };
       webhooks: {
         Row: {
@@ -393,6 +415,7 @@ export type Database = {
         Update: {
           processed?: boolean;
         };
+        Relationships: [];
       };
       sessions: {
         Row: {
@@ -412,6 +435,7 @@ export type Database = {
         Update: {
           expires_at?: string;
         };
+        Relationships: [];
       };
       password_resets: {
         Row: {
@@ -431,6 +455,7 @@ export type Database = {
         Update: {
           expires_at?: string;
         };
+        Relationships: [];
       };
       email_verifications: {
         Row: {
@@ -450,6 +475,7 @@ export type Database = {
         Update: {
           expires_at?: string;
         };
+        Relationships: [];
       };
       otp_codes: {
         Row: {
@@ -469,6 +495,7 @@ export type Database = {
         Update: {
           expires_at?: string;
         };
+        Relationships: [];
       };
       admin_messages: {
         Row: {
@@ -490,6 +517,7 @@ export type Database = {
         Update: {
           is_read?: boolean;
         };
+        Relationships: [];
       };
     };
     Views: Record<string, never>;
@@ -501,6 +529,14 @@ export type Database = {
       count_active_jobs: {
         Args: { uid: string };
         Returns: number;
+      };
+      check_email_available: {
+        Args: { email_to_check: string };
+        Returns: boolean;
+      };
+      check_phone_available: {
+        Args: { phone_to_check: string };
+        Returns: boolean;
       };
     };
     Enums: {

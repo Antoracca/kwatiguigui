@@ -1,16 +1,13 @@
 import { z } from "zod";
+import { EXPERIENCE_VALUES } from "@/lib/constants";
 
 // ---------------------------------------------------------------------------
 // Login
 // ---------------------------------------------------------------------------
 export const loginSchema = z.object({
-  whatsapp: z
+  email: z
     .string()
-    .min(8, "Le numero WhatsApp doit contenir au moins 8 chiffres")
-    .regex(
-      /^\+?\d[\d\s-]{7,}$/,
-      "Format de numero invalide. Exemple: +236 74 14 34 34",
-    ),
+    .email("Veuillez entrer une adresse e-mail valide"),
   password: z
     .string()
     .min(8, "Le mot de passe doit contenir au moins 8 caracteres"),
@@ -31,26 +28,45 @@ export const registerSchema = z
       .min(2, "Le prenom doit contenir au moins 2 caracteres")
       .max(50, "Le prenom ne peut pas depasser 50 caracteres")
       .regex(/^[\p{L}\s'-]+$/u, "Le prenom contient des caracteres invalides"),
-    age: z
-      .number({ required_error: "L'age est requis" })
-      .int("L'age doit etre un nombre entier")
-      .min(18, "Vous devez avoir au moins 18 ans")
-      .max(99, "Age invalide"),
-    whatsapp: z
+    lastName: z
       .string()
-      .min(8, "Le numero WhatsApp doit contenir au moins 8 chiffres")
+      .max(50, "Le nom ne peut pas depasser 50 caracteres")
+      .optional()
+      .default(""),
+    username: z
+      .string()
+      .min(3, "Le nom d'utilisateur doit contenir au moins 3 caracteres")
+      .max(30, "Le nom d'utilisateur ne peut pas depasser 30 caracteres")
       .regex(
-        /^\+?\d[\d\s-]{7,}$/,
-        "Format invalide. Exemple: +236 74 14 34 34",
+        /^[a-zA-Z0-9_]+$/,
+        "Le nom d'utilisateur ne peut contenir que des lettres, chiffres et _",
       ),
-    phone: z
+    dateOfBirth: z
       .string()
       .optional()
       .refine(
-        (val) => !val || /^\+?\d[\d\s-]{7,}$/.test(val),
-        "Format de telephone invalide",
+        (val) => {
+          if (!val) return true; // optionnel pour les comptes entreprise
+          const dob = new Date(val);
+          if (isNaN(dob.getTime())) return false;
+          const today = new Date();
+          let age = today.getFullYear() - dob.getFullYear();
+          const m = today.getMonth() - dob.getMonth();
+          if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+          return age >= 18 && age <= 99;
+        },
+        "Vous devez avoir au moins 18 ans",
       ),
-    region: z.string().min(1, "Veuillez selectionner une region"),
+    email: z
+      .string()
+      .email("Veuillez entrer une adresse e-mail valide"),
+    phone: z
+      .string()
+      .min(1, "Le numero de telephone est obligatoire")
+      .refine(
+        (val) => /^\+?[\d\s()\-]{6,}$/.test(val),
+        "Format de telephone invalide (+236 XX XX XX XX)",
+      ),
     city: z
       .string()
       .min(2, "La ville doit contenir au moins 2 caracteres")
@@ -60,12 +76,12 @@ export const registerSchema = z
       .max(100, "Le quartier ne peut pas depasser 100 caracteres")
       .optional()
       .default(""),
-    jobType: z.string().min(1, "Veuillez selectionner un type d'emploi"),
-    experience: z
-      .string()
-      .max(500, "La description ne peut pas depasser 500 caracteres")
-      .optional()
-      .default(""),
+    jobType: z.string().optional().default(""),
+    experience: z.enum(EXPERIENCE_VALUES, {
+      required_error: "Veuillez selectionner votre niveau d'experience",
+      invalid_type_error: "Valeur d'experience invalide",
+    }).optional(),
+    companyName: z.string().optional(),
     password: z
       .string()
       .min(8, "Le mot de passe doit contenir au moins 8 caracteres")
@@ -94,10 +110,9 @@ export type RegisterInput = z.infer<typeof registerSchema>;
 // Forgot password
 // ---------------------------------------------------------------------------
 export const forgotPasswordSchema = z.object({
-  whatsapp: z
+  email: z
     .string()
-    .min(8, "Le numero WhatsApp doit contenir au moins 8 chiffres")
-    .regex(/^\+?\d[\d\s-]{7,}$/, "Format de numero invalide"),
+    .email("Veuillez entrer une adresse e-mail valide"),
 });
 
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;

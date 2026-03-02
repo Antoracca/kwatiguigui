@@ -5,11 +5,12 @@ import { useTheme } from "next-themes";
 import { Lock, Bell, Sun, Moon, Monitor, AlertTriangle, CheckCircle, AlertCircle } from "lucide-react";
 
 import { changePassword, deactivateAccount } from "@/lib/actions/settings";
+import type { ActionResult } from "@/lib/auth/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const initialPwState = { success: false };
+const initialPwState: ActionResult = { success: false };
 
 // ---------------------------------------------------------------------------
 // Toggle Switch component (Radix-free, accessible)

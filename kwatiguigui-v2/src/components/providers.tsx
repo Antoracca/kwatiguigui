@@ -3,8 +3,17 @@
 import { ThemeProvider } from "next-themes";
 import * as React from "react";
 import { Toaster } from "sonner";
+import { setWasmUrl } from "@lottiefiles/dotlottie-react";
 
 import { AuthProvider } from "@/components/providers/auth-provider";
+
+// ---------------------------------------------------------------------------
+// Configure le chemin du fichier WASM de DotLottie avant tout rendu.
+// Sans ça, @lottiefiles/dotlottie-react essaie de charger le .wasm depuis
+// node_modules (inaccessible en prod) → erreur sur iOS Safari.
+// Le fichier est copié dans /public/dotlottie-player.wasm via postinstall.
+// ---------------------------------------------------------------------------
+setWasmUrl("/dotlottie-player.wasm");
 
 interface ProvidersProps {
   children: React.ReactNode;

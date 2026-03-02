@@ -33,7 +33,6 @@ import { JobFormModal } from "@/components/dashboard/job-form-modal";
 interface Job {
   id: string;
   job_type: string;
-  region: string;
   city: string;
   publication_status: string;
   is_active: boolean;
@@ -235,7 +234,7 @@ export function MyJobsClient({
                       <div className="mt-1.5 flex flex-wrap gap-3 text-fluid-sm text-neutral-500 dark:text-neutral-400">
                         <span className="flex items-center gap-1">
                           <MapPin className="h-3.5 w-3.5" />
-                          {job.city}, {job.region}
+                          {job.city}
                         </span>
                         <span className="flex items-center gap-1">
                           <Calendar className="h-3.5 w-3.5" />

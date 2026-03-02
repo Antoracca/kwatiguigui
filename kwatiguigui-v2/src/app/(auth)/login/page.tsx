@@ -1,33 +1,42 @@
 import type { Metadata } from "next";
-import { LogIn, Phone } from "lucide-react";
+import Image from "next/image";
+import { LogIn } from "lucide-react";
 import Link from "next/link";
 
 import { LoginForm } from "@/components/forms/login-form";
+import { SocialAuth } from "@/components/auth/social-auth";
 
 export const metadata: Metadata = {
   title: "Connexion",
-  description: "Connectez-vous a votre compte KWATIGUIGUI.",
+  description: "Connectez-vous à votre compte KWATIGUIGUI.",
   robots: { index: false, follow: false },
 };
 
 export default function LoginPage() {
   return (
     <>
-      <div className="mb-6 text-center">
-        <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-50 dark:bg-primary-950">
-          <LogIn size={28} className="text-primary-500" />
+      <div className="mb-6 text-center flex flex-col items-center">
+        <div className="relative h-20 w-20 mb-4 drop-shadow-md">
+          <Image
+            src="/images/Favicon.png"
+            alt="Kwatiguigui Logo"
+            fill
+            className="object-contain"
+            priority
+          />
         </div>
-        <h1 className="text-heading-lg font-heading text-neutral-900 dark:text-neutral-100">
+        <h1 className="flex items-center gap-3 text-heading-lg font-heading text-neutral-900 dark:text-neutral-100">
           Connexion
         </h1>
         <p className="mt-2 text-body-sm text-neutral-500">
-          Entrez vos identifiants pour acceder a votre compte.
+          Entrez vos identifiants pour accéder à votre compte.
         </p>
       </div>
 
       <LoginForm />
+      <SocialAuth />
 
-      <p className="mt-6 text-center text-body-sm text-neutral-500">
+      <p className="mt-8 text-center text-body-sm text-neutral-500">
         Pas encore de compte ?{" "}
         <Link
           href="/register"

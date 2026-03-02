@@ -28,15 +28,16 @@ interface PaymentHistory {
 
 interface PaymentClientProps {
   userId: string;
+  userType: "seeker" | "employer" | "company";
   isPremium: boolean;
   expiryDate: string | null;
   whatsapp: string | null;
   paymentHistory: PaymentHistory[];
 }
 
-const PLANS = [
+const EMPLOYER_PLANS = [
   {
-    id: "monthly" as const,
+    id: "monthly",
     label: "Mensuel",
     amount: PRICING.PREMIUM_MONTHLY,
     months: 1,
@@ -45,7 +46,7 @@ const PLANS = [
     perMonth: PRICING.PREMIUM_MONTHLY,
   },
   {
-    id: "biannual" as const,
+    id: "biannual",
     label: "6 mois",
     amount: PRICING.PREMIUM_BIANNUAL,
     months: 6,
@@ -54,7 +55,7 @@ const PLANS = [
     perMonth: Math.round(PRICING.PREMIUM_BIANNUAL / 6),
   },
   {
-    id: "annual" as const,
+    id: "annual",
     label: "Annuel",
     amount: PRICING.PREMIUM_ANNUAL,
     months: 12,
@@ -62,9 +63,29 @@ const PLANS = [
     savings: 33,
     perMonth: Math.round(PRICING.PREMIUM_ANNUAL / 12),
   },
-] as const;
+];
 
-type PlanId = (typeof PLANS)[number]["id"];
+const SEEKER_PLANS = [
+  {
+    id: "seeker_standard",
+    label: "Standard (Gratuit)",
+    amount: 0,
+    months: 1,
+    badge: null,
+    savings: null,
+    perMonth: 0,
+  },
+  {
+    id: "seeker_pro_monthly",
+    label: "Pack VIP / Pro",
+    amount: PRICING.SEEKER_PRO_MONTHLY,
+    months: 1,
+    badge: "+ 3 Mois Gratuits !",
+    savings: null,
+    perMonth: PRICING.SEEKER_PRO_MONTHLY,
+  }
+];
+
 type Method = "orange" | "telecel";
 
 const STATUS_COLORS: Record<string, string> = {
@@ -75,12 +96,14 @@ const STATUS_COLORS: Record<string, string> = {
 
 export function PaymentClient({
   userId,
+  userType,
   isPremium,
   expiryDate,
   whatsapp,
   paymentHistory,
 }: PaymentClientProps) {
-  const [selectedPlan, setSelectedPlan] = useState<PlanId>("monthly");
+  const PLANS = userType === "seeker" ? SEEKER_PLANS : EMPLOYER_PLANS;
+  const [selectedPlan, setSelectedPlan] = useState<string>(PLANS[0]!.id);
   const [selectedMethod, setSelectedMethod] = useState<Method>("orange");
   const [phone, setPhone] = useState(
     whatsapp?.replace(/\D/g, "").replace(/^236/, "") ?? "",
@@ -92,7 +115,7 @@ export function PaymentClient({
   const [error, setError] = useState<string | null>(null);
   const pollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const plan = PLANS.find((p) => p.id === selectedPlan)!;
+  const plan = (PLANS.find((p) => p.id === selectedPlan) || PLANS[0])!;
 
   // Polling logic
   useEffect(() => {
@@ -229,9 +252,14 @@ export function PaymentClient({
                   )}
                 </p>
               )}
-              {!isPremium && (
+              {!isPremium && userType !== "seeker" && (
                 <p className="mt-0.5 text-fluid-sm text-neutral-500">
                   5 annonces max, pas de contact WhatsApp direct
+                </p>
+              )}
+              {!isPremium && userType === "seeker" && (
+                <p className="mt-0.5 text-fluid-sm text-neutral-500">
+                  Visibilité standard. Activez VIP pour sortir du lot.
                 </p>
               )}
             </div>
@@ -341,143 +369,163 @@ export function PaymentClient({
           </div>
 
           {/* Payment method */}
-          <div>
-            <h2 className="mb-4 font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">
-              Methode de paiement
-            </h2>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {(
-                [
-                  {
-                    id: "orange" as Method,
-                    label: "Orange Money",
-                    number: "74 14 34 34",
-                    ussd: "#144*1*1#",
-                    color: "from-orange-500 to-orange-600",
-                  },
-                  {
-                    id: "telecel" as Method,
-                    label: "Telecel Money",
-                    number: "76 16 90 90",
-                    ussd: "*555#",
-                    color: "from-red-500 to-red-600",
-                  },
-                ] as const
-              ).map((method) => (
-                <button
-                  key={method.id}
-                  type="button"
-                  onClick={() => setSelectedMethod(method.id)}
-                  className={[
-                    "flex items-center gap-4 rounded-2xl border-2 p-4 text-left transition-all",
-                    selectedMethod === method.id
-                      ? "border-primary-500 bg-primary-50 shadow-sm dark:bg-primary-950/30"
-                      : "border-neutral-200 bg-white hover:border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900",
-                  ].join(" ")}
-                >
-                  {/* Logo placeholder (colored circle) */}
-                  <div
-                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${method.color} font-heading text-xs font-bold text-white`}
-                  >
-                    {method.id === "orange" ? "OM" : "TM"}
-                  </div>
-                  <div>
-                    <p className="font-heading text-fluid-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                      {method.label}
-                    </p>
-                    <p className="text-fluid-xs text-neutral-500 dark:text-neutral-400">
-                      {method.number}
-                    </p>
-                    <p className="text-fluid-xs text-neutral-400 dark:text-neutral-500">
-                      Code USSD : {method.ussd}
-                    </p>
-                  </div>
-                  {selectedMethod === method.id && (
-                    <CheckCircle className="ml-auto h-5 w-5 shrink-0 fill-primary-500 text-white" />
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Phone number + instructions */}
-          <div className="rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
-            <h3 className="mb-4 font-heading text-fluid-base font-semibold text-neutral-900 dark:text-neutral-100">
-              Numero de telephone mobile money
-            </h3>
-            <Input
-              label={`Numero ${selectedMethod === "orange" ? "Orange Money" : "Telecel Money"}`}
-              type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="74 14 34 34"
-              helperText="Le numero sur lequel vous allez effectuer le paiement"
-            />
-
-            {/* Step-by-step instructions */}
-            <div className="mt-5 space-y-3">
-              <p className="text-fluid-sm font-medium text-neutral-700 dark:text-neutral-300">
-                Instructions de paiement
+          {plan.amount === 0 ? (
+            <div className="rounded-2xl border border-neutral-200 bg-white p-8 text-center dark:border-neutral-700 dark:bg-neutral-900 mt-6 shadow-sm">
+              <h3 className="mb-3 font-heading text-fluid-lg font-bold text-neutral-900 dark:text-neutral-100">
+                Vous avez sélectionné le plan Gratuit
+              </h3>
+              <p className="mb-8 text-fluid-sm text-neutral-500 leading-relaxed max-w-lg mx-auto">
+                Votre compte est déjà actif avec cette formule de base. Profitez de KWATIGUIGUI Standard, ou passez au pack VIP pour plus de visibilité.
               </p>
-              <ol className="space-y-2">
-                {(selectedMethod === "orange"
-                  ? [
-                      "Composez #144# sur votre telephone Orange",
-                      "Selectionnez \"Transfert d'argent\" puis \"Payer un service\"",
-                      `Entrez le montant : ${formatPrice(plan.amount)}`,
-                      "Confirmez avec votre code secret Orange Money",
-                      "Notez la reference de transaction",
-                    ]
-                  : [
-                      "Composez *555# sur votre telephone Telecel",
-                      "Selectionnez \"Paiements\" puis \"Payer un service\"",
-                      `Entrez le montant : ${formatPrice(plan.amount)}`,
-                      "Confirmez avec votre PIN Telecel Money",
-                      "Notez la reference de transaction",
-                    ]
-                ).map((step, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-100 text-xs font-bold text-primary-600 dark:bg-primary-900 dark:text-primary-400">
-                      {i + 1}
-                    </span>
-                    <span className="text-fluid-sm text-neutral-600 dark:text-neutral-400">
-                      {step}
-                    </span>
-                  </li>
-                ))}
-              </ol>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => window.location.href = "/dashboard"}
+              >
+                Retourner au tableau de bord
+              </Button>
             </div>
-
-            {/* Error */}
-            {error && (
-              <div className="mt-4 flex items-start gap-2 rounded-xl border border-error-200 bg-error-50 p-3 text-error-800 dark:border-error-800 dark:bg-error-950/30 dark:text-error-300">
-                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-                <span className="text-fluid-sm">{error}</span>
+          ) : (
+            <>
+              <div className="mt-8">
+                <h2 className="mb-4 font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">
+                  Methode de paiement
+                </h2>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {(
+                    [
+                      {
+                        id: "orange" as Method,
+                        label: "Orange Money",
+                        number: "74 14 34 34",
+                        ussd: "#144*1*1#",
+                        color: "from-orange-500 to-orange-600",
+                      },
+                      {
+                        id: "telecel" as Method,
+                        label: "Telecel Money",
+                        number: "76 16 90 90",
+                        ussd: "*555#",
+                        color: "from-red-500 to-red-600",
+                      },
+                    ] as const
+                  ).map((method) => (
+                    <button
+                      key={method.id}
+                      type="button"
+                      onClick={() => setSelectedMethod(method.id)}
+                      className={[
+                        "flex items-center gap-4 rounded-2xl border-2 p-4 text-left transition-all",
+                        selectedMethod === method.id
+                          ? "border-primary-500 bg-primary-50 shadow-sm dark:bg-primary-950/30"
+                          : "border-neutral-200 bg-white hover:border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900",
+                      ].join(" ")}
+                    >
+                      {/* Logo placeholder (colored circle) */}
+                      <div
+                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${method.color} font-heading text-xs font-bold text-white`}
+                      >
+                        {method.id === "orange" ? "OM" : "TM"}
+                      </div>
+                      <div>
+                        <p className="font-heading text-fluid-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                          {method.label}
+                        </p>
+                        <p className="text-fluid-xs text-neutral-500 dark:text-neutral-400">
+                          {method.number}
+                        </p>
+                        <p className="text-fluid-xs text-neutral-400 dark:text-neutral-500">
+                          Code USSD : {method.ussd}
+                        </p>
+                      </div>
+                      {selectedMethod === method.id && (
+                        <CheckCircle className="ml-auto h-5 w-5 shrink-0 fill-primary-500 text-white" />
+                      )}
+                    </button>
+                  ))}
+                </div>
               </div>
-            )}
 
-            {/* Submit */}
-            <Button
-              variant="accent"
-              size="lg"
-              className="mt-6 w-full"
-              onClick={handleInitiatePayment}
-              loading={isSubmitting || pollingStatus === "pending"}
-              disabled={!phone || isSubmitting || pollingStatus === "pending"}
-            >
-              {pollingStatus === "pending" ? (
-                <>
-                  <Clock className="h-4 w-4" />
-                  Verification en cours...
-                </>
-              ) : (
-                <>
-                  <Phone className="h-4 w-4" />
-                  Payer {formatPrice(plan.amount)}
-                </>
-              )}
-            </Button>
-          </div>
+              {/* Phone number + instructions */}
+              <div className="mt-8 rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
+                <h3 className="mb-4 font-heading text-fluid-base font-semibold text-neutral-900 dark:text-neutral-100">
+                  Numero de telephone mobile money
+                </h3>
+                <Input
+                  label={`Numero ${selectedMethod === "orange" ? "Orange Money" : "Telecel Money"}`}
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="74 14 34 34"
+                  helperText="Le numero sur lequel vous allez effectuer le paiement"
+                />
+
+                {/* Step-by-step instructions */}
+                <div className="mt-5 space-y-3">
+                  <p className="text-fluid-sm font-medium text-neutral-700 dark:text-neutral-300">
+                    Instructions de paiement
+                  </p>
+                  <ol className="space-y-2">
+                    {(selectedMethod === "orange"
+                      ? [
+                        "Composez #144# sur votre telephone Orange",
+                        "Selectionnez \"Transfert d'argent\" puis \"Payer un service\"",
+                        `Entrez le montant : ${formatPrice(plan.amount)}`,
+                        "Confirmez avec votre code secret Orange Money",
+                        "Notez la reference de transaction",
+                      ]
+                      : [
+                        "Composez *555# sur votre telephone Telecel",
+                        "Selectionnez \"Paiements\" puis \"Payer un service\"",
+                        `Entrez le montant : ${formatPrice(plan.amount)}`,
+                        "Confirmez avec votre PIN Telecel Money",
+                        "Notez la reference de transaction",
+                      ]
+                    ).map((step, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-100 text-xs font-bold text-primary-600 dark:bg-primary-900 dark:text-primary-400">
+                          {i + 1}
+                        </span>
+                        <span className="text-fluid-sm text-neutral-600 dark:text-neutral-400">
+                          {step}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                {/* Error */}
+                {error && (
+                  <div className="mt-4 flex items-start gap-2 rounded-xl border border-error-200 bg-error-50 p-3 text-error-800 dark:border-error-800 dark:bg-error-950/30 dark:text-error-300">
+                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span className="text-fluid-sm">{error}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Submit */}
+              <Button
+                variant="accent"
+                size="lg"
+                className="mt-6 w-full"
+                onClick={handleInitiatePayment}
+                loading={isSubmitting || pollingStatus === "pending"}
+                disabled={!phone || isSubmitting || pollingStatus === "pending"}
+              >
+                {pollingStatus === "pending" ? (
+                  <>
+                    <Clock className="h-4 w-4" />
+                    Verification en cours...
+                  </>
+                ) : (
+                  <>
+                    <Phone className="h-4 w-4" />
+                    Payer {formatPrice(plan.amount)}
+                  </>
+                )}
+              </Button>
+            </>
+          )}
         </>
       )}
 

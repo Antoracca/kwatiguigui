@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { RCA_REGIONS, JOB_TYPES } from "@/lib/constants";
+import { JOB_TYPES } from "@/lib/constants";
 
 // ---------------------------------------------------------------------------
 // Active filter pills
@@ -32,7 +32,6 @@ export function JobFilters() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const currentRegion = searchParams.get("region") ?? "";
   const currentJobType = searchParams.get("job_type") ?? "";
   const currentUserType = searchParams.get("user_type") ?? "";
   const currentSort = searchParams.get("sort") ?? "recent";
@@ -53,7 +52,6 @@ export function JobFilters() {
   }
 
   const activeFilters: ActiveFilter[] = [
-    ...(currentRegion ? [{ key: "region", label: "Region", value: currentRegion }] : []),
     ...(currentJobType ? [{ key: "job_type", label: "Metier", value: currentJobType }] : []),
     ...(currentUserType
       ? [
@@ -116,29 +114,6 @@ export function JobFilters() {
             </button>
           ))}
         </div>
-      </div>
-
-      {/* Region */}
-      <div className="space-y-2">
-        <p className="text-body-xs font-medium uppercase tracking-wider text-neutral-400">
-          Region
-        </p>
-        <Select
-          value={currentRegion}
-          onValueChange={(val) => updateParam("region", val === "all" ? "" : val)}
-        >
-          <SelectTrigger className="h-9 text-body-sm">
-            <SelectValue placeholder="Toutes les regions" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Toutes les regions</SelectItem>
-            {RCA_REGIONS.map((region) => (
-              <SelectItem key={region} value={region}>
-                {region}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
       </div>
 
       {/* Type d'emploi */}

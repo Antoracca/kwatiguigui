@@ -20,6 +20,7 @@ import {
   toggleMessageStar,
   deleteMessage,
 } from "@/lib/actions/messages";
+import type { ActionResult } from "@/lib/auth/actions";
 import { formatRelativeDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -57,7 +58,7 @@ interface MessagesClientProps {
   starredMessages: Message[];
 }
 
-const initialSendState = { success: false };
+const initialSendState: ActionResult = { success: false };
 
 export function MessagesClient({
   userId,
@@ -165,8 +166,8 @@ export function MessagesClient({
             {(
               [
                 { id: "inbox" as Tab, label: "Recus", icon: Inbox, count: unreadCount },
-                { id: "sent" as Tab, label: "Envoyes", icon: Send },
-                { id: "starred" as Tab, label: "Favoris", icon: Star },
+                { id: "sent" as Tab, label: "Envoyes", icon: Send, count: undefined as number | undefined },
+                { id: "starred" as Tab, label: "Favoris", icon: Star, count: undefined as number | undefined },
               ] as const
             ).map(({ id, label, icon: Icon, count }) => (
               <button

@@ -13,7 +13,6 @@ function makeJob(overrides: Partial<JobCardData> = {}): JobCardData {
     firstName: "Marie",
     age: 28,
     whatsapp: "+236 74 14 34 34",
-    region: "Bangui",
     city: "Bangui",
     neighborhood: "Boy-Abe",
     jobType: "Aide menagere",

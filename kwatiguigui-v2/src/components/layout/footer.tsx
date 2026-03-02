@@ -1,4 +1,7 @@
+"use client";
+
 import {
+  ArrowUp,
   Briefcase,
   Heart,
   HelpCircle,
@@ -7,8 +10,16 @@ import {
   MessageCircle,
   Phone,
   Shield,
+  FileText,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+  Mail,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const FOOTER_LINKS = {
   plateforme: [
@@ -18,71 +29,110 @@ const FOOTER_LINKS = {
   ],
   entreprise: [
     { href: "/about", label: "A propos", icon: null },
-    { href: "/terms", label: "Conditions d'utilisation", icon: Shield },
+    { href: "/legal", label: "Mentions Légales", icon: FileText },
+    { href: "/privacy", label: "Politique de Confidentialité", icon: Shield },
+    { href: "/terms", label: "CGV & CGU", icon: FileText },
     { href: "/help", label: "Centre d'aide", icon: HelpCircle },
   ],
   contact: [
     {
-      href: "https://wa.me/23674143434",
-      label: "+236 74 14 34 34",
-      icon: MessageCircle,
-      external: true,
-    },
-    {
       href: "tel:+23674143434",
-      label: "Orange Money: 74 14 34 34",
+      label: "+236 74 14 34 34",
       icon: Phone,
       external: true,
     },
     {
-      href: "tel:+23676169090",
-      label: "Telecel Money: 76 16 90 90",
-      icon: Phone,
-      external: true,
+      href: "mailto:support@kwatiguigui.org",
+      label: "support@kwatiguigui.org",
+      icon: Mail,
+      external: false,
+    },
+    {
+      href: "mailto:info@kwatiguigui.org",
+      label: "info@kwatiguigui.org",
+      icon: Mail,
+      external: false,
+    },
+    {
+      href: "mailto:team@kwatiguigui.org",
+      label: "team@kwatiguigui.org",
+      icon: Mail,
+      external: false,
     },
   ],
 } as const;
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const [showTopBtn, setShowTopBtn] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 400) {
+        setShowTopBtn(true);
+      } else {
+        setShowTopBtn(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const goToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   return (
-    <footer className="border-t border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-950">
+    <footer className="border-t border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-950 relative">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Brand */}
-          <div className="space-y-4">
-            <Link
-              href="/"
-              className="flex items-center gap-2 font-heading text-heading-sm font-bold text-primary-500"
-            >
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-500 text-white">
-                <span className="text-body-sm font-bold">K</span>
+        <div className="grid grid-cols-1 gap-12 lg:gap-16 sm:grid-cols-2 lg:grid-cols-5">
+          {/* Brand & Mission (Takes 2 columns on large screens) */}
+          <div className="lg:col-span-2 space-y-6">
+            <Link href="/" className="inline-block transition-transform hover:opacity-90 active:scale-95">
+              <div className="relative h-12 w-48 sm:h-14 sm:w-56">
+                {/* Mode clair */}
+                <Image
+                  src="/images/logoprincipal.png"
+                  alt="Kwatiguigui"
+                  fill
+                  className="object-contain object-left block dark:hidden"
+                  priority
+                />
+                {/* Mode sombre */}
+                <Image
+                  src="/images/logosecondaire.png"
+                  alt="Kwatiguigui"
+                  fill
+                  className="object-contain object-left hidden dark:block"
+                  priority
+                />
               </div>
-              KWATIGUIGUI
             </Link>
-            <p className="text-body-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
-              La premiere plateforme d'emploi de la Republique Centrafricaine.
-              Connectons employeurs et chercheurs d'emploi dans les 20 regions
-              du pays.
+            <p className="text-body-sm leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-sm">
+              La première plateforme d'emploi de la République Centrafricaine. Connectons les talents exceptionnels et les entreprises ambitieuses dans les 20 régions du pays.
             </p>
-            <div className="flex items-center gap-1 text-body-xs text-neutral-400">
-              <MapPin size={14} />
-              Bangui, Republique Centrafricaine
+            <div className="flex items-center gap-2 text-body-sm font-medium text-neutral-600 dark:text-neutral-300">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-50 dark:bg-primary-900/30">
+                <MapPin size={16} className="text-primary-600 dark:text-primary-400" />
+              </div>
+              Bangui, République Centrafricaine
             </div>
           </div>
 
           {/* Plateforme */}
           <div>
-            <h3 className="mb-4 font-heading text-body-sm font-semibold uppercase tracking-wider text-neutral-900 dark:text-neutral-100">
+            <h3 className="mb-6 font-heading text-body-sm font-bold uppercase tracking-widest text-neutral-900 dark:text-neutral-100">
               Plateforme
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-4 flex flex-col items-start">
               {FOOTER_LINKS.plateforme.map((link) => (
-                <li key={link.href}>
+                <li key={link.href} className="w-full">
                   <Link
                     href={link.href}
-                    className="text-body-sm text-neutral-500 transition-colors hover:text-primary-500 dark:text-neutral-400 dark:hover:text-primary-400"
+                    className="inline-block text-body-sm font-medium text-neutral-500 transition-all hover:translate-x-1 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400"
                   >
                     {link.label}
                   </Link>
@@ -93,15 +143,15 @@ export function Footer() {
 
           {/* Entreprise */}
           <div>
-            <h3 className="mb-4 font-heading text-body-sm font-semibold uppercase tracking-wider text-neutral-900 dark:text-neutral-100">
-              Informations
+            <h3 className="mb-6 font-heading text-body-sm font-bold uppercase tracking-widest text-neutral-900 dark:text-neutral-100">
+              Informations & Légal
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-4 flex flex-col items-start">
               {FOOTER_LINKS.entreprise.map((link) => (
-                <li key={link.href}>
+                <li key={link.href} className="w-full">
                   <Link
                     href={link.href}
-                    className="text-body-sm text-neutral-500 transition-colors hover:text-primary-500 dark:text-neutral-400 dark:hover:text-primary-400"
+                    className="inline-block text-body-sm font-medium text-neutral-500 transition-all hover:translate-x-1 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400"
                   >
                     {link.label}
                   </Link>
@@ -110,40 +160,71 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Contact & Social */}
           <div>
-            <h3 className="mb-4 font-heading text-body-sm font-semibold uppercase tracking-wider text-neutral-900 dark:text-neutral-100">
+            <h3 className="mb-6 font-heading text-body-sm font-bold uppercase tracking-widest text-neutral-900 dark:text-neutral-100">
               Contact
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-4 flex flex-col items-start">
               {FOOTER_LINKS.contact.map((link) => (
-                <li key={link.label}>
+                <li key={link.label} className="w-full">
                   <a
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-body-sm text-neutral-500 transition-colors hover:text-primary-500 dark:text-neutral-400 dark:hover:text-primary-400"
+                    className="group inline-flex items-center gap-3 text-body-sm text-neutral-500 transition-all hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 break-words"
                   >
-                    {link.icon && <link.icon size={16} />}
-                    {link.label}
+                    {link.icon && (
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-100 group-hover:bg-primary-50 group-hover:text-primary-600 dark:bg-neutral-800/50 dark:group-hover:bg-primary-900/30 dark:group-hover:text-primary-400 transition-colors">
+                        <link.icon size={14} className="shrink-0" />
+                      </div>
+                    )}
+                    <span className="font-medium">{link.label}</span>
                   </a>
                 </li>
               ))}
             </ul>
+
+            <h3 className="mt-8 mb-4 font-heading text-body-sm font-bold uppercase tracking-widest text-neutral-900 dark:text-neutral-100">
+              Suivez-nous
+            </h3>
+            <div className="flex items-center gap-3">
+              {[Facebook, Twitter, Linkedin, Instagram].map((Icon, i) => (
+                <a
+                  key={i}
+                  href="#"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 transition-all hover:-translate-y-1 hover:bg-primary-600 hover:text-white hover:shadow-lg hover:shadow-primary-600/30 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-primary-500"
+                >
+                  <Icon size={18} />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Bottom */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-neutral-200 pt-8 dark:border-neutral-800 sm:flex-row">
-          <p className="text-body-xs text-neutral-400">
-            &copy; {currentYear} KWATIGUIGUI. Tous droits reserves.
+        <div className="mt-16 flex flex-col items-center justify-between gap-6 border-t border-neutral-200/60 pt-8 dark:border-neutral-800/60 sm:flex-row text-center sm:text-left">
+          <p className="text-body-sm font-medium text-neutral-500 dark:text-neutral-400 flex-1">
+            &copy; {currentYear} KWATIGUIGUI. Tous droits réservés.
           </p>
-          <p className="flex items-center gap-1 text-body-xs text-neutral-400">
-            Fait avec <Heart size={12} className="text-error-500" /> en
-            Republique Centrafricaine
-          </p>
+          <div className="flex items-center gap-4 flex-wrap justify-center">
+            <p className="flex items-center gap-1.5 text-body-sm font-medium text-neutral-500 dark:text-neutral-400">
+              Propulsé par <span className="text-primary-600 dark:text-primary-500 font-bold">G.I.R.A Engineering et Consulting</span>
+            </p>
+          </div>
         </div>
       </div>
+
+      {/* Back to Top Button */}
+      {showTopBtn && (
+        <button
+          onClick={goToTop}
+          aria-label="Retour en haut"
+          className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-primary-600 text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-primary-700 hover:shadow-primary-600/30"
+        >
+          <ArrowUp size={24} />
+        </button>
+      )}
     </footer>
   );
 }

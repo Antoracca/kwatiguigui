@@ -5,6 +5,8 @@ import {
   Calendar,
   Clock,
   Copy,
+  Download,
+  FileText,
   MapPin,
   MessageCircle,
   Share2,
@@ -24,7 +26,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { formatDate, formatRelativeDate } from "@/lib/utils";
+import type { Database } from "@/types/database";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -48,10 +52,21 @@ async function getJob(id: string) {
     .single();
 
   if (error || !data) return null;
-  return data;
+  return data as Database["public"]["Tables"]["jobs"]["Row"];
 }
 
-async function getSimilarJobs(jobType: string, region: string, excludeId: string) {
+async function getCvInfo(userId: string) {
+  const { data } = await supabaseAdmin
+    .from("profiles")
+    .select("cv_public, cv_path, cv_filename")
+    .eq("id", userId)
+    .single();
+
+  if (!data?.cv_public || !data.cv_path) return null;
+  return { cv_filename: data.cv_filename ?? "cv.pdf", isPdf: data.cv_path.endsWith(".pdf") };
+}
+
+async function getSimilarJobs(jobType: string, excludeId: string) {
   const supabase = await createClient();
 
   const { data } = await supabase
@@ -64,12 +79,13 @@ async function getSimilarJobs(jobType: string, region: string, excludeId: string
     .order("created_at", { ascending: false })
     .limit(3);
 
-  return (data ?? []).map((row) => ({
+  const jobs = data as Database["public"]["Tables"]["jobs"]["Row"][] | null;
+
+  return (jobs ?? []).map((row) => ({
     id: row.id,
     firstName: row.first_name,
     age: row.age,
     whatsapp: null as null,
-    region: row.region,
     city: row.city,
     neighborhood: row.neighborhood ?? null,
     jobType: row.job_type,
@@ -97,7 +113,7 @@ export async function generateMetadata({
     };
   }
 
-  const title = `${job.job_type} — ${job.user_type === "seeker" ? "Chercheur" : "Employeur"}, ${job.city} (${job.region})`;
+  const title = `${job.job_type} — ${job.user_type === "seeker" ? "Chercheur" : "Employeur"}, ${job.city}`;
   const description =
     job.experience
       ? `${title}. ${job.experience.slice(0, 150)}`
@@ -123,7 +139,7 @@ function JobPostingJsonLd({ job }: { job: NonNullable<Awaited<ReturnType<typeof 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "JobPosting",
-    title: `${job.job_type} — ${job.city}, ${job.region}`,
+    title: `${job.job_type} — ${job.city}`,
     description:
       job.experience ?? `Offre d'emploi : ${job.job_type} a ${job.city}.`,
     datePosted: job.created_at,
@@ -139,7 +155,6 @@ function JobPostingJsonLd({ job }: { job: NonNullable<Awaited<ReturnType<typeof 
       address: {
         "@type": "PostalAddress",
         addressLocality: job.city,
-        addressRegion: job.region,
         addressCountry: "CF",
       },
     },
@@ -185,7 +200,11 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
   if (!job) notFound();
 
-  const similarJobs = await getSimilarJobs(job.job_type, job.region, id);
+  const [similarJobs, cvInfo] = await Promise.all([
+    getSimilarJobs(job.job_type, id),
+    // Only seekers can share their CV; employers post job offers
+    job.user_type === "seeker" ? getCvInfo(job.user_id) : Promise.resolve(null),
+  ]);
 
   const daysLeft = Math.ceil(
     (new Date(job.expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
@@ -257,7 +276,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                       <span className="flex items-center gap-1.5">
                         <MapPin size={15} className="text-neutral-400" />
                         {job.city}
-                        {job.neighborhood ? `, ${job.neighborhood}` : ""} — {job.region}
+                        {job.neighborhood ? `, ${job.neighborhood}` : ""}
                       </span>
                       <span className="flex items-center gap-1.5">
                         <Calendar size={15} className="text-neutral-400" />
@@ -310,7 +329,6 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                   {[
                     { label: "Metier", value: job.job_type },
                     { label: "Type de profil", value: job.user_type === "seeker" ? "Chercheur d'emploi" : "Employeur" },
-                    { label: "Region", value: job.region },
                     { label: "Ville", value: job.city },
                     ...(job.neighborhood ? [{ label: "Quartier", value: job.neighborhood }] : []),
                     { label: "Age", value: `${job.age} ans` },
@@ -331,6 +349,51 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
           {/* ---- Sidebar ---- */}
           <div className="space-y-4">
+
+            {/* CV card — visible uniquement si cv_public = true */}
+            {cvInfo && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>CV du candidat</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2.5 dark:border-neutral-700 dark:bg-neutral-900/50">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary-50 text-secondary-600 dark:bg-secondary-950/30 dark:text-secondary-400">
+                      <FileText size={16} />
+                    </div>
+                    <p className="truncate text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                      {cvInfo.cv_filename}
+                    </p>
+                  </div>
+
+                  {/* Lire en ligne */}
+                  <a
+                    href={`/api/cv/public/${job.user_id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-secondary-200 bg-secondary-50 px-4 py-2.5 text-sm font-semibold text-secondary-700 transition hover:bg-secondary-100 dark:border-secondary-800/40 dark:bg-secondary-950/20 dark:text-secondary-400 dark:hover:bg-secondary-950/40"
+                  >
+                    <FileText size={15} />
+                    Lire le CV
+                  </a>
+
+                  {/* Télécharger */}
+                  <a
+                    href={`/api/cv/public/${job.user_id}`}
+                    download={cvInfo.cv_filename}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm font-medium text-neutral-700 transition hover:border-primary-300 hover:text-primary-600 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
+                  >
+                    <Download size={15} />
+                    Télécharger
+                  </a>
+
+                  <p className="text-center text-[10px] text-neutral-400">
+                    Le candidat a autorisé le partage de son CV
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Contact card */}
             <Card featured>
               <CardHeader>

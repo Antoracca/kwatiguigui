@@ -63,23 +63,51 @@ export type JobType = (typeof JOB_TYPES)[number];
 // Sectors
 // ---------------------------------------------------------------------------
 export const SECTORS = [
-  "Agriculture & Elevage",
-  "Commerce & Vente",
-  "Batiment & Travaux Publics",
-  "Sante & Medecine",
-  "Education & Formation",
-  "Informatique & Technologie",
-  "Transport & Logistique",
-  "Hotellerie & Restauration",
-  "Artisanat & Metiers",
   "Administration & Bureau",
-  "Securite & Gardiennage",
-  "Menage & Entretien",
-  "Services a la personne",
-  "Autre",
+  "Agriculture, Pêche & Élevage",
+  "Artisanat & Métiers",
+  "Banque, Assurance & Finance",
+  "Bâtiment & Travaux Publics (BTP)",
+  "Commerce, Vente & Distribution",
+  "Communication, Médias & Marketing",
+  "Culture, Art & Divertissement",
+  "Droit & Juridique",
+  "Éducation, Formation & Enseignement",
+  "Énergie & Environnement",
+  "Hôtellerie, Restauration & Tourisme",
+  "Immobilier",
+  "Industrie, Ingénierie & Production",
+  "Informatique, Tech & Télécoms",
+  "Logistique, Transport & Achat",
+  "Mécanique & Maintenance",
+  "Ménage, Entretien & Services domestiques",
+  "Santé, Médecine & Pharmacie",
+  "Sécurité & Gardiennage",
+  "Services à la personne",
+  "Autre secteur",
 ] as const;
 
 export type Sector = (typeof SECTORS)[number];
+
+// ---------------------------------------------------------------------------
+// Experience levels
+// ---------------------------------------------------------------------------
+export const EXPERIENCE_LEVELS = [
+  { value: "none", label: "Aucune expérience" },
+  { value: "1+", label: "1 an +" },
+  { value: "3+", label: "3 ans +" },
+  { value: "5+", label: "5 ans +" },
+  { value: "10+", label: "10 ans +" },
+  { value: "15+", label: "15 ans +" },
+  { value: "20+", label: "20 ans +" },
+  { value: "other", label: "Autres / Préciser" },
+] as const;
+
+export const EXPERIENCE_VALUES = EXPERIENCE_LEVELS.map((e) => e.value) as [
+  "none", "1+", "3+", "5+", "10+", "15+", "20+", "other"
+];
+
+export type ExperienceLevel = (typeof EXPERIENCE_LEVELS)[number]["value"];
 
 // ---------------------------------------------------------------------------
 // User types
@@ -132,6 +160,7 @@ export const PRICING = {
   PREMIUM_MONTHLY: 2_500,
   PREMIUM_BIANNUAL: 12_500,
   PREMIUM_ANNUAL: 25_000,
+  SEEKER_PRO_MONTHLY: 5_000,
   CURRENCY: "FCFA",
   CURRENCY_ISO: "XAF",
   JOB_EXPIRY_DAYS: 30,
@@ -167,6 +196,37 @@ export const PRICING_PLANS = [
       "Badge Premium sur le profil",
     ],
     cta: "Passer a Premium",
+  },
+] as const;
+
+export const SEEKER_PRICING_PLANS = [
+  {
+    name: "Gratuit (Standard)",
+    price: 0,
+    period: null,
+    description: "Le strict minimum pour postuler.",
+    featured: false,
+    features: [
+      "Creer un CV basique",
+      "Postuler aux annonces (limite)",
+      "Acces aux conseils carriere",
+    ],
+    cta: "Commencer gratuitement",
+  },
+  {
+    name: "Pack VIP / Pro",
+    price: 5_000,
+    period: "mois",
+    description: "10x plus de visibilite aupres des recruteurs.",
+    featured: true,
+    features: [
+      "Essai de 3 mois Gratuits",
+      "Profil booste & Traitement rapide",
+      "Generateur de CV Premium",
+      "Missions Stages & Alternances en priorite",
+      "Contact WhatsApp direct avec l'employeur",
+    ],
+    cta: "Debuter mon essai de 3 mois",
   },
 ] as const;
 

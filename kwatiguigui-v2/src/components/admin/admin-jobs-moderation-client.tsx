@@ -15,7 +15,6 @@ import { PaginationWithLinks } from "@/components/ui/pagination";
 interface AdminJob {
   id: string;
   job_type: string | null;
-  region: string | null;
   city: string | null;
   user_type: string | null;
   publication_status: string | null;
@@ -106,7 +105,7 @@ export function AdminJobsModerationClient({
             ].join(" ")}
           >
             {tab.label}
-            {tab.hasBadge && pendingCount > 0 && (
+            {"hasBadge" in tab && tab.hasBadge && pendingCount > 0 && (
               <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-error-500 px-1.5 text-[10px] font-bold text-white">
                 {pendingCount}
               </span>
@@ -159,7 +158,7 @@ export function AdminJobsModerationClient({
                         </p>
                         <div className="mt-0.5 flex items-center gap-1.5 text-xs text-neutral-400">
                           <MapPin className="h-3 w-3" />
-                          {job.city}, {job.region}
+                          {job.city}
                           <span className="ml-1 rounded bg-neutral-100 px-1.5 py-0.5 text-[10px] dark:bg-neutral-800">
                             {job.user_type === "seeker" ? "Chercheur" : "Employeur"}
                           </span>

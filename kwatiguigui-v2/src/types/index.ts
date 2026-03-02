@@ -18,7 +18,6 @@ export interface Profile {
   age: number;
   whatsapp: string;
   phone: string | null;
-  region: string;
   city: string;
   neighborhood: string;
   jobType: string;
@@ -40,7 +39,6 @@ export interface Job {
   firstName: string;
   age: number;
   whatsapp: string | null; // null for non-premium viewers
-  region: string;
   city: string;
   neighborhood: string;
   jobType: string;
@@ -188,7 +186,6 @@ export interface PaginatedResponse<T> {
 // ---------------------------------------------------------------------------
 export interface JobSearchParams {
   query?: string;
-  region?: string;
   jobType?: string;
   userType?: UserType;
   page?: number;

@@ -4,7 +4,8 @@ import { useActionState, useEffect, useRef } from "react";
 import { X, Plus, AlertCircle, CheckCircle } from "lucide-react";
 
 import { createJob } from "@/lib/actions/jobs";
-import { RCA_REGIONS, JOB_TYPES } from "@/lib/constants";
+import type { ActionResult } from "@/lib/auth/actions";
+import { JOB_TYPES } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -21,7 +22,7 @@ interface JobFormModalProps {
   onClose: () => void;
 }
 
-const initialState = { success: false };
+const initialState: ActionResult = { success: false };
 
 export function JobFormModal({ open, onClose }: JobFormModalProps) {
   const [state, action, isPending] = useActionState(createJob, initialState);
@@ -122,22 +123,6 @@ export function JobFormModal({ open, onClose }: JobFormModalProps) {
                 {JOB_TYPES.map((type) => (
                   <SelectItem key={type} value={type}>
                     {type}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select name="region">
-              <SelectTrigger
-                label="Region"
-                error={state.fieldErrors?.region?.[0]}
-              >
-                <SelectValue placeholder="Selectionner une region" />
-              </SelectTrigger>
-              <SelectContent>
-                {RCA_REGIONS.map((region) => (
-                  <SelectItem key={region} value={region}>
-                    {region}
                   </SelectItem>
                 ))}
               </SelectContent>

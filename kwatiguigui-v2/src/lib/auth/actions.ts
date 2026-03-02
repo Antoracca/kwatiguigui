@@ -15,17 +15,7 @@ import {
 // Helpers
 // ---------------------------------------------------------------------------
 
-/**
- * Converts a WhatsApp number to a Supabase Auth-compatible email.
- * Supabase Auth requires an email address for its internal auth system.
- *
- * Format: strip all non-digits from the WhatsApp number, append @kwatiguigui.cf
- * Example: "+236 74 14 34 34" → "23674143434@kwatiguigui.cf"
- */
-function whatsappToEmail(whatsapp: string): string {
-  const digits = whatsapp.replace(/\D/g, "");
-  return `${digits}@kwatiguigui.cf`;
-}
+
 
 // ---------------------------------------------------------------------------
 // Action result type
@@ -44,7 +34,7 @@ export async function signIn(
   formData: FormData,
 ): Promise<ActionResult> {
   const raw = {
-    whatsapp: formData.get("whatsapp"),
+    email: formData.get("email"),
     password: formData.get("password"),
   };
 
@@ -57,10 +47,9 @@ export async function signIn(
   }
 
   const supabase = await createClient();
-  const email = whatsappToEmail(parsed.data.whatsapp);
 
   const { error } = await supabase.auth.signInWithPassword({
-    email,
+    email: parsed.data.email,
     password: parsed.data.password,
   });
 
@@ -68,7 +57,7 @@ export async function signIn(
     // Normalize Supabase Auth error messages for French UI
     const message =
       error.message === "Invalid login credentials"
-        ? "Numero WhatsApp ou mot de passe incorrect."
+        ? "Email ou mot de passe incorrect."
         : error.message === "Email not confirmed"
           ? "Votre compte n'a pas encore ete confirme."
           : "Une erreur est survenue. Veuillez reessayer.";
@@ -77,7 +66,7 @@ export async function signIn(
   }
 
   revalidatePath("/dashboard", "layout");
-  redirect("/dashboard");
+  return { success: true };
 }
 
 // ---------------------------------------------------------------------------
@@ -87,40 +76,75 @@ export async function signUp(
   _prevState: ActionResult,
   formData: FormData,
 ): Promise<ActionResult> {
+
+  // ── STEP 0: Log raw FormData ─────────────────────────────────────────────
+  const rawEntries: Record<string, string> = {};
+  for (const [key, value] of formData.entries()) {
+    if (key !== "password" && key !== "confirmPassword") {
+      rawEntries[key] = String(value);
+    } else {
+      rawEntries[key] = "[hidden]";
+    }
+  }
+  console.log("━━━━━━━━━━━━━━━ [signUp] RAW FORMDATA ━━━━━━━━━━━━━━━");
+  console.log(JSON.stringify(rawEntries, null, 2));
+
+  // ── STEP 1: Build raw object ─────────────────────────────────────────────
+  const phoneRaw = (formData.get("phone") as string | null) || "";
+  const phoneDigits = phoneRaw.replace(/\D/g, "");
+  const phone = phoneDigits.length >= 7 ? phoneRaw : undefined;
+
+  const companyName = (formData.get("companyName") as string | null)?.trim();
+  let neighborhood = (formData.get("neighborhood") as string | null)?.trim() || undefined;
+
+  if (companyName) {
+    neighborhood = neighborhood ? `${neighborhood} (${companyName})` : companyName;
+  }
+
   const raw = {
     userType: formData.get("userType"),
     firstName: formData.get("firstName"),
-    age: formData.get("age") ? Number(formData.get("age")) : undefined,
-    whatsapp: formData.get("whatsapp"),
-    phone: formData.get("phone") || undefined,
-    region: formData.get("region"),
+    lastName: formData.get("lastName") || undefined,
+    username: formData.get("username"),
+    dateOfBirth: formData.get("dateOfBirth") || undefined,
+    email: formData.get("email"),
+    phone,
     city: formData.get("city"),
-    neighborhood: formData.get("neighborhood") || undefined,
-    jobType: formData.get("jobType"),
+    neighborhood,
+    companyName,
+    jobType: formData.get("jobType") || undefined,
     experience: formData.get("experience") || undefined,
     password: formData.get("password"),
     confirmPassword: formData.get("confirmPassword"),
   };
 
+  console.log("━━━━━━━━━━━━━━━ [signUp] PARSED RAW ━━━━━━━━━━━━━━━");
+  console.log({ ...raw, password: "[hidden]", confirmPassword: "[hidden]" });
+
+  // ── STEP 2: Zod validation ───────────────────────────────────────────────
   const parsed = registerSchema.safeParse(raw);
   if (!parsed.success) {
+    const errors = parsed.error.flatten().fieldErrors;
+    console.error("━━━━━━━━━━━━━━━ [signUp] ZOD ERRORS ━━━━━━━━━━━━━━━");
+    console.error(JSON.stringify(errors, null, 2));
     return {
       success: false,
-      fieldErrors: parsed.error.flatten().fieldErrors,
+      fieldErrors: errors,
+      error: "❌ Validation échouée : " + Object.entries(errors).map(([k, v]) => `${k}: ${v?.[0]}`).join(" | "),
     };
   }
 
-  const supabase = await createClient();
-  const email = whatsappToEmail(parsed.data.whatsapp);
+  console.log("✅ [signUp] Zod validation passed");
+  console.log({ ...parsed.data, password: "[hidden]" });
 
-  // Step 1: Create the Supabase Auth user.
-  // The user's profile row is created in step 2 after successful auth creation.
+  const supabase = await createClient();
+
+  // ── STEP 3: Supabase Auth signup ─────────────────────────────────────────
+  console.log("━━━━━━━━━━━ [signUp] Calling supabase.auth.signUp... ━━━━━━━━━━━");
   const { data: authData, error: authError } = await supabase.auth.signUp({
-    email,
+    email: parsed.data.email,
     password: parsed.data.password,
     options: {
-      // Store minimal data in auth.users metadata (not sensitive data).
-      // The full profile lives in the public.profiles table.
       data: {
         user_type: parsed.data.userType,
         first_name: parsed.data.firstName,
@@ -129,54 +153,76 @@ export async function signUp(
   });
 
   if (authError) {
-    const message =
-      authError.message.includes("already registered") ||
-      authError.message.includes("User already registered")
-        ? "Ce numero WhatsApp est deja utilise. Voulez-vous vous connecter ?"
-        : "Erreur lors de la creation du compte. Veuillez reessayer.";
-
+    console.error("❌ [signUp] Auth error:", authError.message, authError.status, authError.code);
+    let message: string;
+    if (authError.status === 429 || authError.message.toLowerCase().includes("rate limit") || authError.message.toLowerCase().includes("over_email_send_rate_limit")) {
+      message = "Trop de tentatives d'inscription. Veuillez patienter quelques minutes avant de réessayer, ou utilisez une adresse e-mail différente.";
+    } else if (authError.message.includes("already registered") || authError.message.includes("User already registered")) {
+      message = "Cette adresse e-mail est déjà utilisée. Voulez-vous vous connecter ?";
+    } else {
+      message = `Erreur auth: ${authError.message}`;
+    }
     return { success: false, error: message };
   }
 
   if (!authData.user) {
-    return { success: false, error: "Erreur inattendue. Veuillez reessayer." };
+    console.error("❌ [signUp] No user returned from auth.signUp");
+    return { success: false, error: "Erreur inattendue (pas d'utilisateur retourné). Réessayez." };
   }
 
-  // Step 2: Insert the user profile into public.profiles.
-  // This uses the server client which acts as the authenticated user,
-  // so RLS allows the INSERT (policy: auth.uid() = id).
-  const { error: profileError } = await supabase.from("profiles").insert({
+  console.log("✅ [signUp] Auth user created:", authData.user.id);
+
+  // ── STEP 4: Profile insert ───────────────────────────────────────────────
+  // DB constraints (from database.ts Insert type):
+  //   last_name: string         (NOT NULL — use empty string if missing)
+  //   job_type: string          (NOT NULL — required)
+  //   experience: enum | null   (nullable)
+  //   username: string | null   (nullable)
+  const profilePayload = {
     id: authData.user.id,
     first_name: parsed.data.firstName,
-    age: parsed.data.age,
-    whatsapp: parsed.data.whatsapp,
-    phone: parsed.data.phone ?? null,
-    region: parsed.data.region,
+    last_name: parsed.data.lastName || "",
+    username: parsed.data.username || null,
+    date_of_birth: parsed.data.dateOfBirth || null,
+    whatsapp: parsed.data.email,
+    phone: parsed.data.phone || null,
     city: parsed.data.city,
-    neighborhood: parsed.data.neighborhood ?? null,
-    job_type: parsed.data.jobType,
-    experience: parsed.data.experience ?? null,
+    neighborhood: parsed.data.neighborhood || "",
+    job_type: parsed.data.jobType || "",             // DB: string NOT NULL — required
+    experience: parsed.data.userType === "employer" ? "none" : (parsed.data.experience || "none") as "none" | "1+" | "3+" | "5+" | "10+" | "15+" | "20+" | "other",
     user_type: parsed.data.userType,
     is_active: true,
     subscription_paid: false,
-  });
+  };
+
+  console.log("━━━━━━━━━━━ [signUp] Inserting profile... ━━━━━━━━━━━");
+  console.log(JSON.stringify(profilePayload, null, 2));
+
+  const { error: profileError } = await supabase.from("profiles").insert(profilePayload);
 
   if (profileError) {
-    // Profile creation failed — clean up by deleting the auth user via admin.
-    // We import admin here lazily to avoid the module-level guard at import time.
+    console.error("❌ [signUp] Profile insert FAILED:");
+    console.error("  message:", profileError.message);
+    console.error("  details:", profileError.details);
+    console.error("  hint:   ", profileError.hint);
+    console.error("  code:   ", profileError.code);
+
     const { supabaseAdmin } = await import("@/lib/supabase/admin");
     await supabaseAdmin.auth.admin.deleteUser(authData.user.id);
+    console.log("🗑️  [signUp] Auth user rolled back:", authData.user.id);
 
     return {
       success: false,
-      error: "Erreur lors de la creation du profil. Veuillez reessayer.",
+      error: `❌ Erreur DB: ${profileError.message}${profileError.hint ? ` (${profileError.hint})` : ""}`,
     };
   }
+
+  console.log("✅ [signUp] Profile inserted successfully! Redirecting...");
 
   // Supabase Auth may require email confirmation (configured in Supabase dashboard).
   // If email confirmation is disabled, the user is already signed in after signUp.
   revalidatePath("/dashboard", "layout");
-  redirect("/dashboard");
+  return { success: true };
 }
 
 // ---------------------------------------------------------------------------
@@ -202,7 +248,7 @@ export async function forgotPassword(
   _prevState: ActionResult,
   formData: FormData,
 ): Promise<ActionResult> {
-  const raw = { whatsapp: formData.get("whatsapp") };
+  const raw = { email: formData.get("email") };
 
   const parsed = forgotPasswordSchema.safeParse(raw);
   if (!parsed.success) {
@@ -213,14 +259,8 @@ export async function forgotPassword(
   }
 
   const supabase = await createClient();
-  const email = whatsappToEmail(parsed.data.whatsapp);
 
-  // resetPasswordForEmail sends a magic link to the Supabase Auth email.
-  // In our case the "email" is the WhatsApp-derived address @kwatiguigui.cf.
-  // Since users don't have real email access, this flow should be adapted
-  // to send an OTP via WhatsApp API (Phase 2). For now the reset link
-  // is sent to the generated email address (for admin/dev use).
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+  const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, {
     redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password`,
   });
 

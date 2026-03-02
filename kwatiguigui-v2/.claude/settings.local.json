@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(find:*)",
+      "WebSearch",
+      "WebFetch(domain:developers.google.com)",
+      "WebFetch(domain:supabase.com)",
+      "WebFetch(domain:boardshape.com)",
+      "WebFetch(domain:openid.net)",
+      "WebFetch(domain:aboutauth.com)",
+      "WebFetch(domain:github.com)"
+    ]
+  }
+}

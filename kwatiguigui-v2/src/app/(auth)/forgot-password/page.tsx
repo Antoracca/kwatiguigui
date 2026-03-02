@@ -5,8 +5,8 @@ import Link from "next/link";
 import { ForgotPasswordForm } from "@/components/forms/forgot-password-form";
 
 export const metadata: Metadata = {
-  title: "Mot de passe oublie",
-  description: "Reinitialiser votre mot de passe KWATIGUIGUI.",
+  title: "Mot de passe oublié",
+  description: "Pas de panique ! Réinitialiser votre mot de passe KWATIGUIGUI.",
   robots: { index: false, follow: false },
 };
 
@@ -18,11 +18,10 @@ export default function ForgotPasswordPage() {
           <KeyRound size={28} className="text-warning-500" />
         </div>
         <h1 className="text-heading-lg font-heading text-neutral-900 dark:text-neutral-100">
-          Mot de passe oublie
+          Mot de passe oublié ?
         </h1>
         <p className="mt-2 text-body-sm text-neutral-500">
-          Entrez votre numero WhatsApp. Nous vous enverrons un lien de
-          reinitialisation.
+         Pas de panique ! Entrez votre e-mail ou numéro de téléphone pour recevoir les instructions de réinitialisation.
         </p>
       </div>
 

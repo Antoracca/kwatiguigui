@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { resetPassword } from "@/lib/auth/actions";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 // ---------------------------------------------------------------------------
 // Password strength helpers
@@ -208,7 +209,16 @@ export function ResetPasswordForm() {
           className="w-full"
           disabled={isPending || strengthLevel < 3}
         >
-          {isPending ? "Mise a jour..." : "Changer le mot de passe"}
+          {isPending ? (
+            <>
+              <div className="h-10 w-24 -ml-4 flex items-center justify-center">
+                <DotLottieReact src="/images/chargementloader.lottie" loop autoplay />
+              </div>
+              <span>Mise à jour...</span>
+            </>
+          ) : (
+            "Changer le mot de passe"
+          )}
         </Button>
       </form>
 

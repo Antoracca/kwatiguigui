@@ -34,7 +34,6 @@ export function jobPostingJsonLd(job: {
   id: string;
   title: string;
   description: string;
-  region: string;
   city: string;
   datePosted: string;
   expiresAt: string;
@@ -63,7 +62,6 @@ export function jobPostingJsonLd(job: {
       address: {
         "@type": "PostalAddress",
         addressLocality: job.city,
-        addressRegion: job.region,
         addressCountry: "CF",
       },
     },

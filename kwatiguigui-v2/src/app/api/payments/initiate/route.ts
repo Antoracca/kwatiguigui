@@ -89,12 +89,13 @@ export async function POST(request: NextRequest) {
     const reference = generatePaymentReference();
 
     // 6. Insert payment record with status "pending"
-    const { error: insertError } = await supabaseAdmin.from("payments").insert({
+    const { error: insertError } = await (supabaseAdmin.from("payments") as Record<string, any>).insert({
       user_id: user.id,
       amount,
       method: parsed.data.method,
       status: "pending",
       reference,
+      phone_number: parsed.data.phoneNumber,
     });
 
     if (insertError) {
@@ -127,8 +128,7 @@ export async function POST(request: NextRequest) {
 
     if (!operatorResponse.success) {
       // Update payment to failed
-      await supabaseAdmin
-        .from("payments")
+      await (supabaseAdmin.from("payments") as Record<string, any>)
         .update({ status: "failed" })
         .eq("reference", reference);
 
@@ -140,8 +140,7 @@ export async function POST(request: NextRequest) {
 
     // 8. Store transactionId if available
     if (operatorResponse.transactionId) {
-      await supabaseAdmin
-        .from("payments")
+      await (supabaseAdmin.from("payments") as Record<string, any>)
         .update({ transaction_id: operatorResponse.transactionId })
         .eq("reference", reference);
     }

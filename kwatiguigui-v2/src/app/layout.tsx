@@ -74,9 +74,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/favicon/favicon.ico",
-    shortcut: "/favicon/favicon-16x16.png",
-    apple: "/favicon/apple-touch-icon.png",
+    icon: "/images/Favicon.png",
+    shortcut: "/images/Favicon.png",
+    apple: "/images/Favicon.png",
   },
   manifest: "/favicon/site.webmanifest",
 };

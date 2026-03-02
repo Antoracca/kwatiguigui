@@ -15,7 +15,6 @@ export const createJobSchema = z.object({
     .int()
     .min(18, "Vous devez avoir au moins 18 ans")
     .max(99),
-  region: z.string().min(1, "Veuillez selectionner une region"),
   city: z.string().min(2, "La ville est requise").max(100),
   neighborhood: z.string().max(100).optional().default(""),
   jobType: z.string().min(1, "Le type d'emploi est requis"),
@@ -45,7 +44,6 @@ export type UpdateJobStatusInput = z.infer<typeof updateJobStatusSchema>;
 // ---------------------------------------------------------------------------
 export const searchJobsSchema = z.object({
   query: z.string().max(200).optional(),
-  region: z.string().optional(),
   jobType: z.string().optional(),
   userType: z.enum(USER_TYPES).optional(),
   page: z.coerce.number().int().min(1).default(1),

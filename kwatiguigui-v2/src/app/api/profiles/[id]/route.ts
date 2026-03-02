@@ -33,7 +33,7 @@ export async function GET(
   const { data: profile, error } = await supabase
     .from("profiles")
     .select(
-      "id, first_name, age, whatsapp, region, city, neighborhood, job_type, experience, user_type, is_active, subscription_paid, created_at",
+      "id, first_name, last_name, date_of_birth, whatsapp, city, neighborhood, job_type, experience, user_type, is_active, subscription_paid, created_at",
     )
     .eq("id", id)
     .eq("is_active", true) // Only return active profiles
@@ -76,10 +76,10 @@ export async function GET(
   const publicProfile = {
     id: profile.id,
     firstName: profile.first_name,
-    age: profile.age,
+    lastName: profile.last_name,
+    dateOfBirth: profile.date_of_birth,
     // Only premium viewers (or the profile owner) see the real WhatsApp number
     whatsapp: requesterIsPremium ? profile.whatsapp : maskWhatsApp(profile.whatsapp ?? ""),
-    region: profile.region,
     city: profile.city,
     neighborhood: profile.neighborhood,
     jobType: profile.job_type,

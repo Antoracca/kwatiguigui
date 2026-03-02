@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { createClient } from "@/lib/supabase/server";
-import { RCA_REGIONS, JOB_TYPES, PRICING } from "@/lib/constants";
+import { JOB_TYPES, PRICING } from "@/lib/constants";
 
 import type { ActionResult } from "@/lib/auth/actions";
 
@@ -12,11 +12,6 @@ import type { ActionResult } from "@/lib/auth/actions";
 // Job schemas
 // ---------------------------------------------------------------------------
 const jobSchema = z.object({
-  region: z
-    .string()
-    .refine((val) => (RCA_REGIONS as readonly string[]).includes(val), {
-      message: "Region invalide",
-    }),
   city: z.string().min(2, "La ville est requise").max(100),
   neighborhood: z.string().max(100).optional().default(""),
   job_type: z
@@ -48,7 +43,7 @@ export async function createJob(
   // Fetch profile to get user data + subscription status
   const { data: profile } = await supabase
     .from("profiles")
-    .select("first_name, age, whatsapp, user_type, subscription_paid, expiry_date")
+    .select("first_name, date_of_birth, whatsapp, user_type, subscription_paid, expiry_date")
     .eq("id", user.id)
     .single();
 
@@ -78,7 +73,6 @@ export async function createJob(
   }
 
   const raw = {
-    region: formData.get("region"),
     city: formData.get("city"),
     neighborhood: formData.get("neighborhood") || undefined,
     job_type: formData.get("job_type"),
@@ -99,9 +93,16 @@ export async function createJob(
   const { error: insertError } = await supabase.from("jobs").insert({
     user_id: user.id,
     first_name: profile.first_name,
-    age: profile.age,
+    age: (() => {
+      if (!profile.date_of_birth) return 0;
+      const dob = new Date(profile.date_of_birth);
+      const today = new Date();
+      let a = today.getFullYear() - dob.getFullYear();
+      const m = today.getMonth() - dob.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) a--;
+      return Math.max(0, a);
+    })(),
     whatsapp: profile.whatsapp,
-    region: parsed.data.region,
     city: parsed.data.city,
     neighborhood: parsed.data.neighborhood || null,
     job_type: parsed.data.job_type,
