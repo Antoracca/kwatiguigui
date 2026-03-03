@@ -17,11 +17,15 @@ import {
   BarChart3,
   Building2,
   Rocket,
-  Crown
+  Crown,
+  Menu,
+  X
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -73,88 +77,179 @@ const SEEKER_NAV = [
   { href: "/dashboard/settings", label: "Paramètres", icon: Settings, exact: false },
 ] as const;
 
-export function DashboardSidebar({ userType }: { userType: "seeker" | "employer" | "company" | null }) {
+// ---------------------------------------------------------------------------
+// Shared nav content — rendered both in desktop sidebar and mobile drawer
+// ---------------------------------------------------------------------------
+function SidebarContent({
+  userType,
+  onClose,
+}: {
+  userType: "seeker" | "employer" | "company" | null;
+  onClose?: () => void;
+}) {
   const pathname = usePathname();
   const navItems = userType === "seeker" ? SEEKER_NAV : EMPLOYER_NAV;
 
   return (
-    // h-full: match the parent flex row height (viewport minus header).
-    // overflow-y-auto: sidebar scrolls independently from main content.
-    // sticky/top-0 removed: parent layout uses h-screen overflow-hidden,
-    //   so sticky is redundant — the sidebar never leaves its flex cell.
-    <aside className="hidden h-full w-64 shrink-0 overflow-y-auto border-r border-neutral-200 bg-white lg:block dark:border-neutral-800 dark:bg-neutral-900">
-      <nav className="flex flex-col gap-1 p-4 min-h-full">
-        {navItems.map((item) => {
-          const isActive = item.exact
-            ? pathname === item.href
-            : pathname.startsWith(item.href);
+    <nav className="flex flex-col gap-1 p-4 min-h-full">
+      {navItems.map((item) => {
+        const isActive = item.exact
+          ? pathname === item.href
+          : pathname.startsWith(item.href);
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 rounded-xl px-4 py-3 text-body-sm font-medium transition-all hover:bg-neutral-50 dark:hover:bg-neutral-800",
-                isActive
-                  ? "bg-primary-50 text-primary-600 shadow-sm dark:bg-primary-950 dark:text-primary-400 font-bold"
-                  : "text-neutral-600 dark:text-neutral-400",
-              )}
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={onClose}
+            className={cn(
+              "flex items-center gap-3 rounded-xl px-4 py-3 text-body-sm font-medium transition-all hover:bg-neutral-50 dark:hover:bg-neutral-800",
+              isActive
+                ? "bg-primary-50 text-primary-600 shadow-sm dark:bg-primary-950 dark:text-primary-400 font-bold"
+                : "text-neutral-600 dark:text-neutral-400",
+            )}
+          >
+            <item.icon size={18} className={isActive ? "text-primary-600 dark:text-primary-400" : "text-neutral-400"} />
+            {item.label}
+          </Link>
+        );
+      })}
+
+      <div className="flex-1" />
+
+      {/* Upsell Banner for Seekers */}
+      {userType === "seeker" && (
+        <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50/50 p-4 shadow-sm dark:border-amber-900/30 dark:bg-amber-950/20">
+          <div className="mb-2 flex items-center gap-2">
+            <Crown className="h-5 w-5 text-amber-500" strokeWidth={2.5} />
+            <p className="font-heading text-sm font-bold text-neutral-900 dark:text-neutral-100">
+              Passez VIP
+            </p>
+          </div>
+          <p className="mb-3 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
+            Démarquez-vous et contactez les recruteurs en direct avec 3 mois offerts.
+          </p>
+          <Link href="/dashboard/payment" className="block" onClick={onClose}>
+            <button
+              type="button"
+              className="w-full rounded-lg bg-amber-500 py-2 text-xs font-bold text-white transition-colors hover:bg-amber-600"
             >
-              <item.icon size={18} className={isActive ? "text-primary-600 dark:text-primary-400" : "text-neutral-400"} />
-              {item.label}
-            </Link>
-          );
-        })}
+              Activer l'essai
+            </button>
+          </Link>
+        </div>
+      )}
 
-        <div className="flex-1" />
-
-        {/* Upsell Banner (Free Trial 3 Months) for Seekers */}
-        {userType === "seeker" && (
-          <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50/50 p-4 shadow-sm dark:border-amber-900/30 dark:bg-amber-950/20">
-            <div className="mb-2 flex items-center gap-2">
-              <Crown className="h-5 w-5 text-amber-500" strokeWidth={2.5} />
-              <p className="font-heading text-sm font-bold text-neutral-900 dark:text-neutral-100">
-                Passez VIP
-              </p>
-            </div>
-            <p className="mb-3 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
-              Démarquez-vous et contactez les recruteurs en direct avec 3 mois offerts.
+      {/* Upsell Banner for Employers */}
+      {userType !== "seeker" && (
+        <div className="mt-8 rounded-xl border border-neutral-200 bg-neutral-50 p-4 shadow-sm dark:border-neutral-800 dark:bg-neutral-800/50">
+          <div className="mb-2 flex items-center gap-2">
+            <Building2 className="h-5 w-5 text-neutral-700 dark:text-neutral-300" />
+            <p className="font-heading text-sm font-bold text-neutral-900 dark:text-neutral-100">
+              Marque Employeur
             </p>
-            <Link href="/dashboard/payment" className="block">
-              <button
-                type="button"
-                className="w-full rounded-lg bg-amber-500 py-2 text-xs font-bold text-white transition-colors hover:bg-amber-600"
-              >
-                Activer l'essai
-              </button>
-            </Link>
           </div>
-        )}
+          <p className="mb-3 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
+            Attirez les meilleurs talents en personnalisant votre page entreprise.
+          </p>
+          <Link href="/dashboard/company" className="block" onClick={onClose}>
+            <button
+              type="button"
+              className="w-full rounded-lg border border-neutral-300 bg-white py-2 text-xs font-bold text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+            >
+              Créer ma vitrine
+            </button>
+          </Link>
+        </div>
+      )}
+    </nav>
+  );
+}
 
-        {/* Upsell Banner for Employers */}
-        {userType !== "seeker" && (
-          <div className="mt-8 rounded-xl border border-neutral-200 bg-neutral-50 p-4 shadow-sm dark:border-neutral-800 dark:bg-neutral-800/50">
-            <div className="mb-2 flex items-center gap-2">
-              <Building2 className="h-5 w-5 text-neutral-700 dark:text-neutral-300" />
-              <p className="font-heading text-sm font-bold text-neutral-900 dark:text-neutral-100">
-                Marque Employeur
-              </p>
-            </div>
-            <p className="mb-3 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
-              Attirez les meilleurs talents en personnalisant votre page entreprise.
-            </p>
-            <Link href="/dashboard/company" className="block">
-              <button
-                type="button"
-                className="w-full rounded-lg border border-neutral-300 bg-white py-2 text-xs font-bold text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
-              >
-                Créer ma vitrine
-              </button>
-            </Link>
-          </div>
+export function DashboardSidebar({ userType }: { userType: "seeker" | "employer" | "company" | null }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+
+  // Close drawer on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  // Prevent body scroll when drawer is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
+  return (
+    <>
+      {/* ── DESKTOP sidebar (lg+) ── */}
+      <aside className="hidden h-full w-64 shrink-0 overflow-y-auto border-r border-neutral-200 bg-white lg:block dark:border-neutral-800 dark:bg-neutral-900">
+        <SidebarContent userType={userType} />
+      </aside>
+
+      {/* ── MOBILE hamburger button (fixed, bottom-left, visible < lg) ── */}
+      <button
+        type="button"
+        onClick={() => setMobileOpen(true)}
+        className="fixed bottom-5 left-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-primary-600 text-white shadow-lg shadow-primary-900/30 transition-all hover:bg-primary-700 active:scale-95 lg:hidden"
+        aria-label="Ouvrir le menu"
+      >
+        <Menu size={22} />
+      </button>
+
+      {/* ── MOBILE drawer overlay ── */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              key="sidebar-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm lg:hidden"
+              onClick={() => setMobileOpen(false)}
+              aria-hidden="true"
+            />
+
+            {/* Slide-in panel */}
+            <motion.aside
+              key="sidebar-drawer"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", stiffness: 320, damping: 32 }}
+              className="fixed inset-y-0 left-0 z-50 flex w-72 flex-col overflow-y-auto bg-white shadow-2xl dark:bg-neutral-900 lg:hidden"
+            >
+              {/* Drawer header */}
+              <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-4 dark:border-neutral-800">
+                <p className="font-heading text-sm font-bold text-neutral-900 dark:text-white">
+                  Navigation
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-lg p-1.5 text-neutral-500 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+                  aria-label="Fermer le menu"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto">
+                <SidebarContent userType={userType} onClose={() => setMobileOpen(false)} />
+              </div>
+            </motion.aside>
+          </>
         )}
-      </nav>
-    </aside>
+      </AnimatePresence>
+    </>
   );
 }
 

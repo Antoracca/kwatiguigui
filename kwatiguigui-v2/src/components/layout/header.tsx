@@ -245,8 +245,8 @@ export function Header() {
           </div>
         </Link>
 
-        {/* Desktop navigation */}
-        <nav className="hidden md:flex flex-1 items-center justify-center gap-1 xl:gap-2 h-full" role="navigation">
+        {/* Desktop navigation — visible à partir de lg (1024px) */}
+        <nav className="hidden lg:flex flex-1 items-center justify-center gap-1 xl:gap-2 h-full" role="navigation">
           {NAV_CATEGORIES.map((category) => {
             const isActiveRoute = pathname === category.href || pathname.startsWith(category.href + "/");
             const isHovered = activeMenu === category.id;
@@ -285,8 +285,8 @@ export function Header() {
           })}
         </nav>
 
-        {/* Desktop actions */}
-        <div className="hidden md:flex flex-shrink-0 items-center justify-end gap-2 lg:gap-3">
+        {/* Desktop actions — visible à partir de lg (1024px) */}
+        <div className="hidden lg:flex flex-shrink-0 items-center justify-end gap-2 lg:gap-3">
 
           {/* Theme toggle */}
           <button
@@ -387,9 +387,9 @@ export function Header() {
           )}
         </div>
 
-        {/* Mobile hamburger */}
+        {/* Mobile/tablet hamburger — visible en dessous de lg (1024px) */}
         <button
-          className="relative z-50 rounded-lg p-2 text-neutral-600 hover:bg-neutral-100 md:hidden dark:text-neutral-300 dark:hover:bg-neutral-800 transition-colors"
+          className="relative z-50 rounded-lg p-2 text-neutral-600 hover:bg-neutral-100 lg:hidden dark:text-neutral-300 dark:hover:bg-neutral-800 transition-colors"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
           aria-expanded={mobileOpen}
@@ -472,7 +472,7 @@ export function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
-            className="fixed inset-0 top-[72px] z-40 bg-white dark:bg-neutral-950 overflow-y-auto pb-24 md:hidden"
+            className="fixed inset-0 top-[72px] z-40 bg-white dark:bg-neutral-950 overflow-y-auto pb-24 lg:hidden"
           >
             <div className="px-5 py-6 flex flex-col gap-8">
 

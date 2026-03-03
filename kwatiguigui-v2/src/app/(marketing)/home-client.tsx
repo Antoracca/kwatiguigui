@@ -166,6 +166,9 @@ const TICKER_MESSAGES = [
 ];
 
 const AnnouncementTicker = () => {
+    // Duplicate messages so the loop is seamless: animate x from 0% to -50%
+    const doubled = [...TICKER_MESSAGES, ...TICKER_MESSAGES];
+
     return (
         <div className="w-full overflow-hidden border-b border-neutral-100 dark:border-neutral-900 bg-transparent py-3 flex items-center relative z-20">
             {/* Gradient masks for smooth fade effect at edges */}
@@ -173,16 +176,16 @@ const AnnouncementTicker = () => {
             <div className="absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white dark:from-neutral-950 to-transparent z-10 pointer-events-none" />
 
             <motion.div
-                className="flex whitespace-nowrap gap-24 px-4 w-max items-center"
-                animate={{ x: ["100vw", "-100%"] }}
+                className="flex whitespace-nowrap gap-20 sm:gap-24 px-4 w-max items-center"
+                animate={{ x: ["0%", "-50%"] }}
                 transition={{
-                    duration: 60,
+                    duration: 50,
                     ease: "linear",
                     repeat: Infinity,
-                    repeatDelay: 10
+                    repeatType: "loop",
                 }}
             >
-                {TICKER_MESSAGES.map((msg, i) => {
+                {doubled.map((msg, i) => {
                     const Icon = msg.icon;
                     return (
                         <div key={i} className="flex-none text-sm font-semibold text-neutral-800 dark:text-neutral-200 tracking-wide flex items-center gap-3">
@@ -475,7 +478,7 @@ export default function HomeClient() {
                                     <Building2 size={16} className="text-secondary-400" />
                                     <span>Vous êtes une entreprise ?</span>
                                 </div>
-                                <h2 className="font-heading text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-white sm:text-4xl tracking-tight leading-none mt-2">
+                                <h2 className="font-heading text-[clamp(2.25rem,5vw,4rem)] font-extrabold text-white tracking-tight leading-none mt-2">
                                     {"Recrutez efficacement".split("").map((char, index) => (
                                         <motion.span
                                             key={index}
