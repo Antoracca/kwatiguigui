@@ -1,19 +1,23 @@
-"use client";
-
 // global-error.tsx — fallback for unrecoverable root-layout errors.
 //
-// IMPORTANT: do NOT render <html> or <body> here.
-// In Next.js 16 + React 19, rendering <html> triggers React's document
-// context which injects a head-manager via useContext. That context is
-// null during the /_global-error prerender, crashing the build.
-// Next.js wraps this component in its own HTML shell automatically.
+// RULES (do NOT violate):
+// 1. NO "use client" — React 19 / Next.js 16 calls useContext internally when
+//    prerendering "use client" components that contain onClick handlers, and
+//    that context is null during /_global-error prerender → crash.
+// 2. NO <html> / <body> — React 19 injects a head-manager via useContext when
+//    it detects <html>, which also crashes the prerender.
+// 3. NO onClick / event handlers — triggers React 19 action-context internals.
+// 4. Use plain <a href="/"> for both actions — full page reload is the correct
+//    behavior when the root layout itself has crashed.
+// 5. NO external imports — any package that calls React hooks at module level
+//    will corrupt React in this isolated prerender context.
 
 interface GlobalErrorProps {
   error: Error & { digest?: string };
-  reset: () => void;
+  reset: () => void; // provided by Next.js — unused here, full reload instead
 }
 
-export default function GlobalError({ error, reset }: GlobalErrorProps) {
+export default function GlobalError({ error }: GlobalErrorProps) {
   return (
     <div
       style={{
@@ -43,7 +47,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
             fontSize: 28,
           }}
         >
-          ⚠️
+          &#9888;
         </div>
 
         <h1 style={{ fontSize: "1.5rem", fontWeight: 700, margin: "0 0 0.75rem" }}>
@@ -75,9 +79,8 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
         </p>
 
         <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center" }}>
-          <button
-            type="button"
-            onClick={reset}
+          <a
+            href="/"
             style={{
               padding: "0.625rem 1.5rem",
               borderRadius: 999,
@@ -85,12 +88,12 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
               color: "#fff",
               fontWeight: 600,
               fontSize: "0.875rem",
-              border: "none",
-              cursor: "pointer",
+              textDecoration: "none",
+              display: "inline-block",
             }}
           >
             Reessayer
-          </button>
+          </a>
           <a
             href="/"
             style={{
@@ -101,6 +104,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
               fontWeight: 600,
               fontSize: "0.875rem",
               textDecoration: "none",
+              display: "inline-block",
             }}
           >
             Accueil
