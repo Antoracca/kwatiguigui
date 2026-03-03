@@ -65,7 +65,7 @@ type FormValues = z.infer<typeof schema>;
 function getMinDate(): string {
   const d = new Date();
   d.setDate(d.getDate() + 1);
-  return d.toISOString().split("T")[0];
+  return d.toISOString().split("T")[0] ?? "";
 }
 
 const inputClass =
