@@ -78,7 +78,11 @@ export function DashboardSidebar({ userType }: { userType: "seeker" | "employer"
   const navItems = userType === "seeker" ? SEEKER_NAV : EMPLOYER_NAV;
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 overflow-y-auto border-r border-neutral-200 bg-white lg:block dark:border-neutral-800 dark:bg-neutral-900">
+    // h-full: match the parent flex row height (viewport minus header).
+    // overflow-y-auto: sidebar scrolls independently from main content.
+    // sticky/top-0 removed: parent layout uses h-screen overflow-hidden,
+    //   so sticky is redundant — the sidebar never leaves its flex cell.
+    <aside className="hidden h-full w-64 shrink-0 overflow-y-auto border-r border-neutral-200 bg-white lg:block dark:border-neutral-800 dark:bg-neutral-900">
       <nav className="flex flex-col gap-1 p-4 min-h-full">
         {navItems.map((item) => {
           const isActive = item.exact

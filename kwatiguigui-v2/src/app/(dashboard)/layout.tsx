@@ -52,11 +52,16 @@ export default async function DashboardLayout({
   const userType = (profile?.user_type as "seeker" | "employer" | "company") || null;
 
   return (
-    <div className="flex min-h-screen flex-col">
+    // h-screen + overflow-hidden: the viewport IS the only scroll container.
+    // flex-1 min-h-0 on the row: lets flex children shrink below content size,
+    //   which is required for overflow-y-auto to work inside a flex layout.
+    // overflow-y-auto on main: main content scrolls independently.
+    // The sidebar has its own overflow-y-auto — it scrolls independently too.
+    <div className="flex h-screen flex-col overflow-hidden">
       <Header />
-      <div className="flex flex-1">
+      <div className="flex flex-1 min-h-0">
         <DashboardSidebar userType={userType} />
-        <main className="flex-1 bg-white p-4 sm:p-6 lg:p-8 dark:bg-neutral-950">
+        <main className="flex-1 min-h-0 overflow-y-auto bg-white p-4 sm:p-6 lg:p-8 dark:bg-neutral-950">
           {children}
         </main>
       </div>
