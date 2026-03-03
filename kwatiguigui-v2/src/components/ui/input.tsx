@@ -1,3 +1,5 @@
+"use client";
+
 import { Label } from "@radix-ui/react-label";
 import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import * as React from "react";

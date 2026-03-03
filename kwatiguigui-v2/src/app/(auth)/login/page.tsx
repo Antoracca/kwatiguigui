@@ -6,6 +6,8 @@ import Link from "next/link";
 import { LoginForm } from "@/components/forms/login-form";
 import { SocialAuth } from "@/components/auth/social-auth";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Connexion",
   description: "Connectez-vous à votre compte KWATIGUIGUI.",

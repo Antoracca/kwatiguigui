@@ -4,6 +4,8 @@ import Link from "next/link";
 
 import { ForgotPasswordForm } from "@/components/forms/forgot-password-form";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Mot de passe oublié",
   description: "Pas de panique ! Réinitialiser votre mot de passe KWATIGUIGUI.",

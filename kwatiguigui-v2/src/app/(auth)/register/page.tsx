@@ -5,6 +5,8 @@ import Link from "next/link";
 import { RegisterForm } from "@/components/forms/register-form";
 import { SocialAuth } from "@/components/auth/social-auth";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Inscription",
   description:

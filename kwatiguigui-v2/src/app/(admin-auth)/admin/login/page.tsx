@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { AdminLoginForm } from "@/components/admin/admin-login-form";
 
+// Prevent static prerendering: this page uses client hooks via AdminLoginForm
+// and is robots:noindex — no benefit from static generation.
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Administration — KWATIGUIGUI",
   robots: { index: false, follow: false },
