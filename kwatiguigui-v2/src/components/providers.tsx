@@ -36,6 +36,16 @@ const LottieWasmLoader = dynamic(
   { ssr: false },
 );
 
+// Overlay de navigation global — intercepte les clics sur les liens internes
+// et affiche le loading.lottie en plein écran avec blur pendant au moins 1,6 s.
+const NavigationLoader = dynamic(
+  () =>
+    import("@/components/providers/navigation-loader").then((m) => ({
+      default: m.NavigationLoader,
+    })),
+  { ssr: false },
+);
+
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider
@@ -60,6 +70,7 @@ export function Providers({ children }: { children: ReactNode }) {
         }}
       />
       <LottieWasmLoader />
+      <NavigationLoader />
     </ThemeProvider>
   );
 }
