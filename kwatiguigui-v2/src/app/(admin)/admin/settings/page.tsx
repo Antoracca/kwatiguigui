@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Parametres admin",
   robots: { index: false, follow: false },

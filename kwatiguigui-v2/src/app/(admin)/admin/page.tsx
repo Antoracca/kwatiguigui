@@ -6,6 +6,8 @@ import { formatPrice, formatRelativeDate } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Dashboard Admin — KWATIGUIGUI",
   robots: { index: false, follow: false },

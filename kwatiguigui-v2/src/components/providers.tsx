@@ -3,7 +3,6 @@
 import { ThemeProvider } from "next-themes";
 import * as React from "react";
 import { Toaster } from "sonner";
-import { setWasmUrl } from "@lottiefiles/dotlottie-react";
 
 import { AuthProvider } from "@/components/providers/auth-provider";
 
@@ -13,13 +12,13 @@ interface ProvidersProps {
 
 export function Providers({ children }: ProvidersProps) {
   // Configure le chemin du fichier WASM de DotLottie (browser uniquement).
-  // Sans ça, @lottiefiles/dotlottie-react essaie de charger le .wasm depuis
-  // node_modules (inaccessible en prod) → erreur sur iOS Safari.
-  // Le fichier est copié dans /public/dotlottie-player.wasm via postinstall.
-  // Guard typeof window: évite d'exécuter ce code pendant SSR/prerender (Next.js
-  // charge les modules "use client" côté serveur pour générer le HTML initial).
+  // IMPORTANT: dynamic import — le static import de @lottiefiles/dotlottie-react
+  // au niveau module corrompt React pendant le prerender Next.js (React devient null).
+  // Le dynamic import garantit que le package n'est jamais chargé côté serveur.
   React.useEffect(() => {
-    setWasmUrl("/dotlottie-player.wasm");
+    import("@lottiefiles/dotlottie-react").then(({ setWasmUrl }) => {
+      setWasmUrl("/dotlottie-player.wasm");
+    });
   }, []);
 
   return (

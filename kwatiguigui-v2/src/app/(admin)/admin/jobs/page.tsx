@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { AdminJobsModerationClient } from "@/components/admin/admin-jobs-moderation-client";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Annonces — Admin KWATIGUIGUI",
   robots: { index: false, follow: false },

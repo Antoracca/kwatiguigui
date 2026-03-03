@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { AdminUsersClient } from "@/components/admin/admin-users-client";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Utilisateurs — Admin KWATIGUIGUI",
   robots: { index: false, follow: false },

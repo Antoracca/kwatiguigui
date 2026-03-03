@@ -5,6 +5,8 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { formatPrice, formatDate, formatRelativeDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Paiements — Admin KWATIGUIGUI",
   robots: { index: false, follow: false },
