@@ -1,20 +1,20 @@
-// global-error.tsx — fallback for unrecoverable root-layout errors.
-//
-// RULES (do NOT violate):
-// 1. NO "use client" — React 19 / Next.js 16 calls useContext internally when
-//    prerendering "use client" components that contain onClick handlers, and
-//    that context is null during /_global-error prerender → crash.
-// 2. NO <html> / <body> — React 19 injects a head-manager via useContext when
-//    it detects <html>, which also crashes the prerender.
-// 3. NO onClick / event handlers — triggers React 19 action-context internals.
-// 4. Use plain <a href="/"> for both actions — full page reload is the correct
-//    behavior when the root layout itself has crashed.
-// 5. NO external imports — any package that calls React hooks at module level
-//    will corrupt React in this isolated prerender context.
+"use client"; // required by Next.js — global-error MUST be a Client Component
+
+// INVARIANTS — do NOT break any of these:
+// 1. NO <html>/<body>   → React 19 injects head-manager via useContext when it
+//                          detects <html>; that context is null here → crash.
+// 2. NO onClick handlers → React 19 sets up form/action context via useContext
+//                          for any element with an event handler → crash.
+// 3. NO React hooks      → no explicit useContext calls in our code.
+// 4. NO external imports → any package calling React hooks at module level
+//                          corrupts React in this isolated prerender context.
+// 5. Use <a href="/"> for both actions — full page reload is the correct UX
+//    when the root layout itself has crashed; reset() would re-render a broken
+//    tree anyway.
 
 interface GlobalErrorProps {
   error: Error & { digest?: string };
-  reset: () => void; // provided by Next.js — unused here, full reload instead
+  reset: () => void; // provided by Next.js — unused, <a href="/"> instead
 }
 
 export default function GlobalError({ error }: GlobalErrorProps) {
