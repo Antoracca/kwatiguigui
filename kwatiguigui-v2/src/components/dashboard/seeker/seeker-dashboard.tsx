@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { DynamicRoadmap } from "./DynamicRoadmap";
 import type { Database } from "@/types/database";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
@@ -41,8 +42,27 @@ export function SeekerDashboard({
         })
         .replace(/^./, (str) => str.toUpperCase());
 
-    // FIXME: Fetch real completion dynamically later
-    const cvCompletion = 0;
+    // ── Complétude du profil — formule UNIQUE partagée (profile-form, dashboard, recommendations) ──
+    // Total max = 100 points.
+    let cvCompletion = 0;
+    if (profile) {
+        const expFilled = !!profile.experience && profile.experience !== "";
+        const completionPoints =
+            (!!profile.avatar_url ? 15 : 0)          // Photo de profil
+            + (!!profile.cv_path ? 15 : 0)           // CV uploadé
+            + (!!profile.job_type ? 12 : 0)          // Poste/secteur
+            + (expFilled ? 12 : 0)                   // Expérience
+            + 8                                       // Email vérifié (toujours vrai ici)
+            + (!!profile.city ? 8 : 0)               // Ville
+            + (!!profile.first_name ? 5 : 0)         // Prénom
+            + (!!profile.last_name ? 5 : 0)          // Nom
+            + (!!profile.phone ? 5 : 0)              // Téléphone
+            + (!!profile.whatsapp ? 5 : 0)           // WhatsApp
+            + (!!profile.linkedin_url ? 5 : 0)       // LinkedIn
+            + (!!profile.date_of_birth ? 3 : 0)      // Date de naissance
+            + (!!profile.username ? 2 : 0);           // Username
+        cvCompletion = Math.min(100, completionPoints);
+    }
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500 pb-12">
@@ -150,12 +170,22 @@ export function SeekerDashboard({
                         </div>
 
                         <div>
-                            <Progress value={cvCompletion} className="h-2.5 mb-3 bg-neutral-100 dark:bg-neutral-800 rounded-full" indicatorClassName="bg-gradient-to-r from-primary-500 to-accent-500 rounded-full" />
+                            <Progress
+                                value={cvCompletion}
+                                className="h-2.5 mb-3 bg-neutral-100 dark:bg-neutral-800 rounded-full"
+                                indicatorClassName={cvCompletion >= 90 ? "bg-emerald-500 rounded-full" : "bg-gradient-to-r from-primary-500 to-accent-500 rounded-full"}
+                            />
                             <div className="flex justify-between items-center text-xs font-semibold">
-                                <span className="text-neutral-500 flex items-center gap-1"><CheckCircle2 size={12} /> Incomplet</span>
-                                <Link href="/dashboard/profile" className="text-primary-600 hover:underline dark:text-primary-400">
-                                    Compléter maintenant &rarr;
-                                </Link>
+                                {cvCompletion >= 90 ? (
+                                    <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1"><CheckCircle2 size={12} /> Complet</span>
+                                ) : (
+                                    <>
+                                        <span className="text-neutral-500 flex items-center gap-1"><CheckCircle2 size={12} /> Incomplet</span>
+                                        <Link href="/dashboard/profile" className="text-primary-600 hover:underline dark:text-primary-400">
+                                            Compléter maintenant &rarr;
+                                        </Link>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </CardContent>
@@ -201,39 +231,8 @@ export function SeekerDashboard({
             <div className="grid gap-8 lg:grid-cols-3 items-start">
 
                 {/* Left Col: Main Call to action / Missing steps */}
-                <div className="lg:col-span-2 space-y-6">
-                    <div className="flex items-center justify-between">
-                        <h2 className="font-heading text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-                            <Zap size={20} className="text-amber-500" />
-                            Votre Feuille de Route
-                        </h2>
-                    </div>
-
-                    <div className="rounded-3xl border border-neutral-200/60 bg-white p-8 shadow-sm dark:border-neutral-800/60 dark:bg-neutral-900 relative overflow-hidden">
-                        <div className="absolute right-0 bottom-0 w-64 h-64 bg-primary-50 dark:bg-primary-950/20 rounded-tl-full -z-10 blur-xl" />
-
-                        <div className="flex flex-col sm:flex-row gap-8 items-center text-center sm:text-left">
-                            <div className="w-24 h-24 shrink-0 rounded-2xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 dark:border-neutral-700 flex items-center justify-center shadow-inner">
-                                <FileText size={40} className="text-neutral-300 dark:text-neutral-600" />
-                            </div>
-
-                            <div className="flex-1 space-y-3">
-                                <h3 className="font-heading text-xl font-bold text-neutral-900 dark:text-neutral-100">
-                                    Aucun profil détecté
-                                </h3>
-                                <p className="text-neutral-500 leading-relaxed text-sm">
-                                    Pour que notre IA puisse vous recommander les meilleures offres en RCA, nous avons besoin de connaître vos compétences. Complétez votre profil interactif en quelques minutes.
-                                </p>
-                                <div className="pt-2">
-                                    <Button asChild className="rounded-full shadow-md font-bold text-white">
-                                        <Link href="/dashboard/profile">
-                                            Démarrer le diagnostic complet
-                                        </Link>
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div className="lg:col-span-2">
+                    <DynamicRoadmap />
                 </div>
 
                 {/* Right Col: Quick Tools Sidebar */}

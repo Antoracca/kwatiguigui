@@ -1,20 +1,12 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect } from "react";
 import dynamic from "next/dynamic";
 
-// All three providers are dynamically imported (ssr: false) because their
+// All providers are dynamically imported (ssr: false) because their
 // static imports corrupt React in the Next.js 16 / Turbopack SSR prerender
 // bundle — they call React hooks or access browser APIs at module level,
 // which crashes the prerender worker.
-//
-// ssr: false is safe for all three:
-//   - AuthProvider: auth state is inherently client-side; server components
-//     read auth directly from Supabase cookies, not via AuthProvider
-//   - Toaster: toasts are always browser-only, no SSR value
-//   - ThemeProvider: next-themes handles suppressHydrationWarning on <html>
-//     so no visible flash occurs even without SSR theme rendering
 
 const AuthProvider = dynamic(
   () =>
@@ -34,15 +26,17 @@ const Toaster = dynamic(
   { ssr: false },
 );
 
-export function Providers({ children }: { children: ReactNode }) {
-  // Load DotLottie WASM URL only in the browser — dynamic import prevents
-  // @lottiefiles/dotlottie-react from ever loading during SSR/prerender.
-  useEffect(() => {
-    import("@lottiefiles/dotlottie-react").then(({ setWasmUrl }) => {
-      setWasmUrl("/dotlottie-player.wasm");
-    });
-  }, []);
+// Lottie WASM loader — must also be ssr: false to avoid useEffect null crash
+// during /_not-found static prerender.
+const LottieWasmLoader = dynamic(
+  () =>
+    import("@/components/providers/lottie-wasm-loader").then((m) => ({
+      default: m.LottieWasmLoader,
+    })),
+  { ssr: false },
+);
 
+export function Providers({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider
       attribute="class"
@@ -65,6 +59,7 @@ export function Providers({ children }: { children: ReactNode }) {
           },
         }}
       />
+      <LottieWasmLoader />
     </ThemeProvider>
   );
 }

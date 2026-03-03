@@ -1,0 +1,23 @@
+# .codex/config.toml
+
+# Modèle
+model = "gpt-5.3-codex"
+
+# Raisonnement profond
+reasoning = "high"
+
+# Autorisations maximales
+approval_mode = "never"
+
+# Accès complet au repo
+read_repo = true
+write_repo = true
+
+# Autoriser exécution de commandes
+execute_commands = true
+
+# Autoriser accès réseau
+network_access = true
+
+# Mode persistant (mémoire session longue si supporté)
+persistent_session = true

@@ -1,3 +1,8 @@
+// Prevent static prerendering — the root layout's Providers chain (next/dynamic,
+// useEffect) causes React to be null in the [root-of-the-server] SSR bundle
+// during /_not-found static prerender. force-dynamic makes this a runtime page.
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { Home, Search, ArrowLeft } from "lucide-react";
 

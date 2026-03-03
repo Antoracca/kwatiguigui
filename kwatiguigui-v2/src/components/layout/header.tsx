@@ -138,6 +138,7 @@ export function Header() {
   const { user, isLoading: authLoading } = useAuthContext();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
+  const [profileAvatar, setProfileAvatar] = React.useState<string | null>(null);
 
   const supabase = createClient();
 
@@ -147,6 +148,26 @@ export function Header() {
     await supabase.auth.signOut();
     window.location.href = "/";
   };
+
+  // Fetch user profile for avatar
+  React.useEffect(() => {
+    async function fetchProfile() {
+      if (!user) return;
+      try {
+        const { data } = await supabase
+          .from("profiles")
+          .select("avatar_url")
+          .eq("id", user.id)
+          .single();
+        if (data?.avatar_url) {
+          setProfileAvatar(data.avatar_url);
+        }
+      } catch (error) {
+        console.error("Failed to load profile avatar", error);
+      }
+    }
+    fetchProfile();
+  }, [user, supabase]);
 
   // Mega Menu State
   const [activeMenu, setActiveMenu] = React.useState<string | null>(null);
@@ -286,13 +307,22 @@ export function Header() {
             <div className="relative" data-user-menu>
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-2 rounded-xl bg-primary-50 dark:bg-primary-950/40 border border-primary-200 dark:border-primary-800/50 px-4 py-2 text-primary-700 dark:text-primary-300 font-semibold text-sm hover:bg-primary-100 dark:hover:bg-primary-900/40 transition-all"
+                className="flex items-center gap-2 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 px-1.5 py-1.5 pr-4 text-neutral-700 dark:text-neutral-300 font-semibold text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-all shadow-sm"
               >
-                <div className="h-7 w-7 rounded-full bg-primary-600 dark:bg-primary-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
-                  {user.email?.[0]?.toUpperCase() ?? "U"}
+                <div className="relative h-8 w-8 overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center shrink-0 border border-neutral-100 dark:border-neutral-700">
+                  {profileAvatar ? (
+                    <Image
+                      src={profileAvatar}
+                      alt="Avatar"
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <User className="h-4 w-4 text-neutral-500" />
+                  )}
                 </div>
                 Mon espace
-                <ChevronDown size={15} className={cn("transition-transform duration-200", userMenuOpen ? "rotate-180" : "")} />
+                <ChevronDown size={14} className={cn("ml-1 text-neutral-400 transition-transform duration-200", userMenuOpen ? "rotate-180 text-primary-500" : "")} />
               </button>
               <AnimatePresence>
                 {userMenuOpen && (

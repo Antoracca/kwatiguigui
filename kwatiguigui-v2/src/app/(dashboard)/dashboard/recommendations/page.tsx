@@ -24,31 +24,26 @@ export default async function RecommendationsPage() {
         .eq("id", user.id)
         .single();
 
-    // Calculate Completion Percentage (Same formula used in ProfileForm)
+    // ── Complétude du profil — formule UNIQUE partagée (profile-form, dashboard, recommendations) ──
+    // Total max = 100 points.
     let completionPercentage = 0;
     if (profile) {
-        let maxScore = 0;
-        let score = 0;
-        const addScore = (active: boolean, weight: number) => {
-            maxScore += weight;
-            if (active) score += weight;
-        };
-
-        addScore(true, 50); // Email is always verified if they're here
-        addScore(!!profile.first_name, 5);
-        addScore(!!profile.last_name, 5);
-        addScore(!!profile.username, 5);
-        addScore(!!profile.date_of_birth, 5);
-        addScore(!!profile.job_type, 10);
-        addScore(!!profile.experience && profile.experience !== "none", 10);
-        addScore(!!profile.city, 5);
-        addScore(!!profile.phone || !!profile.whatsapp, 5);
-        addScore(!!profile.avatar_url, 20);
-        addScore(!!profile.cv_path, 20);
-        addScore(!!profile.linkedin_url, 5);
-
-        completionPercentage = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
-        if (completionPercentage > 100) completionPercentage = 100;
+        const expFilled = !!profile.experience && profile.experience !== "";
+        const completionPoints =
+            (!!profile.avatar_url ? 15 : 0)          // Photo de profil
+            + (!!profile.cv_path ? 15 : 0)           // CV uploadé
+            + (!!profile.job_type ? 12 : 0)          // Poste/secteur
+            + (expFilled ? 12 : 0)                   // Expérience
+            + 8                                       // Email vérifié (toujours vrai ici)
+            + (!!profile.city ? 8 : 0)               // Ville
+            + (!!profile.first_name ? 5 : 0)         // Prénom
+            + (!!profile.last_name ? 5 : 0)          // Nom
+            + (!!profile.phone ? 5 : 0)              // Téléphone
+            + (!!profile.whatsapp ? 5 : 0)           // WhatsApp
+            + (!!profile.linkedin_url ? 5 : 0)       // LinkedIn
+            + (!!profile.date_of_birth ? 3 : 0)      // Date de naissance
+            + (!!profile.username ? 2 : 0);           // Username
+        completionPercentage = Math.min(100, completionPoints);
     }
 
     return (

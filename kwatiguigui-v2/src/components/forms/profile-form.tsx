@@ -399,11 +399,11 @@ export function ProfileForm({
   }
 
   // ── CV upload state ────────────────────────────────────────────────────
-  const [cvFile, setCvFile]         = useState<File | null>(null);
+  const [cvFile, setCvFile] = useState<File | null>(null);
   const [cvDragging, setCvDragging] = useState(false);
-  const [cvSaving, setCvSaving]     = useState(false);
+  const [cvSaving, setCvSaving] = useState(false);
   const [cvDeleting, setCvDeleting] = useState(false);
-  const [cvError, setCvError]       = useState<string | null>(null);
+  const [cvError, setCvError] = useState<string | null>(null);
   const cvInputRef = useRef<HTMLInputElement>(null);
 
   // Derive whether the saved CV is a PDF (to know if we can show the iframe)
@@ -412,9 +412,9 @@ export function ProfileForm({
   const pendingCvIsPDF = cvFile?.type === "application/pdf";
 
   // ── CV public sharing toggle ───────────────────────────────────────────
-  const [cvPublic, setCvPublic]         = useState(initialValues.cv_public);
+  const [cvPublic, setCvPublic] = useState(initialValues.cv_public);
   const [cvPublicSaving, setCvPublicSaving] = useState(false);
-  const [cvPublicError, setCvPublicError]   = useState<string | null>(null);
+  const [cvPublicError, setCvPublicError] = useState<string | null>(null);
 
   async function handleToggleCvPublic(next: boolean) {
     setCvPublicSaving(true);
@@ -470,22 +470,23 @@ export function ProfileForm({
       return next;
     });
 
-  // ── Complétude du profil (pondérée par importance métier) ────────────────
-  // Règle : "rempli" = l'utilisateur a fait un choix, quelle que soit la valeur.
-  // "Aucune expérience" (none) = champ rempli — la complétude ne juge pas le niveau.
+  // ── Complétude du profil — formule UNIQUE partagée (profile-form, dashboard, recommendations) ──
   // Total max = 100 points.
   const expFilled = experience !== "";  // "" = jamais touché | "none" = choix honnête ✓
   const completionPoints =
-    (!!avatarPreview ? 20 : 0)  // Photo — signal #1 de confiance
-    + (!!jobType ? 15 : 0)  // Poste / secteur — critère de recherche #1
-    + (expFilled ? 15 : 0)  // Expérience — rempli si l'utilisateur a choisi
-    + (emailVerified ? 10 : 0)  // Email vérifié — crédibilité identité
-    + (!!initialValues.city ? 10 : 0)  // Ville — matching géographique
-    + (!!initialValues.first_name ? 8 : 0)  // Prénom — identité de base
-    + (!!initialValues.phone ? 8 : 0)  // Téléphone — contact principal
-    + (!!initialValues.whatsapp ? 7 : 0)  // WhatsApp — contact secondaire (RCA)
-    + (!!initialValues.last_name ? 4 : 0)  // Nom — identité complète
-    + (!!initialValues.date_of_birth ? 3 : 0); // Date de naissance — qualification âge
+    (!!avatarPreview ? 15 : 0)                   // Photo de profil
+    + (!!initialValues.cv_path ? 15 : 0)         // CV uploadé
+    + (!!jobType ? 12 : 0)                       // Poste/secteur
+    + (expFilled ? 12 : 0)                       // Expérience
+    + (emailVerified ? 8 : 0)                    // Email vérifié
+    + (!!initialValues.city ? 8 : 0)             // Ville
+    + (!!initialValues.first_name ? 5 : 0)       // Prénom
+    + (!!initialValues.last_name ? 5 : 0)        // Nom
+    + (!!initialValues.phone ? 5 : 0)            // Téléphone
+    + (!!initialValues.whatsapp ? 5 : 0)         // WhatsApp
+    + (!!initialValues.linkedin_url ? 5 : 0)     // LinkedIn
+    + (!!initialValues.date_of_birth ? 3 : 0)    // Date de naissance
+    + (!!initialValues.username ? 2 : 0);         // Username
   // → Maximum : 100 points
 
   const completionPercentage = Math.min(100, completionPoints);
@@ -1330,8 +1331,8 @@ export function ProfileForm({
                 !initialValues.cv_path
                   ? "Importez d'abord un CV avant d'activer le partage"
                   : cvPublic
-                  ? "Désactiver le partage"
-                  : "Activer le partage"
+                    ? "Désactiver le partage"
+                    : "Activer le partage"
               }
               className={[
                 "relative mt-0.5 inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500",
