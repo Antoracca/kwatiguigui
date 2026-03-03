@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Moon, TrendingUp, BookOpen, ScrollText, Users, GraduationCap, ChevronRight } from "lucide-react";
+import { Moon, TrendingUp, ScrollText, Users, ChevronRight } from "lucide-react";
 
 import { AdviceHero } from "@/components/dashboard/advice/AdviceHero";
 import { DailyTipCard } from "@/components/dashboard/advice/DailyTipCard";
@@ -9,6 +9,7 @@ import { AdviceCategoryTabs, CategoryTab } from "@/components/dashboard/advice/A
 import { ArticleCard, Article } from "@/components/dashboard/advice/ArticleCard";
 import { VideoCard, VideoClass } from "@/components/dashboard/advice/VideoCard";
 import { ToolsPromoSection } from "@/components/dashboard/advice/ToolsPromoSection";
+import { CoachingBooking } from "@/components/dashboard/advice/CoachingBooking";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ── Mock Data ─────────────────────────────────────────────────────────────
@@ -145,23 +146,7 @@ export default function AdvicePage() {
                 <div className="xl:col-span-2">
                     <DailyTipCard />
                 </div>
-                <div className="rounded-[2rem] border border-neutral-200 bg-neutral-50 px-6 py-8 dark:border-neutral-800 dark:bg-neutral-900/50 flex flex-col justify-center">
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
-                            <GraduationCap size={20} />
-                        </div>
-                        <h3 className="font-heading text-lg font-bold text-neutral-900 dark:text-neutral-100">
-                            Coaching Personnalisé
-                        </h3>
-                    </div>
-                    <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-6">
-                        Besoin d'aller plus loin ? Réservez une session de 30 minutes avec un expert RH Kwatiguigui pour auditer votre profil.
-                    </p>
-                    <button className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-neutral-900 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200">
-                        Prendre rendez-vous
-                        <ChevronRight size={16} />
-                    </button>
-                </div>
+                <CoachingBooking />
             </div>
 
             {/* ── 3. Articles & Guides ── */}
