@@ -4,6 +4,10 @@ import { createClient } from "@/lib/supabase/server";
 import { Header } from "@/components/layout/header";
 import { DashboardSidebar } from "@/components/layout/sidebar";
 
+// All dashboard pages require auth — never prerender any of them.
+// This cascades to every child page under (dashboard)/dashboard/*.
+export const dynamic = "force-dynamic";
+
 /**
  * Dashboard layout — server-side auth guard.
  *

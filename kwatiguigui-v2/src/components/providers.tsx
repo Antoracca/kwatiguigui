@@ -1,21 +1,20 @@
 "use client";
 
+import type { ReactNode } from "react";
+import { useEffect } from "react";
 import { ThemeProvider } from "next-themes";
-import * as React from "react";
 import { Toaster } from "sonner";
 
 import { AuthProvider } from "@/components/providers/auth-provider";
 
-interface ProvidersProps {
-  children: React.ReactNode;
-}
+// Named imports instead of "import * as React" — prevents the namespace
+// import from resolving to null in certain Next.js / Turbopack SSR bundles.
 
-export function Providers({ children }: ProvidersProps) {
-  // Configure le chemin du fichier WASM de DotLottie (browser uniquement).
-  // IMPORTANT: dynamic import — le static import de @lottiefiles/dotlottie-react
-  // au niveau module corrompt React pendant le prerender Next.js (React devient null).
-  // Le dynamic import garantit que le package n'est jamais chargé côté serveur.
-  React.useEffect(() => {
+export function Providers({ children }: { children: ReactNode }) {
+  // Dynamic import of @lottiefiles/dotlottie-react — the static import
+  // at module level corrupts the React instance during Next.js prerendering
+  // (React becomes null). Dynamic import ensures it only loads in the browser.
+  useEffect(() => {
     import("@lottiefiles/dotlottie-react").then(({ setWasmUrl }) => {
       setWasmUrl("/dotlottie-player.wasm");
     });
