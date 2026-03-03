@@ -32,7 +32,7 @@ import { SearchableSelect } from "@/components/ui/searchable-select";
 const MAX_DOB = (() => {
   const d = new Date();
   d.setFullYear(d.getFullYear() - 18);
-  return d.toISOString().split("T")[0]!;
+  return d.toISOString().slice(0, 10);
 })();
 
 const JOB_OPTIONS = JOB_TYPES.map((j) => ({ value: j, label: j }));

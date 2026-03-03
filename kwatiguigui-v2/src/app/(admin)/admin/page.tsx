@@ -123,7 +123,7 @@ export default async function AdminDashboardPage() {
   // Build weekly signups bar chart data (7 days)
   const dailyCounts = Array.from({ length: 7 }, (_, i) => {
     const day = new Date(Date.now() - (6 - i) * 24 * 60 * 60 * 1000);
-    const dayStr = day.toISOString().split("T")[0];
+    const dayStr = day.toISOString().slice(0, 10);
     return ((weeklySignups as any[]) ?? []).filter((p) =>
       p.created_at?.startsWith(dayStr),
     ).length;

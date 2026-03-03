@@ -424,7 +424,7 @@ export function RegisterForm() {
   // Max date for date-of-birth input (must be ≥ 18 years old)
   const maxDob = new Date();
   maxDob.setFullYear(maxDob.getFullYear() - 18);
-  const maxDobStr = maxDob.toISOString().split("T")[0];
+  const maxDobStr = maxDob.toISOString().slice(0, 10);
 
   if (state.success) {
     return (
