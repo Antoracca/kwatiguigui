@@ -4,10 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 
-// Durée minimale d'affichage (même si la page est déjà prête)
-const MIN_MS = 1600;
+// Durée minimale d'affichage
+const MIN_MS = 1000;
 
-// DotLottie a besoin du WASM côté navigateur uniquement
+// Pages déjà chargées pendant cette session (module-level = persiste jusqu'au
+// rechargement complet de la page / expiration de session).
+// Réinitialisé automatiquement à chaque hard-refresh ou nouvelle session.
+const visitedPaths = new Set<string>();
+
 const DotLottieReact = dynamic(
   () =>
     import("@lottiefiles/dotlottie-react").then((m) => ({
@@ -20,28 +24,24 @@ export function NavigationLoader() {
   const pathname = usePathname();
   const [visible, setVisible] = useState(false);
 
-  // Horodatage du clic pour calculer le temps restant à afficher
   const startRef   = useRef<number>(0);
   const timerRef   = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  // Flag : une navigation est en cours (clic détecté, page pas encore chargée)
   const pendingRef = useRef(false);
 
-  // ── 1. Écoute TOUS les clics sur les liens internes ─────────────────────
-  // Phase de capture (true) → on intercepte avant que Next.js déclenche
-  // la navigation, donc le loader s'affiche au même instant que le clic.
+  // Marquer la page initiale comme déjà visitée dès le montage
+  useEffect(() => {
+    visitedPaths.add(pathname);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── 1. Intercepte les clics sur les liens internes ───────────────────────
   useEffect(() => {
     function handleLinkClick(e: MouseEvent) {
-      const anchor = (e.target as HTMLElement).closest<HTMLAnchorElement>(
-        "a[href]",
-      );
+      const anchor = (e.target as HTMLElement).closest<HTMLAnchorElement>("a[href]");
       if (!anchor) return;
 
       const href = anchor.getAttribute("href") ?? "";
-
-      // Ignorer : liens externes, ancres pures, liens de téléchargement
       if (!href.startsWith("/") || href.startsWith("//")) return;
 
-      // Déterminer le chemin cible (sans query ni hash)
       let targetPath: string;
       try {
         targetPath = new URL(href, window.location.href).pathname;
@@ -49,8 +49,11 @@ export function NavigationLoader() {
         targetPath = href.split("?")[0]?.split("#")[0] ?? href;
       }
 
-      // Ne pas afficher si on est déjà sur cette page
+      // Même page → rien
       if (targetPath === window.location.pathname) return;
+
+      // Déjà visitée cette session → pas de loader
+      if (visitedPaths.has(targetPath)) return;
 
       pendingRef.current = true;
       startRef.current   = Date.now();
@@ -62,9 +65,11 @@ export function NavigationLoader() {
     return () => document.removeEventListener("click", handleLinkClick, true);
   }, []);
 
-  // ── 2. Quand le pathname change → la nouvelle page est prête ────────────
-  // On cache le loader seulement après avoir respecté le délai minimum.
+  // ── 2. Pathname changé → page prête, marquer comme visitée ──────────────
   useEffect(() => {
+    // Toujours marquer la page courante comme visitée
+    visitedPaths.add(pathname);
+
     if (!pendingRef.current) return;
     pendingRef.current = false;
 
@@ -77,7 +82,7 @@ export function NavigationLoader() {
     return () => clearTimeout(timerRef.current);
   }, [pathname]);
 
-  // ── 3. Sécurité : auto-fermeture après 8 s si la page ne répond pas ────
+  // ── 3. Sécurité : auto-fermeture à 8 s si la page ne répond pas ─────────
   useEffect(() => {
     if (!visible) return;
     const safety = setTimeout(() => setVisible(false), 8000);
