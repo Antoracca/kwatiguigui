@@ -4,17 +4,25 @@ import type { ReactNode } from "react";
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
 
-import { AuthProvider } from "@/components/providers/auth-provider";
-
-// sonner and next-themes are dynamically imported (ssr: false) because their
-// static imports cause React to become null in the Next.js 16 / Turbopack
-// SSR prerender bundle — they call React.useEffect / React.useContext at
-// module-level via namespace imports, which crashes the prerender worker.
+// All three providers are dynamically imported (ssr: false) because their
+// static imports corrupt React in the Next.js 16 / Turbopack SSR prerender
+// bundle — they call React hooks or access browser APIs at module level,
+// which crashes the prerender worker.
 //
-// ssr: false is safe for both:
+// ssr: false is safe for all three:
+//   - AuthProvider: auth state is inherently client-side; server components
+//     read auth directly from Supabase cookies, not via AuthProvider
 //   - Toaster: toasts are always browser-only, no SSR value
 //   - ThemeProvider: next-themes handles suppressHydrationWarning on <html>
 //     so no visible flash occurs even without SSR theme rendering
+
+const AuthProvider = dynamic(
+  () =>
+    import("@/components/providers/auth-provider").then((m) => ({
+      default: m.AuthProvider,
+    })),
+  { ssr: false },
+);
 
 const ThemeProvider = dynamic(
   () => import("next-themes").then((m) => ({ default: m.ThemeProvider })),
