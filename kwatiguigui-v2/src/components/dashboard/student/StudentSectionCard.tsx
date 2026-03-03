@@ -22,9 +22,11 @@ import {
   Search,
   Crown,
   Pencil,
+  RefreshCw,
 } from "lucide-react";
 
-import { toggleStudentMode, updateStudentProfile } from "@/lib/actions/student";
+import { useRouter } from "next/navigation";
+import { toggleStudentMode, updateStudentProfile, getProfileCompleteness } from "@/lib/actions/student";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -262,14 +264,18 @@ function SubLabel({ children }: { children: React.ReactNode }) {
 // ---------------------------------------------------------------------------
 // PropulserFlat — section plate dans le fond de la page (pas de carte)
 // ---------------------------------------------------------------------------
-const SCORE_CRITERIA = (p: StudentProfileData) => [
-  { label: "Prénom", pts: 20, present: !!p.first_name },
-  { label: "Nom de famille", pts: 15, present: !!p.last_name },
-  { label: "Email", pts: 15, present: !!p.email },
-  { label: "Ville", pts: 15, present: !!p.city },
-  { label: "WhatsApp", pts: 15, present: !!p.whatsapp },
-  { label: "Téléphone", pts: 10, present: !!p.phone },
-  { label: "Photo de profil", pts: 10, present: !!p.avatar_url },
+// Criteria UI mapping based on unified score logic (100 pts)
+const getUnifiedCriteriaUI = (p: StudentProfileData) => [
+  { label: "Photo de profil", pts: 15, present: !!p.avatar_url },
+  { label: "CV Uploadé", pts: 15, present: true }, // Not tracked in `profileData` prop directly, but handled by server score
+  { label: "Type d'emploi souhaité", pts: 12, present: true },
+  { label: "Expérience", pts: 12, present: true },
+  { label: "Email", pts: 8, present: !!p.email },
+  { label: "Ville", pts: 8, present: !!p.city },
+  { label: "LinkedIn", pts: 5, present: true },
+  { label: "Nom complet", pts: 10, present: !!p.first_name && !!p.last_name },
+  { label: "Contacts (Tél/Whatsapp)", pts: 10, present: !!p.phone || !!p.whatsapp },
+  { label: "Infos basiques", pts: 5, present: true },
 ];
 
 function PropulserFlat({
@@ -277,10 +283,33 @@ function PropulserFlat({
 }: {
   profileData: StudentProfileData; published: boolean; onPublish: () => void;
 }) {
-  const criteria = SCORE_CRITERIA(profileData);
-  const score = criteria.reduce((s, c) => (c.present ? s + c.pts : s), 0);
-  const missing = criteria.filter((c) => !c.present);
-  const optimized = score >= 90;
+  const [score, setScore] = useState<number | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Fetch true unified score on mount
+  useEffect(() => {
+    fetchScore();
+  }, []);
+
+  async function fetchScore() {
+    setIsRefreshing(true);
+    try {
+      const res = await getProfileCompleteness();
+      setScore(res.score);
+    } catch (e) {
+      console.error("Failed to fetch score", e);
+    } finally {
+      setIsRefreshing(false);
+    }
+  }
+
+  // Fallback to local data analysis if score isn't loaded yet
+  const criteria = getUnifiedCriteriaUI(profileData);
+  const displayScore = score !== null ? score : 0; // Wait for server to give exact score
+  const optimized = displayScore >= 90;
+
+  // What to tell the user they are missing based on local quick check
+  const missing = criteria.filter((c) => !c.present && c.pts > 0);
 
   return (
     <motion.div variants={FADE_UP} initial="hidden" animate="visible" className="space-y-7 pt-2">
@@ -297,11 +326,21 @@ function PropulserFlat({
       {/* ── Titre & score ────────────────────────────────────────────── */}
       <div className="space-y-3">
         <div className="flex items-end justify-between gap-3">
-          <h2 className="font-heading text-xl font-bold text-neutral-900 dark:text-neutral-100 leading-tight">
-            Complétude de votre profil étudiant
-          </h2>
+          <div className="flex items-center gap-3">
+            <h2 className="font-heading text-xl font-bold text-neutral-900 dark:text-neutral-100 leading-tight">
+              Complétude de votre profil étudiant
+            </h2>
+            <button
+              onClick={fetchScore}
+              disabled={isRefreshing}
+              className="inline-flex items-center justify-center rounded-full p-1.5 text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-800 dark:hover:text-neutral-300 disabled:opacity-50"
+              title="Actualiser le score"
+            >
+              <RefreshCw size={14} className={isRefreshing ? "animate-spin" : ""} />
+            </button>
+          </div>
           <span className={["text-2xl font-extrabold shrink-0", optimized ? "text-secondary-600 dark:text-secondary-400" : "text-accent-600 dark:text-accent-400"].join(" ")}>
-            {score}%
+            {score === null ? "..." : `${displayScore}%`}
           </span>
         </div>
 
@@ -316,10 +355,10 @@ function PropulserFlat({
         </div>
 
         {/* Message score */}
-        {score < 90 ? (
+        {displayScore < 90 ? (
           <p className="text-sm text-neutral-500 dark:text-neutral-400">
             Votre profil est à{" "}
-            <span className="font-semibold text-accent-600 dark:text-accent-400">{score}%</span>
+            <span className="font-semibold text-accent-600 dark:text-accent-400">{displayScore}%</span>
             {" "}— en dessous de la recommandation de{" "}
             <span className="font-semibold">90%</span>.
             {" "}Complétez-le pour maximiser votre visibilité auprès des recruteurs.
@@ -352,9 +391,9 @@ function PropulserFlat({
       {!optimized && (
         <div className="space-y-2.5">
           <p className="text-sm text-neutral-600 dark:text-neutral-400">
-            Manquants :{" "}
+            Pour atteindre 90%, vous devez remplir complètement :{" "}
             <span className="font-semibold text-neutral-800 dark:text-neutral-200">
-              {missing.map((m) => m.label).join(", ")}
+              Votre CV (PDF), Expériences, Type d'emploi souhaité, Photo de profil...
             </span>
           </p>
           <a
@@ -362,7 +401,7 @@ function PropulserFlat({
             className="inline-flex items-center gap-2 rounded-full bg-primary-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-primary-700 active:scale-[0.98]"
           >
             <Pencil size={14} />
-            Modifier mon profil
+            Compléter mon CV & Profil
           </a>
         </div>
       )}
@@ -429,11 +468,12 @@ function PropulserFlat({
           <motion.div key="btn" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <button
               type="button"
+              disabled={displayScore < 90}
               onClick={onPublish}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-purple-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-purple-700 active:scale-[0.99]"
+              className={["w-full inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold shadow-sm transition active:scale-[0.99]", displayScore >= 90 ? "bg-purple-600 text-white hover:bg-purple-700" : "bg-neutral-100 text-neutral-400 cursor-not-allowed dark:bg-neutral-800 dark:text-neutral-500"].join(" ")}
             >
               <Search size={15} />
-              Publier mon profil étudiant
+              {displayScore >= 90 ? "Publier mon profil étudiant" : "Atteignez 90% pour publier"}
             </button>
           </motion.div>
         ) : (
@@ -483,10 +523,14 @@ function PropulserFlat({
 export function StudentSectionCard({
   initialValues,
   profileData,
+  initialStep = "wizard",
 }: {
   initialValues: StudentProfileValues;
   profileData: StudentProfileData;
+  initialStep?: "wizard" | "propulser";
 }) {
+  const router = useRouter();
+
   // ── Form state ────────────────────────────────────────────────────────
   const [isStudent, setIsStudent] = useState(initialValues.is_student);
   const [schoolName, setSchoolName] = useState(initialValues.school_name);
@@ -514,13 +558,18 @@ export function StudentSectionCard({
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
-  // ── Restore from sessionStorage (10 min cache) ────────────────────────
+  // ── Restore from sessionStorage and URL routing param ────────────────
   useEffect(() => {
-    if (initialValues.is_student && isSavedSession()) {
-      setWizardSaved(true);
-      setShowPropulser(true);
+    if (initialValues.is_student) {
+      if (initialStep === "propulser" && isSavedSession()) {
+        setWizardSaved(true);
+        setShowPropulser(true);
+      } else if (initialStep === "wizard" && isSavedSession()) {
+        // Force the URL to ?step=propulser if we have a valid session but user dropped param
+        router.replace("/dashboard/student?step=propulser");
+      }
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [initialStep, initialValues.is_student, router]);
 
   // ── Handlers ──────────────────────────────────────────────────────────
   async function handleActivate() {
@@ -559,6 +608,7 @@ export function StudentSectionCard({
     clearSaved();
     setDir(-1);
     setFormStep(3);
+    router.replace("/dashboard/student");
   }
 
   function goNext() { setDir(1); setFormStep(3); }
@@ -587,7 +637,12 @@ export function StudentSectionCard({
       setWizardSaved(true);
       setShowPropulser(true);
       persistSaved();
-      setTimeout(() => setSaved(false), 3000);
+
+      // Navigate sequentially using URL step param
+      setTimeout(() => {
+        setSaved(false);
+        router.push("/dashboard/student?step=propulser");
+      }, 500);
     } else {
       setError(result.error ?? "Erreur inconnue");
     }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,7 +12,7 @@ import {
   Calendar,
   Clock,
   Star,
-  Sparkles,
+  Tag,
   CheckCircle2,
   Loader2,
   ShieldCheck,
@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 
+import { createClient } from "@/lib/supabase/client";
 import { bookCoachingSession, type BookingFormData } from "@/lib/actions/coaching";
 
 // ── Constants ────────────────────────────────────────────────────────────────
@@ -40,7 +41,7 @@ const TOPICS = [
   "Audit de CV & Profil",
   "Préparation à l'entretien",
   "Orientation professionnelle",
-  "Stratégie de recherche d'emploi",
+  "Stratégie de recherche",
   "Négociation salariale",
   "Autre",
 ];
@@ -48,13 +49,13 @@ const TOPICS = [
 // ── Schema ───────────────────────────────────────────────────────────────────
 
 const schema = z.object({
-  full_name:           z.string().min(2, "Le nom est requis (2 caractères min.)"),
-  email:               z.string().email("Adresse email invalide"),
+  full_name:           z.string().min(2, "Le nom est requis"),
+  email:               z.string().email("Email invalide"),
   phone:               z.string().optional(),
   preferred_date:      z.string().min(1, "Sélectionnez une date"),
-  preferred_time_slot: z.string().min(1, "Sélectionnez un créneau horaire"),
-  topic:               z.string().min(1, "Choisissez un sujet de session"),
-  message:             z.string().max(500, "500 caractères maximum").optional(),
+  preferred_time_slot: z.string().min(1, "Sélectionnez un créneau"),
+  topic:               z.string().min(1, "Choisissez un sujet"),
+  message:             z.string().max(500).optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -68,25 +69,27 @@ function getMinDate(): string {
 }
 
 const inputClass =
-  "w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none transition focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:border-primary-400 dark:focus:bg-neutral-800/80";
+  "w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none transition focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:border-primary-400 dark:focus:bg-neutral-800/80";
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
   return (
-    <p className="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-500">
+    <p className="mt-1 flex items-center gap-1 text-xs text-red-500">
       <AlertCircle size={11} />
       {message}
     </p>
   );
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
+function Label({ children, required, hint }: { children: React.ReactNode; required?: boolean; hint?: string }) {
   return (
-    <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+    <label className="mb-1.5 flex items-center gap-1 text-sm font-medium text-neutral-700 dark:text-neutral-300">
       {children}
-    </p>
+      {required && <span className="text-red-500">*</span>}
+      {hint && <span className="ml-1 text-xs font-normal text-neutral-400">{hint}</span>}
+    </label>
   );
 }
 
@@ -108,7 +111,7 @@ function SuccessView({ onClose }: { onClose: () => void }) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.25 }}
-        className="space-y-3 w-full max-w-sm"
+        className="w-full max-w-sm space-y-4"
       >
         <h3 className="font-heading text-2xl font-bold text-neutral-900 dark:text-neutral-100">
           Demande envoyée !
@@ -116,7 +119,6 @@ function SuccessView({ onClose }: { onClose: () => void }) {
         <p className="text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
           Votre demande de session coaching a été transmise à notre équipe RH Kwatiguigui.
         </p>
-
         <div className="flex items-start gap-3 rounded-2xl border border-green-200 bg-green-50 px-4 py-4 text-left dark:border-green-800/40 dark:bg-green-900/20">
           <MailCheck className="mt-0.5 h-5 w-5 shrink-0 text-green-600 dark:text-green-400" />
           <div>
@@ -146,27 +148,59 @@ function SuccessView({ onClose }: { onClose: () => void }) {
 // ── Main component ────────────────────────────────────────────────────────────
 
 export function CoachingBooking() {
-  const [open, setOpen]           = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [open, setOpen]               = useState(false);
+  const [submitted, setSubmitted]     = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+
+  // Prefilled values kept across dialog open/close cycles
+  const prefilled = useRef<Partial<FormValues>>({});
 
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({ resolver: zodResolver(schema) });
 
   const selectedTopic = watch("topic");
 
+  // Prefill from Supabase profile on mount
+  useEffect(() => {
+    (async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("first_name, last_name, phone")
+        .eq("id", user.id)
+        .single();
+
+      const fullName = profile
+        ? `${profile.first_name ?? ""} ${profile.last_name ?? ""}`.trim()
+        : "";
+      const phone = profile?.phone ?? "";
+      const email = user.email ?? "";
+
+      prefilled.current = { full_name: fullName, email, phone };
+
+      setValue("full_name", fullName);
+      setValue("email",     email);
+      setValue("phone",     phone);
+    })();
+  }, [setValue]);
+
   function handleOpenChange(v: boolean) {
     setOpen(v);
     if (!v) {
+      // After close animation, restore prefilled state
       setTimeout(() => {
         setSubmitted(false);
         setServerError(null);
-        reset();
+        reset(prefilled.current);
       }, 300);
     }
   }
@@ -184,7 +218,7 @@ export function CoachingBooking() {
   return (
     <div className="flex flex-col rounded-[2rem] border border-neutral-200 bg-white px-6 py-8 dark:border-neutral-800 dark:bg-neutral-900">
       {/* Card header */}
-      <div className="flex items-center gap-3 mb-3">
+      <div className="mb-3 flex items-center gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
           <GraduationCap size={20} />
         </div>
@@ -198,7 +232,7 @@ export function CoachingBooking() {
         {[
           { icon: <Clock size={11} />,    label: "30 min" },
           { icon: <Star size={11} />,     label: "Expert RH" },
-          { icon: <Sparkles size={11} />, label: "Sur mesure" },
+          { icon: <GraduationCap size={11} />, label: "Sur mesure" },
         ].map(({ icon, label }) => (
           <span
             key={label}
@@ -225,97 +259,72 @@ export function CoachingBooking() {
         </Dialog.Trigger>
 
         <Dialog.Portal>
-          {/* Overlay */}
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" />
 
-          {/* Panel */}
+          {/* scrollbar-hide = overflow hidden visually but still scrollable natively */}
           <Dialog.Content
             aria-describedby="coaching-desc"
-            className="fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-2xl max-h-[90dvh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-3xl bg-white shadow-2xl outline-none dark:bg-neutral-900"
+            className="fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-2xl max-h-[92dvh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto scrollbar-hide rounded-3xl bg-white shadow-2xl outline-none dark:bg-neutral-900"
           >
             {submitted ? (
               <SuccessView onClose={() => handleOpenChange(false)} />
             ) : (
               <>
-                {/* Dialog header */}
-                <div className="sticky top-0 z-10 flex items-start justify-between border-b border-neutral-100 bg-white px-6 py-5 dark:border-neutral-800 dark:bg-neutral-900">
+                {/* Sticky header */}
+                <div className="sticky top-0 z-10 flex items-start justify-between border-b border-neutral-100 bg-white px-6 py-4 dark:border-neutral-800 dark:bg-neutral-900">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
-                      <GraduationCap size={20} />
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
+                      <GraduationCap size={18} />
                     </div>
                     <div>
-                      <Dialog.Title className="font-heading text-lg font-bold text-neutral-900 dark:text-neutral-100">
+                      <Dialog.Title className="font-heading text-base font-bold text-neutral-900 dark:text-neutral-100">
                         Réserver votre session
                       </Dialog.Title>
                       <p id="coaching-desc" className="text-xs text-neutral-400">
-                        Session de 30 min · Expert RH Kwatiguigui
+                        30 min · Expert RH Kwatiguigui
                       </p>
                     </div>
                   </div>
                   <Dialog.Close className="rounded-lg p-1.5 text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-600 dark:hover:bg-neutral-800 dark:hover:text-neutral-200">
-                    <X size={18} />
+                    <X size={17} />
                   </Dialog.Close>
                 </div>
 
-                {/* Form */}
-                <form onSubmit={handleSubmit(onSubmit)} noValidate className="divide-y divide-neutral-100 dark:divide-neutral-800">
-                  {/* 1 — Infos personnelles */}
-                  <section className="px-6 py-5 space-y-4">
-                    <SectionLabel>Informations personnelles</SectionLabel>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div>
-                        <label className="mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                          Nom complet <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          {...register("full_name")}
-                          placeholder="Jean Dupont"
-                          className={inputClass}
-                        />
-                        <FieldError message={errors.full_name?.message} />
-                      </div>
+                {/* Form — single pass, no scroll needed */}
+                <form onSubmit={handleSubmit(onSubmit)} noValidate className="px-6 py-5 space-y-5">
 
-                      <div>
-                        <label className="mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                          Adresse email <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          {...register("email")}
-                          type="email"
-                          placeholder="jean@exemple.com"
-                          className={inputClass}
-                        />
-                        <FieldError message={errors.email?.message} />
-                      </div>
-
-                      <div className="sm:col-span-2">
-                        <label className="mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                          Téléphone{" "}
-                          <span className="ml-1 text-xs font-normal text-neutral-400">(optionnel)</span>
-                        </label>
-                        <input
-                          {...register("phone")}
-                          type="tel"
-                          placeholder="+236 70 00 00 00"
-                          className={inputClass}
-                        />
-                      </div>
+                  {/* Row 1: Nom + Email */}
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div>
+                      <Label required>Nom complet</Label>
+                      <input {...register("full_name")} placeholder="Jean Dupont" className={inputClass} />
+                      <FieldError message={errors.full_name?.message} />
                     </div>
-                  </section>
+                    <div>
+                      <Label required>Adresse email</Label>
+                      <input {...register("email")} type="email" placeholder="jean@exemple.com" className={inputClass} />
+                      <FieldError message={errors.email?.message} />
+                    </div>
+                  </div>
 
-                  {/* 2 — Créneau */}
-                  <section className="px-6 py-5 space-y-4">
-                    <SectionLabel>
-                      <span className="flex items-center gap-2">
-                        <Calendar size={12} />
-                        Choisissez votre créneau
-                      </span>
-                    </SectionLabel>
-                    <div className="grid gap-4 sm:grid-cols-2">
+                  {/* Row 2: Téléphone */}
+                  <div>
+                    <Label hint="(optionnel)">Téléphone</Label>
+                    <input {...register("phone")} type="tel" placeholder="+236 70 00 00 00" className={inputClass} />
+                  </div>
+
+                  {/* Divider */}
+                  <div className="border-t border-neutral-100 dark:border-neutral-800" />
+
+                  {/* Row 3: Date + Heure */}
+                  <div>
+                    <p className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-400">
+                      <Calendar size={11} />
+                      Créneau souhaité
+                    </p>
+                    <div className="grid gap-3 sm:grid-cols-2">
                       <div>
-                        <label className="mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                          Date souhaitée <span className="text-red-500">*</span>
-                        </label>
+                        <Label required>Date</Label>
                         <input
                           {...register("preferred_date")}
                           type="date"
@@ -324,60 +333,47 @@ export function CoachingBooking() {
                         />
                         <FieldError message={errors.preferred_date?.message} />
                       </div>
-
                       <div>
-                        <label className="mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                          Heure <span className="text-red-500">*</span>
-                        </label>
+                        <Label required>Heure</Label>
                         <select {...register("preferred_time_slot")} className={inputClass}>
-                          <option value="">Sélectionner un créneau</option>
+                          <option value="">Sélectionner</option>
                           {TIME_SLOTS.map((s) => (
-                            <option key={s} value={s}>
-                              {s}
-                            </option>
+                            <option key={s} value={s}>{s}</option>
                           ))}
                         </select>
                         <FieldError message={errors.preferred_time_slot?.message} />
                       </div>
                     </div>
-                  </section>
+                  </div>
 
-                  {/* 3 — Sujet */}
-                  <section className="px-6 py-5 space-y-3">
-                    <SectionLabel>
-                      <span className="flex items-center gap-2">
-                        <Sparkles size={12} />
-                        Sujet de la session <span className="text-red-500 normal-case font-semibold ml-0.5">*</span>
-                      </span>
-                    </SectionLabel>
-                    <div className="grid gap-2 sm:grid-cols-2">
+                  {/* Divider */}
+                  <div className="border-t border-neutral-100 dark:border-neutral-800" />
+
+                  {/* Row 4: Sujet — 3 columns so only 2 rows */}
+                  <div>
+                    <p className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-400">
+                      <Tag size={11} />
+                      Sujet de la session <span className="text-red-500 normal-case text-xs font-semibold ml-0.5">*</span>
+                    </p>
+                    <div className="grid gap-2 grid-cols-2 sm:grid-cols-3">
                       {TOPICS.map((topic) => {
                         const active = selectedTopic === topic;
                         return (
                           <label
                             key={topic}
-                            className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition ${
+                            className={`flex cursor-pointer items-center gap-2.5 rounded-xl border px-3 py-2.5 text-sm font-medium transition ${
                               active
                                 ? "border-primary-500 bg-primary-50 text-primary-700 dark:border-primary-400 dark:bg-primary-900/30 dark:text-primary-300"
-                                : "border-neutral-200 bg-neutral-50 text-neutral-600 hover:border-neutral-300 hover:bg-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:border-neutral-600 dark:hover:bg-neutral-700/50"
+                                : "border-neutral-200 bg-neutral-50 text-neutral-600 hover:border-neutral-300 hover:bg-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:border-neutral-600"
                             }`}
                           >
-                            <input
-                              type="radio"
-                              value={topic}
-                              className="sr-only"
-                              {...register("topic")}
-                            />
+                            <input type="radio" value={topic} className="sr-only" {...register("topic")} />
                             <span
-                              className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition ${
-                                active
-                                  ? "border-primary-500 dark:border-primary-400"
-                                  : "border-neutral-300 dark:border-neutral-600"
+                              className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border-2 transition ${
+                                active ? "border-primary-500 dark:border-primary-400" : "border-neutral-300 dark:border-neutral-600"
                               }`}
                             >
-                              {active && (
-                                <span className="h-2 w-2 rounded-full bg-primary-500 dark:bg-primary-400" />
-                              )}
+                              {active && <span className="h-1.5 w-1.5 rounded-full bg-primary-500 dark:bg-primary-400" />}
                             </span>
                             {topic}
                           </label>
@@ -385,50 +381,44 @@ export function CoachingBooking() {
                       })}
                     </div>
                     <FieldError message={errors.topic?.message} />
-                  </section>
+                  </div>
 
-                  {/* 4 — Message */}
-                  <section className="px-6 py-5 space-y-3">
-                    <SectionLabel>
-                      Message{" "}
-                      <span className="ml-1 normal-case font-normal">(optionnel)</span>
-                    </SectionLabel>
+                  {/* Divider */}
+                  <div className="border-t border-neutral-100 dark:border-neutral-800" />
+
+                  {/* Row 5: Message */}
+                  <div>
+                    <Label hint="(optionnel)">Message</Label>
                     <textarea
                       {...register("message")}
-                      rows={3}
+                      rows={2}
                       placeholder="Décrivez brièvement votre situation ou vos objectifs…"
                       className={`${inputClass} resize-none`}
                     />
                     <FieldError message={errors.message?.message} />
-                  </section>
+                  </div>
 
-                  {/* Footer / submit */}
-                  <div className="px-6 py-5 space-y-3">
-                    {serverError && (
-                      <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800/40 dark:bg-red-900/20 dark:text-red-400">
-                        <AlertCircle size={15} className="mt-0.5 shrink-0" />
-                        {serverError}
-                      </div>
-                    )}
+                  {/* Server error */}
+                  {serverError && (
+                    <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800/40 dark:bg-red-900/20 dark:text-red-400">
+                      <AlertCircle size={14} className="mt-0.5 shrink-0" />
+                      {serverError}
+                    </div>
+                  )}
 
+                  {/* Submit */}
+                  <div className="space-y-2 pt-1">
                     <button
                       type="submit"
                       disabled={isSubmitting}
                       className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary-600 px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-primary-600/20 transition hover:bg-primary-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-primary-500 dark:hover:bg-primary-400"
                     >
                       {isSubmitting ? (
-                        <>
-                          <Loader2 size={15} className="animate-spin" />
-                          Envoi en cours…
-                        </>
+                        <><Loader2 size={15} className="animate-spin" /> Envoi en cours…</>
                       ) : (
-                        <>
-                          Confirmer ma réservation
-                          <ChevronRight size={15} />
-                        </>
+                        <>Confirmer ma réservation <ChevronRight size={15} /></>
                       )}
                     </button>
-
                     <p className="flex items-center justify-center gap-1.5 text-xs text-neutral-400">
                       <ShieldCheck size={12} />
                       Confirmation par email sous 24 h · Aucun paiement requis

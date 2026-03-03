@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 import { StudentSectionCard } from "@/components/dashboard/student/StudentSectionCard";
 import type { StudentProfileValues, StudentProfileData } from "@/components/dashboard/student/StudentSectionCard";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Stages & Alternance — KWATIGUIGUI",
   description: "Gérez votre profil étudiant, vos disponibilités pour les stages et alternances.",
@@ -12,30 +14,36 @@ export const metadata: Metadata = {
 };
 
 const DEFAULT_STUDENT: StudentProfileValues = {
-  is_student:          false,
-  school_name:         "",
-  field_of_study:      "",
-  study_level:         "",
-  school_year:         "",
-  internship_open:     false,
-  alternance_open:     false,
-  internship_start:    null,
+  is_student: false,
+  school_name: "",
+  field_of_study: "",
+  study_level: "",
+  school_year: "",
+  internship_open: false,
+  alternance_open: false,
+  internship_start: null,
   internship_duration: "",
-  internship_mode:     "",
+  internship_mode: "",
   student_description: "",
 };
 
 const DEFAULT_PROFILE: StudentProfileData = {
-  first_name:  "",
-  last_name:   "",
-  city:        "",
-  phone:       null,
-  whatsapp:    "",
-  avatar_url:  null,
-  email:       "",
+  first_name: "",
+  last_name: "",
+  city: "",
+  phone: null,
+  whatsapp: "",
+  avatar_url: null,
+  email: "",
 };
 
-export default async function StudentPage() {
+export default async function StudentPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ step?: string }>;
+}) {
+  const params = await searchParams;
+  const initialStep = params.step === "propulser" ? "propulser" : "wizard";
   const supabase = await createClient();
 
   const {
@@ -46,7 +54,7 @@ export default async function StudentPage() {
   if (authError || !user) redirect("/login");
 
   let studentValues: StudentProfileValues = DEFAULT_STUDENT;
-  let profileData: StudentProfileData     = { ...DEFAULT_PROFILE, email: user.email ?? "" };
+  let profileData: StudentProfileData = { ...DEFAULT_PROFILE, email: user.email ?? "" };
 
   // Single query — fetches both student fields AND profile completeness fields
   const { data } = await supabase
@@ -59,27 +67,27 @@ export default async function StudentPage() {
 
   if (data) {
     studentValues = {
-      is_student:          data.is_student          ?? false,
-      school_name:         data.school_name         ?? "",
-      field_of_study:      data.field_of_study      ?? "",
-      study_level:         data.study_level         ?? "",
-      school_year:         data.school_year         ?? "",
-      internship_open:     data.internship_open     ?? false,
-      alternance_open:     data.alternance_open     ?? false,
-      internship_start:    data.internship_start    ?? null,
+      is_student: data.is_student ?? false,
+      school_name: data.school_name ?? "",
+      field_of_study: data.field_of_study ?? "",
+      study_level: data.study_level ?? "",
+      school_year: data.school_year ?? "",
+      internship_open: data.internship_open ?? false,
+      alternance_open: data.alternance_open ?? false,
+      internship_start: data.internship_start ?? null,
       internship_duration: data.internship_duration ?? "",
-      internship_mode:     data.internship_mode     ?? "",
+      internship_mode: data.internship_mode ?? "",
       student_description: data.student_description ?? "",
     };
 
     profileData = {
-      first_name:  data.first_name  ?? "",
-      last_name:   data.last_name   ?? "",
-      city:        data.city        ?? "",
-      phone:       data.phone       ?? null,
-      whatsapp:    data.whatsapp    ?? "",
-      avatar_url:  data.avatar_url  ?? null,
-      email:       user.email       ?? "",
+      first_name: data.first_name ?? "",
+      last_name: data.last_name ?? "",
+      city: data.city ?? "",
+      phone: data.phone ?? null,
+      whatsapp: data.whatsapp ?? "",
+      avatar_url: data.avatar_url ?? null,
+      email: user.email ?? "",
     };
   }
 
@@ -96,7 +104,11 @@ export default async function StudentPage() {
       </div>
 
       {/* ── Composant Pôle Étudiant ───────────────────────────────────────── */}
-      <StudentSectionCard initialValues={studentValues} profileData={profileData} />
+      <StudentSectionCard
+        initialValues={studentValues}
+        profileData={profileData}
+        initialStep={initialStep}
+      />
     </div>
   );
 }

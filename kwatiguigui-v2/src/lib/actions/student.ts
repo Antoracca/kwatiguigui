@@ -18,19 +18,19 @@ const INTERNSHIP_MODES = ["Présentiel", "Distanciel", "Hybride", ""] as const;
 // Validation schema
 // ---------------------------------------------------------------------------
 const studentProfileSchema = z.object({
-  school_name:          z.string().max(200).default(""),
-  field_of_study:       z.string().max(100).default(""),
-  study_level:          z.string().refine((v) => (STUDY_LEVELS as readonly string[]).includes(v), "Niveau invalide").default(""),
-  school_year:          z.string().refine((v) => (SCHOOL_YEARS as readonly string[]).includes(v), "Année invalide").default(""),
-  internship_open:      z.boolean().default(false),
-  alternance_open:      z.boolean().default(false),
-  internship_start:     z.string().nullable().default(null).refine(
+  school_name: z.string().max(200).default(""),
+  field_of_study: z.string().max(100).default(""),
+  study_level: z.string().refine((v) => (STUDY_LEVELS as readonly string[]).includes(v), "Niveau invalide").default(""),
+  school_year: z.string().refine((v) => (SCHOOL_YEARS as readonly string[]).includes(v), "Année invalide").default(""),
+  internship_open: z.boolean().default(false),
+  alternance_open: z.boolean().default(false),
+  internship_start: z.string().nullable().default(null).refine(
     (v) => !v || /^\d{4}-\d{2}-\d{2}$/.test(v),
     "Format de date invalide (YYYY-MM-DD)",
   ),
-  internship_duration:  z.string().refine((v) => (INTERNSHIP_DURATIONS as readonly string[]).includes(v), "Durée invalide").default(""),
-  internship_mode:      z.string().refine((v) => (INTERNSHIP_MODES as readonly string[]).includes(v), "Mode invalide").default(""),
-  student_description:  z.string().max(600).default(""),
+  internship_duration: z.string().refine((v) => (INTERNSHIP_DURATIONS as readonly string[]).includes(v), "Durée invalide").default(""),
+  internship_mode: z.string().refine((v) => (INTERNSHIP_MODES as readonly string[]).includes(v), "Mode invalide").default(""),
+  student_description: z.string().max(600).default(""),
 });
 
 export type StudentProfileInput = z.infer<typeof studentProfileSchema>;
@@ -89,16 +89,16 @@ export async function updateStudentProfile(input: StudentProfileInput): Promise<
   const { error } = await supabase
     .from("profiles")
     .update({
-      school_name:          parsed.data.school_name,
-      field_of_study:       parsed.data.field_of_study,
-      study_level:          parsed.data.study_level,
-      school_year:          parsed.data.school_year,
-      internship_open:      parsed.data.internship_open,
-      alternance_open:      parsed.data.alternance_open,
-      internship_start:     parsed.data.internship_start,
-      internship_duration:  parsed.data.internship_duration,
-      internship_mode:      parsed.data.internship_mode,
-      student_description:  parsed.data.student_description,
+      school_name: parsed.data.school_name,
+      field_of_study: parsed.data.field_of_study,
+      study_level: parsed.data.study_level,
+      school_year: parsed.data.school_year,
+      internship_open: parsed.data.internship_open,
+      alternance_open: parsed.data.alternance_open,
+      internship_start: parsed.data.internship_start,
+      internship_duration: parsed.data.internship_duration,
+      internship_mode: parsed.data.internship_mode,
+      student_description: parsed.data.student_description,
     })
     .eq("id", user.id);
 
@@ -108,4 +108,59 @@ export async function updateStudentProfile(input: StudentProfileInput): Promise<
 
   revalidatePath("/dashboard/student");
   return { success: true };
+}
+
+// ---------------------------------------------------------------------------
+// getProfileCompleteness — fetch fields and calculate unified 100-point score
+// ---------------------------------------------------------------------------
+export async function getProfileCompleteness() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { score: 0 };
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select(
+      "cv_path, linkedin_url, job_type, experience, first_name, last_name, city, phone, whatsapp, date_of_birth, username, avatar_url"
+    )
+    .eq("id", user.id)
+    .single();
+
+  if (!profile) return { score: 0 };
+
+  let score = 0;
+
+  // 1. Core professional info (44 pts)
+  if (profile.cv_path && profile.cv_path.length > 0) score += 15;
+  if (profile.linkedin_url && profile.linkedin_url.length > 0) score += 5;
+  if (profile.job_type && profile.job_type.length > 0) score += 12;
+  if (profile.experience && profile.experience.length > 50) score += 12;
+
+  // 2. Verified contact (8 pts)
+  if (user.email_confirmed_at) score += 8;
+
+  // 3. Location & Identity (18 pts)
+  if (profile.city && profile.city.length > 0) score += 8;
+  if (profile.first_name && profile.first_name.length > 0) score += 5;
+  if (profile.last_name && profile.last_name.length > 0) score += 5;
+
+  // 4. Additional contact (10 pts)
+  if (profile.phone && profile.phone.length > 0) score += 5;
+  if (profile.whatsapp && profile.whatsapp.length > 0) score += 5;
+
+  // 5. Basic details (5 pts)
+  if (profile.date_of_birth) score += 3;
+  if (profile.username && profile.username.length > 0) score += 2;
+
+  // 6. Avatar bonus (15 pts) - replacing student pole bonus
+  if (profile.avatar_url && profile.avatar_url.length > 0) score += 15;
+
+  // Ensure 100 max
+  score = Math.min(100, score);
+
+  return { score };
 }
