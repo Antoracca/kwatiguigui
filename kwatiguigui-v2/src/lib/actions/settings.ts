@@ -20,12 +20,12 @@ export async function changePassword(
   } = await supabase.auth.getUser();
 
   if (authError || !user) {
-    return { success: false, error: "Non authentifie." };
+    return { success: false, error: "Non authentifié." };
   }
 
   const raw = {
-    currentPassword: formData.get("currentPassword"),
-    newPassword: formData.get("newPassword"),
+    currentPassword:    formData.get("currentPassword"),
+    newPassword:        formData.get("newPassword"),
     confirmNewPassword: formData.get("confirmNewPassword"),
   };
 
@@ -37,7 +37,7 @@ export async function changePassword(
     };
   }
 
-  // Verify current password by trying to sign in
+  // Verify current password by re-authenticating
   const email = user.email;
   if (!email) {
     return { success: false, error: "Session invalide." };
@@ -65,7 +65,42 @@ export async function changePassword(
   if (updateError) {
     return {
       success: false,
-      error: "Erreur lors du changement de mot de passe. Reessayez.",
+      error: "Erreur lors du changement de mot de passe. Réessayez.",
+    };
+  }
+
+  return { success: true };
+}
+
+// ---------------------------------------------------------------------------
+// requestPasswordReset
+// For Google-only accounts that want to set an email/password in addition.
+// Sends a Supabase reset link → user lands on /reset-password, sets a
+// password, and can then log in with email + password going forward.
+// ---------------------------------------------------------------------------
+export async function requestPasswordReset(): Promise<ActionResult> {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user?.email) {
+    return { success: false, error: "Non authentifié." };
+  }
+
+  const siteUrl =
+    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
+  const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
+    redirectTo: `${siteUrl}/reset-password`,
+  });
+
+  if (error) {
+    return {
+      success: false,
+      error: "Erreur lors de l'envoi du lien. Réessayez.",
     };
   }
 
@@ -84,17 +119,17 @@ export async function deactivateAccount(): Promise<ActionResult> {
   } = await supabase.auth.getUser();
 
   if (authError || !user) {
-    return { success: false, error: "Non authentifie." };
+    return { success: false, error: "Non authentifié." };
   }
 
-  // Soft-delete: set is_active = false on profile
+  // Soft-delete : is_active = false
   const { error: updateError } = await supabase
     .from("profiles")
     .update({ is_active: false })
     .eq("id", user.id);
 
   if (updateError) {
-    return { success: false, error: "Erreur lors de la desactivation." };
+    return { success: false, error: "Erreur lors de la désactivation." };
   }
 
   await supabase.auth.signOut();

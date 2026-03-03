@@ -62,6 +62,7 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.0",
     "react-international-phone": "^4.8.0",
+    "react-markdown": "^10.1.0",
     "sonner": "^1.7.0",
     "speakeasy": "^2.0.0",
     "tailwind-merge": "^2.6.0",

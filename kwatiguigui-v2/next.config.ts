@@ -13,6 +13,7 @@ function buildContentSecurityPolicy() {
       ? "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.orange.com https://api.telecel.cf https://*.sentry.io https://unpkg.com blob:"
       : "connect-src 'self' ws: wss: http: https: blob:",
     "frame-ancestors 'none'",
+    "frame-src 'self' https://www.youtube.com",
     "base-uri 'self'",
     "form-action 'self'",
   ];
@@ -33,11 +34,11 @@ const securityHeaders = [
   },
   ...(isProduction
     ? [
-        {
-          key: "Strict-Transport-Security",
-          value: "max-age=63072000; includeSubDomains; preload",
-        },
-      ]
+      {
+        key: "Strict-Transport-Security",
+        value: "max-age=63072000; includeSubDomains; preload",
+      },
+    ]
     : []),
   {
     key: "X-Frame-Options",
@@ -77,6 +78,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "*.supabase.co",
         pathname: "/storage/v1/object/public/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "img.youtube.com",
       },
     ],
     deviceSizes: [640, 750, 828, 1080, 1200],

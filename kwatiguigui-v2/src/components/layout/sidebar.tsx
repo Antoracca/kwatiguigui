@@ -15,7 +15,9 @@ import {
   Users,
   Calendar,
   BarChart3,
-  Building2
+  Building2,
+  Rocket,
+  Crown
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -29,6 +31,13 @@ const CandidatureIcon = ({ className, size = 18 }: { className?: string; size?: 
 
 const OffresIcon = ({ className, size = 18 }: { className?: string; size?: number }) => (
   <Image src="/images/offres.png" alt="Offres" width={size} height={size} className={className} />
+);
+
+const StudentIcon = ({ className, size = 18 }: { className?: string; size?: number }) => (
+  <div className={`relative flex items-center justify-center ${className}`}>
+    <div className="absolute inset-0 bg-purple-500/20 blur-sm rounded-full dark:bg-purple-500/40" />
+    <Rocket size={size} className="relative z-10 drop-shadow-md text-purple-600 dark:text-purple-400 -rotate-12" />
+  </div>
 );
 
 // ---------------------------------------------------------------------------
@@ -57,9 +66,10 @@ const SEEKER_NAV = [
   { href: "/dashboard/cv-builder", label: "Créateur de CV", icon: FileText, exact: false },
   { href: "/dashboard/recommendations", label: "Offres & Recommandations", icon: OffresIcon, exact: false },
   { href: "/dashboard/alerts", label: "Alertes emploi", icon: BellRing, exact: false },
-  { href: "/dashboard/student", label: "Stages & Alternance", icon: GraduationCap, exact: false },
+  { href: "/dashboard/student", label: "Stages & Alternance", icon: StudentIcon, exact: false },
   { href: "/dashboard/advice", label: "Conseils Carrière", icon: BookOpen, exact: false },
   { href: "/dashboard/messages", label: "Messagerie", icon: MessageSquare, exact: false },
+  { href: "/dashboard/payment", label: "Abonnement VIP", icon: Crown, exact: false },
   { href: "/dashboard/settings", label: "Paramètres", icon: Settings, exact: false },
 ] as const;
 
@@ -68,8 +78,8 @@ export function DashboardSidebar({ userType }: { userType: "seeker" | "employer"
   const navItems = userType === "seeker" ? SEEKER_NAV : EMPLOYER_NAV;
 
   return (
-    <aside className="hidden w-64 shrink-0 border-r border-neutral-200 bg-white lg:block dark:border-neutral-800 dark:bg-neutral-900">
-      <nav className="flex flex-col gap-1 p-4 h-full">
+    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 overflow-y-auto border-r border-neutral-200 bg-white lg:block dark:border-neutral-800 dark:bg-neutral-900">
+      <nav className="flex flex-col gap-1 p-4 min-h-full">
         {navItems.map((item) => {
           const isActive = item.exact
             ? pathname === item.href
@@ -80,10 +90,10 @@ export function DashboardSidebar({ userType }: { userType: "seeker" | "employer"
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-xl px-4 py-3 text-body-sm font-medium transition-all",
+                "flex items-center gap-3 rounded-xl px-4 py-3 text-body-sm font-medium transition-all hover:bg-neutral-50 dark:hover:bg-neutral-800",
                 isActive
                   ? "bg-primary-50 text-primary-600 shadow-sm dark:bg-primary-950 dark:text-primary-400 font-bold"
-                  : "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100",
+                  : "text-neutral-600 dark:text-neutral-400",
               )}
             >
               <item.icon size={18} className={isActive ? "text-primary-600 dark:text-primary-400" : "text-neutral-400"} />
@@ -92,21 +102,26 @@ export function DashboardSidebar({ userType }: { userType: "seeker" | "employer"
           );
         })}
 
+        <div className="flex-1" />
+
         {/* Upsell Banner (Free Trial 3 Months) for Seekers */}
         {userType === "seeker" && (
-          <div className="mt-8 rounded-2xl bg-gradient-to-br from-primary-50 to-primary-100 p-4 border border-primary-200 shadow-sm dark:from-primary-950/40 dark:to-neutral-900 dark:border-primary-900/50">
-            <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="w-5 h-5 text-primary-600 dark:text-primary-400" />
-              <p className="font-heading font-bold text-primary-800 dark:text-primary-300 text-body-sm">
-                Accélerez votre carrière !
+          <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50/50 p-4 shadow-sm dark:border-amber-900/30 dark:bg-amber-950/20">
+            <div className="mb-2 flex items-center gap-2">
+              <Crown className="h-5 w-5 text-amber-500" strokeWidth={2.5} />
+              <p className="font-heading text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                Passez VIP
               </p>
             </div>
-            <p className="text-xs text-primary-700 dark:text-primary-400 mb-3 leading-relaxed">
-              Le Pack Standard ou VIP vous rend 10x plus visible. Période d'<strong>Essai de 3 mois Gratuits</strong> disponibles.
+            <p className="mb-3 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
+              Démarquez-vous et contactez les recruteurs en direct avec 3 mois offerts.
             </p>
-            <Link href="/dashboard/payment">
-              <button type="button" className="w-full rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-3 text-xs transition-colors shadow-sm">
-                Découvrir l'essai
+            <Link href="/dashboard/payment" className="block">
+              <button
+                type="button"
+                className="w-full rounded-lg bg-amber-500 py-2 text-xs font-bold text-white transition-colors hover:bg-amber-600"
+              >
+                Activer l'essai
               </button>
             </Link>
           </div>
@@ -114,18 +129,21 @@ export function DashboardSidebar({ userType }: { userType: "seeker" | "employer"
 
         {/* Upsell Banner for Employers */}
         {userType !== "seeker" && (
-          <div className="mt-8 rounded-2xl bg-gradient-to-br from-accent-50 to-neutral-50 p-4 border border-accent-200 shadow-sm dark:from-accent-950/40 dark:to-neutral-900 dark:border-accent-900/50">
-            <div className="flex items-center gap-2 mb-2">
-              <Building2 className="w-5 h-5 text-accent-600 dark:text-accent-400" />
-              <p className="font-heading font-bold text-accent-800 dark:text-accent-300 text-body-sm">
+          <div className="mt-8 rounded-xl border border-neutral-200 bg-neutral-50 p-4 shadow-sm dark:border-neutral-800 dark:bg-neutral-800/50">
+            <div className="mb-2 flex items-center gap-2">
+              <Building2 className="h-5 w-5 text-neutral-700 dark:text-neutral-300" />
+              <p className="font-heading text-sm font-bold text-neutral-900 dark:text-neutral-100">
                 Marque Employeur
               </p>
             </div>
-            <p className="text-xs text-neutral-600 dark:text-neutral-400 mb-3 leading-relaxed">
+            <p className="mb-3 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
               Attirez les meilleurs talents en personnalisant votre page entreprise.
             </p>
-            <Link href="/dashboard/company">
-              <button type="button" className="w-full rounded-lg bg-white border border-accent-300 hover:bg-accent-50 text-accent-700 font-bold py-2 px-3 text-xs transition-colors shadow-sm dark:bg-neutral-800 dark:border-accent-800 dark:text-accent-400 dark:hover:bg-neutral-700">
+            <Link href="/dashboard/company" className="block">
+              <button
+                type="button"
+                className="w-full rounded-lg border border-neutral-300 bg-white py-2 text-xs font-bold text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+              >
                 Créer ma vitrine
               </button>
             </Link>

@@ -4,11 +4,16 @@ import { useState, useEffect, useRef } from "react";
 import {
   Crown,
   CheckCircle,
+  CheckCircle2,
   Phone,
   Loader2,
   AlertCircle,
   Clock,
   ReceiptText,
+  Shield,
+  Zap,
+  MessageSquare,
+  PhoneCall,
 } from "lucide-react";
 
 import { formatPrice, formatDate } from "@/lib/utils";
@@ -69,20 +74,38 @@ const SEEKER_PLANS = [
   {
     id: "seeker_standard",
     label: "Standard (Gratuit)",
+    description: "Pour commencer votre recherche d'emploi et créer un profil de base.",
     amount: 0,
     months: 1,
     badge: null,
     savings: null,
     perMonth: 0,
+    features: [
+      "Création de CV basique",
+      "Recherche d'offres standard",
+      "Visibilité normale du profil",
+      "Accès aux conseils carrière limités"
+    ],
+    highlight: false,
   },
   {
     id: "seeker_pro_monthly",
-    label: "Pack VIP / Pro",
+    label: "VIP Premium",
+    description: "Dominez le marché de l'emploi en contactant directement les recruteurs.",
     amount: PRICING.SEEKER_PRO_MONTHLY,
     months: 1,
-    badge: "+ 3 Mois Gratuits !",
+    badge: "3 Mois Offerts",
     savings: null,
     perMonth: PRICING.SEEKER_PRO_MONTHLY,
+    features: [
+      "✨ Mise en avant instantanée de votre profil",
+      "💬 Messagerie directe (in-app) avec les recruteurs",
+      "📱 Accès aux numéros WhatsApp des entreprises",
+      "⚡ Recommandations d'offres prioritaires",
+      "📊 Analyse avancée de profil et de CV",
+      "🔓 Accès illimité aux Masterclasses Vidéos"
+    ],
+    highlight: true,
   }
 ];
 
@@ -320,52 +343,125 @@ export function PaymentClient({
       {pollingStatus !== "completed" && (
         <>
           <div>
-            <h2 className="mb-4 font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">
+            <h2 className="mb-6 font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">
               Choisir un plan
             </h2>
-            <div className="grid gap-4 sm:grid-cols-3">
-              {PLANS.map((p) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => setSelectedPlan(p.id)}
-                  className={[
-                    "relative rounded-2xl border-2 p-5 text-left transition-all",
-                    selectedPlan === p.id
-                      ? "border-primary-500 bg-primary-50 shadow-md dark:bg-primary-950/30"
-                      : "border-neutral-200 bg-white hover:border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900",
-                  ].join(" ")}
-                >
-                  {p.badge && (
-                    <span className="absolute right-3 top-3 rounded-full bg-accent-100 px-2 py-0.5 text-xs font-semibold text-accent-700 dark:bg-accent-900 dark:text-accent-300">
-                      {p.badge}
-                    </span>
-                  )}
-                  <p className="font-heading text-fluid-base font-bold text-neutral-900 dark:text-neutral-100">
-                    {p.label}
-                  </p>
-                  <p className="mt-2 font-heading text-fluid-2xl font-bold text-primary-600 dark:text-primary-400">
-                    {formatPrice(p.amount)}
-                  </p>
-                  {p.months > 1 && (
-                    <p className="mt-0.5 text-fluid-xs text-neutral-500 dark:text-neutral-400">
-                      soit {formatPrice(p.perMonth)}/mois
-                    </p>
-                  )}
-                  {p.months === 1 && (
-                    <p className="mt-0.5 text-fluid-xs text-neutral-500 dark:text-neutral-400">
-                      par mois
-                    </p>
-                  )}
-                  {selectedPlan === p.id && (
-                    <div className="mt-3 flex items-center gap-1.5 text-primary-600 dark:text-primary-400">
-                      <CheckCircle className="h-4 w-4 fill-primary-500 text-white" />
-                      <span className="text-fluid-xs font-medium">Selectionne</span>
+
+            {userType === "seeker" ? (
+              <div className="grid gap-6 lg:grid-cols-2 max-w-4xl">
+                {PLANS.map((p: any) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => setSelectedPlan(p.id)}
+                    className={[
+                      "group relative flex flex-col rounded-[2rem] border-2 p-8 text-left transition-all duration-300",
+                      selectedPlan === p.id && p.highlight
+                        ? "border-amber-500 bg-amber-50/50 shadow-xl shadow-amber-500/10 dark:bg-amber-950/20"
+                        : selectedPlan === p.id && !p.highlight
+                          ? "border-primary-500 bg-primary-50/50 shadow-lg dark:bg-primary-950/20"
+                          : "border-neutral-200 bg-white hover:border-neutral-300 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900",
+                    ].join(" ")}
+                  >
+                    {/* Badge */}
+                    {p.badge && (
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-1.5 text-sm font-bold text-white shadow-lg">
+                        {p.badge}
+                      </div>
+                    )}
+
+                    <div className="mb-6">
+                      <h3 className="flex items-center gap-2 font-heading text-2xl font-black text-neutral-900 dark:text-neutral-100">
+                        {p.highlight && <Crown className="h-6 w-6 text-amber-500" strokeWidth={2.5} />}
+                        {p.label}
+                      </h3>
+                      <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400 min-h-[40px]">
+                        {p.description}
+                      </p>
                     </div>
-                  )}
-                </button>
-              ))}
-            </div>
+
+                    <div className="mb-6 flex items-baseline gap-2">
+                      <span className="font-heading text-4xl font-black text-neutral-900 dark:text-white">
+                        {p.amount === 0 ? "0 FCFA" : formatPrice(p.amount)}
+                      </span>
+                      {p.amount > 0 && (
+                        <span className="text-sm font-medium text-neutral-500">/ mois</span>
+                      )}
+                    </div>
+
+                    <div className="flex-1 space-y-4">
+                      {p.features.map((feature: string, idx: number) => (
+                        <div key={idx} className="flex items-start gap-3">
+                          <CheckCircle2
+                            className={[
+                              "mt-0.5 h-5 w-5 shrink-0",
+                              p.highlight ? "text-amber-500" : "text-primary-500"
+                            ].join(" ")}
+                          />
+                          <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                            {feature}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Sélection indicator */}
+                    <div className={[
+                      "mt-8 w-full rounded-xl py-3 text-center text-sm font-bold transition-colors",
+                      selectedPlan === p.id
+                        ? (p.highlight ? "bg-amber-500 text-white shadow-md shadow-amber-500/20" : "bg-primary-500 text-white shadow-md shadow-primary-500/20")
+                        : "bg-neutral-100 text-neutral-600 group-hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300"
+                    ].join(" ")}>
+                      {selectedPlan === p.id ? "Plan Sélectionné" : "Choisir ce plan"}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-3">
+                {PLANS.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => setSelectedPlan(p.id)}
+                    className={[
+                      "relative rounded-2xl border-2 p-5 text-left transition-all",
+                      selectedPlan === p.id
+                        ? "border-primary-500 bg-primary-50 shadow-md dark:bg-primary-950/30"
+                        : "border-neutral-200 bg-white hover:border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900",
+                    ].join(" ")}
+                  >
+                    {p.badge && (
+                      <span className="absolute right-3 top-3 rounded-full bg-accent-100 px-2 py-0.5 text-xs font-semibold text-accent-700 dark:bg-accent-900 dark:text-accent-300">
+                        {p.badge}
+                      </span>
+                    )}
+                    <p className="font-heading text-fluid-base font-bold text-neutral-900 dark:text-neutral-100">
+                      {p.label}
+                    </p>
+                    <p className="mt-2 font-heading text-fluid-2xl font-bold text-primary-600 dark:text-primary-400">
+                      {formatPrice(p.amount)}
+                    </p>
+                    {p.months > 1 && (
+                      <p className="mt-0.5 text-fluid-xs text-neutral-500 dark:text-neutral-400">
+                        soit {formatPrice(p.perMonth)}/mois
+                      </p>
+                    )}
+                    {p.months === 1 && (
+                      <p className="mt-0.5 text-fluid-xs text-neutral-500 dark:text-neutral-400">
+                        par mois
+                      </p>
+                    )}
+                    {selectedPlan === p.id && (
+                      <div className="mt-3 flex items-center gap-1.5 text-primary-600 dark:text-primary-400">
+                        <CheckCircle className="h-4 w-4 fill-primary-500 text-white" />
+                        <span className="text-fluid-xs font-medium">Selectionne</span>
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Payment method */}

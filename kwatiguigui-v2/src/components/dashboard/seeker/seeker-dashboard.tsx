@@ -1,10 +1,26 @@
-import { ArrowRight, BookOpen, Briefcase, FileText, Sparkles, TrendingUp, ChevronRight, CheckCircle2 } from "lucide-react";
+import {
+    ArrowRight,
+    BookOpen,
+    Briefcase,
+    FileText,
+    Crown,
+    TrendingUp,
+    ChevronRight,
+    CheckCircle2,
+    Target,
+    LineChart,
+    FileSignature,
+    Zap,
+    Compass,
+    PlayCircle
+} from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import type { Database } from "@/types/database";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -29,198 +45,244 @@ export function SeekerDashboard({
     const cvCompletion = 0;
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-500">
-            {/* Header */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <p className="text-body-sm text-neutral-400">{todayCapitalized}</p>
-                    <h1 className="mt-1 font-heading text-heading-xl font-bold text-neutral-900 dark:text-neutral-100">
-                        Bonjour, {firstName}
-                    </h1>
-                    <p className="text-body-sm text-neutral-500 mt-1">
-                        Prêt à décrocher votre prochaine opportunité ?
-                    </p>
+        <div className="space-y-8 animate-in fade-in duration-500 pb-12">
+
+            {/* ── 1. Hero Section (High-Tech & Lottie) ── */}
+            <div className="relative overflow-hidden rounded-[2.5rem] bg-[#a4d3f8] px-6 py-10 text-sky-950 shadow-xl sm:px-12 sm:py-16 border border-sky-300">
+                {/* Background Grid */}
+                <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-[0.05]" />
+
+                {/* Subtle Lottie Background */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] sm:w-[500px] lg:w-[600px] h-auto opacity-50 mix-blend-darken pointer-events-none">
+                    <DotLottieReact
+                        src="/images/BusinessAnalysis.lottie"
+                        loop
+                        autoplay
+                    />
                 </div>
-                <div className="flex items-center gap-3">
-                    <Link href="/dashboard/cv-builder">
-                        <Button variant="primary" size="sm" className="shadow-sm">
-                            <FileText size={14} className="mr-2" />
-                            Créer mon CV
+
+                {/* Decorative glows (Placed OVER the Lottie to ensure perfectly seamless edges) */}
+                <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-white/60 blur-[80px] pointer-events-none" />
+                <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-blue-100/50 blur-[100px] pointer-events-none" />
+
+                {/* Left content (Text) */}
+                <div className="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left max-w-2xl min-h-[300px] justify-center space-y-6">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-[#85a8c9]/40 bg-white/50 px-3 py-1 text-xs font-bold text-sky-900 shadow-sm backdrop-blur-md">
+                        <Compass size={14} className="text-primary-700" />
+                        <span>{todayCapitalized}</span>
+                    </div>
+
+                    <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] text-sky-950">
+                        Prêt à accélérer,<br />
+                        <span className="text-primary-700">
+                            {firstName} ?
+                        </span>
+                    </h1>
+
+                    <p className="text-lg text-sky-900/90 leading-relaxed font-medium max-w-lg">
+                        Votre tableau de bord centralise toutes les données et outils dont vous avez besoin pour dominer votre recherche d'emploi en RCA.
+                    </p>
+
+                    <div className="pt-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 w-full sm:w-auto">
+                        <Button asChild size="lg" className="w-full sm:w-auto rounded-full bg-primary-600 text-white hover:bg-primary-700 font-bold shadow-md border-0">
+                            <Link href="/dashboard/cv-builder">
+                                <FileSignature size={18} className="mr-2" />
+                                Créer mon CV gagnant
+                            </Link>
                         </Button>
-                    </Link>
+                        <Button asChild variant="outline" size="lg" className="w-full sm:w-auto rounded-full border-[#85a8c9] bg-white/70 hover:bg-white text-sky-950 font-bold shadow-sm">
+                            <Link href="/dashboard/jobs">
+                                <Target size={18} className="mr-2 text-primary-700" />
+                                Voir les offres
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
             </div>
 
-            {/* Premium Upsell — design épuré fond blanc */}
+            {/* ── 2. Premium Upsell (Clean UI) ── */}
             {!isPremium && (
-                <div className="flex flex-col gap-4 rounded-2xl border border-primary-100 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-primary-900/30 dark:bg-neutral-900">
+                <div className="flex flex-col gap-4 rounded-2xl border border-neutral-200 bg-white p-6 sm:flex-row sm:items-center sm:justify-between dark:border-neutral-800 dark:bg-neutral-900 shadow-sm transition-shadow hover:shadow-md">
                     <div className="flex items-start gap-4">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400">
-                            <Sparkles size={20} />
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-500 dark:bg-amber-900/20 dark:text-amber-400">
+                            <Crown size={24} strokeWidth={2.5} />
                         </div>
                         <div>
-                            <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                                Pack VIP — 3 mois d&apos;essai gratuit
+                            <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+                                Passez en mode VIP <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 dark:bg-amber-900/50 dark:text-amber-300">Essai Gratuit</Badge>
+                            </h3>
+                            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400 max-w-xl leading-relaxed">
+                                Multipliez vos chances par 10 : Messagerie directe avec les recruteurs, numéros WhatsApp, mise en avant instantanée.
                             </p>
-                            <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-                                Visibilité x10, messagerie directe, accès aux contacts WhatsApp des entreprises.
-                            </p>
-                            <div className="mt-2 flex flex-wrap gap-3">
-                                {["Visibilité x10", "Messagerie directe", "Accès Contacts"].map((f) => (
-                                    <span key={f} className="flex items-center gap-1 text-xs font-medium text-primary-600 dark:text-primary-400">
-                                        <CheckCircle2 size={12} />
-                                        {f}
-                                    </span>
-                                ))}
-                            </div>
                         </div>
                     </div>
-                    <div className="shrink-0">
-                        <Link href="/dashboard/payment">
-                            <Button size="sm" className="whitespace-nowrap bg-primary-600 text-white hover:bg-primary-700">
-                                Essai gratuit
-                                <ArrowRight size={14} className="ml-1.5" />
-                            </Button>
-                        </Link>
-                        <p className="mt-1 text-center text-[10px] text-neutral-400">Ensuite 5 000 FCFA / mois</p>
+                    <div className="shrink-0 sm:text-right">
+                        <Button asChild className="w-full sm:w-auto bg-amber-500 text-white hover:bg-amber-600 shadow-none font-bold">
+                            <Link href="/dashboard/payment">
+                                Activer mes 3 mois gratuits
+                                <ArrowRight size={16} className="ml-2" />
+                            </Link>
+                        </Button>
                     </div>
                 </div>
             )}
 
-            {/* Stats & Tools Grid */}
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {/* ── 3. KPIs & Stats (Clean UI) ── */}
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                 {/* CV Progress */}
-                <Card className="col-span-1 lg:col-span-2 border-primary-100 dark:border-primary-900/40 relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary-50/50 to-bg-white dark:from-primary-950/20 dark:to-neutral-950 pointer-events-none" />
-                    <CardContent className="p-6 relative z-10 flex flex-col h-full justify-between">
-                        <div className="flex items-start justify-between mb-4">
-                            <div>
-                                <p className="text-body-sm font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-                                    <FileText size={16} className="text-primary-500" />
-                                    Profil & CV
-                                </p>
-                                <p className="text-xs text-neutral-500 mt-1 max-w-[200px]">
-                                    Un CV complet a 80% plus de chances d'être repéré.
-                                </p>
+                <Card className="col-span-1 lg:col-span-2 border-neutral-200/60 shadow-sm hover:shadow-md transition-shadow dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-xl">
+                    <CardContent className="p-6 h-full flex flex-col justify-between">
+                        <div className="flex items-start justify-between mb-6">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2.5 rounded-xl bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400">
+                                    <Target size={20} />
+                                </div>
+                                <div>
+                                    <p className="font-heading font-bold text-neutral-900 dark:text-neutral-100">
+                                        Potentiel du Profil
+                                    </p>
+                                    <p className="text-xs text-neutral-500 font-medium">Objectif : 100%</p>
+                                </div>
                             </div>
-                            <span className="font-heading text-heading-md font-bold text-primary-600 dark:text-primary-400">
+                            <span className="font-heading text-3xl font-black text-primary-600 dark:text-primary-400">
                                 {cvCompletion}%
                             </span>
                         </div>
 
                         <div>
-                            <Progress value={cvCompletion} className="h-2 mb-2 bg-neutral-100 dark:bg-neutral-800" indicatorClassName="bg-primary-500" />
-                            <p className="text-xs text-neutral-400 font-medium">Aucun CV importé pour le moment.</p>
+                            <Progress value={cvCompletion} className="h-2.5 mb-3 bg-neutral-100 dark:bg-neutral-800 rounded-full" indicatorClassName="bg-gradient-to-r from-primary-500 to-accent-500 rounded-full" />
+                            <div className="flex justify-between items-center text-xs font-semibold">
+                                <span className="text-neutral-500 flex items-center gap-1"><CheckCircle2 size={12} /> Incomplet</span>
+                                <Link href="/dashboard/profile" className="text-primary-600 hover:underline dark:text-primary-400">
+                                    Compléter maintenant &rarr;
+                                </Link>
+                            </div>
                         </div>
                     </CardContent>
                 </Card>
 
-                {/* Applications */}
-                <Card className="hover:border-primary-200 transition-colors">
+                {/* Applications Stats */}
+                <Card className="border-neutral-200/60 shadow-sm hover:border-primary-300 transition-all dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-xl group">
                     <Link href="/dashboard/applications" className="block h-full">
-                        <CardContent className="p-6 flex flex-col h-full justify-between">
-                            <div className="rounded-xl bg-secondary-50 p-3 w-fit dark:bg-secondary-950/40 mb-3">
-                                <Briefcase size={20} className="text-secondary-600 dark:text-secondary-400" />
+                        <CardContent className="p-6 h-full flex flex-col justify-between">
+                            <div className="flex justify-between items-start">
+                                <div className="rounded-xl bg-neutral-100 p-2.5 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors">
+                                    <FileSignature size={20} />
+                                </div>
+                                <ArrowRight size={16} className="text-neutral-300 dark:text-neutral-600 group-hover:text-primary-500 group-hover:translate-x-1 transition-all" />
                             </div>
-                            <div>
-                                <p className="mt-0.5 font-heading text-heading-md font-bold text-neutral-900 dark:text-neutral-100">
-                                    0
-                                </p>
-                                <p className="text-body-sm text-neutral-500 font-medium">Candidatures</p>
+                            <div className="mt-4">
+                                <p className="font-heading text-4xl font-black text-neutral-900 dark:text-neutral-100">0</p>
+                                <p className="text-sm font-medium text-neutral-500 mt-1">Candidatures envoyées</p>
                             </div>
                         </CardContent>
                     </Link>
                 </Card>
 
                 {/* Profile Views */}
-                <Card className="hover:border-primary-200 transition-colors">
-                    <CardContent className="p-6 flex flex-col h-full justify-between">
-                        <div className="rounded-xl bg-accent-50 p-3 w-fit dark:bg-accent-950/40 mb-3">
-                            <TrendingUp size={20} className="text-accent-600 dark:text-accent-400" />
+                <Card className="border-neutral-200/60 shadow-sm transition-all dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-xl relative overflow-hidden">
+                    <div className="absolute right-0 top-0 w-24 h-24 bg-gradient-to-bl from-accent-500/10 to-transparent rounded-bl-full pointer-events-none" />
+                    <CardContent className="p-6 h-full flex flex-col justify-between relative z-10">
+                        <div className="flex justify-between items-start">
+                            <div className="rounded-xl bg-accent-50 p-2.5 dark:bg-accent-950/30 text-accent-600 dark:text-accent-400">
+                                <LineChart size={20} />
+                            </div>
+                            <Badge variant="outline" className="text-[10px] font-bold tracking-wider uppercase border-accent-200 text-accent-600 dark:border-accent-800 dark:text-accent-400">Stats</Badge>
                         </div>
-                        <div>
-                            <p className="mt-0.5 font-heading text-heading-md font-bold text-neutral-900 dark:text-neutral-100">
-                                —
-                            </p>
-                            <p className="text-body-sm text-neutral-500 font-medium flex items-center gap-1">Vues <Badge variant="default" className="px-1.5 py-0 text-[10px]">Bientôt</Badge></p>
+                        <div className="mt-4">
+                            <p className="font-heading text-4xl font-black text-neutral-300 dark:text-neutral-700">—</p>
+                            <p className="text-sm font-medium text-neutral-500 mt-1">Vues de votre profil</p>
                         </div>
                     </CardContent>
                 </Card>
             </div>
 
-            {/* Two columns layout for Recommendations & Advice */}
-            <div className="grid gap-6 lg:grid-cols-3 items-start">
-                {/* Recommendated Jobs */}
-                <div className="lg:col-span-2">
-                    <div className="mb-4 flex items-center justify-between">
-                        <h2 className="font-heading text-heading-sm font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-                            <Sparkles size={18} className="text-accent-500" />
-                            Offres recommandées
+            {/* ── 4. Main Content Area (Tools & Actions) ── */}
+            <div className="grid gap-8 lg:grid-cols-3 items-start">
+
+                {/* Left Col: Main Call to action / Missing steps */}
+                <div className="lg:col-span-2 space-y-6">
+                    <div className="flex items-center justify-between">
+                        <h2 className="font-heading text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+                            <Zap size={20} className="text-amber-500" />
+                            Votre Feuille de Route
                         </h2>
-                        <Link
-                            href="/dashboard/recommendations"
-                            className="flex items-center gap-1 text-body-sm font-medium text-primary-500 hover:text-primary-600"
-                        >
-                            Voir tout
-                            <ArrowRight size={14} />
+                    </div>
+
+                    <div className="rounded-3xl border border-neutral-200/60 bg-white p-8 shadow-sm dark:border-neutral-800/60 dark:bg-neutral-900 relative overflow-hidden">
+                        <div className="absolute right-0 bottom-0 w-64 h-64 bg-primary-50 dark:bg-primary-950/20 rounded-tl-full -z-10 blur-xl" />
+
+                        <div className="flex flex-col sm:flex-row gap-8 items-center text-center sm:text-left">
+                            <div className="w-24 h-24 shrink-0 rounded-2xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 dark:border-neutral-700 flex items-center justify-center shadow-inner">
+                                <FileText size={40} className="text-neutral-300 dark:text-neutral-600" />
+                            </div>
+
+                            <div className="flex-1 space-y-3">
+                                <h3 className="font-heading text-xl font-bold text-neutral-900 dark:text-neutral-100">
+                                    Aucun profil détecté
+                                </h3>
+                                <p className="text-neutral-500 leading-relaxed text-sm">
+                                    Pour que notre IA puisse vous recommander les meilleures offres en RCA, nous avons besoin de connaître vos compétences. Complétez votre profil interactif en quelques minutes.
+                                </p>
+                                <div className="pt-2">
+                                    <Button asChild className="rounded-full shadow-md font-bold text-white">
+                                        <Link href="/dashboard/profile">
+                                            Démarrer le diagnostic complet
+                                        </Link>
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Col: Quick Tools Sidebar */}
+                <div className="space-y-6">
+                    <h2 className="font-heading text-xl font-bold text-neutral-900 dark:text-neutral-100">
+                        Outils Rapides
+                    </h2>
+
+                    <div className="grid gap-3">
+                        {/* Tool 1 */}
+                        <Link href="/dashboard/cv-builder" className="group p-4 rounded-2xl border border-neutral-200/80 bg-white hover:border-primary-300 hover:shadow-md transition-all dark:border-neutral-800 dark:bg-neutral-900 flex items-center gap-4">
+                            <div className="rounded-xl bg-primary-50 p-2.5 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400 group-hover:scale-110 transition-transform">
+                                <FileSignature size={18} />
+                            </div>
+                            <div className="flex-1">
+                                <p className="font-bold text-sm text-neutral-900 dark:text-neutral-100">Créateur de CV</p>
+                                <p className="text-xs text-neutral-500">Modèles pro & design</p>
+                            </div>
+                            <ChevronRight size={16} className="text-neutral-400 group-hover:text-primary-500" />
+                        </Link>
+
+                        {/* Tool 2 */}
+                        <Link href="/dashboard/advice/profile-analysis" className="group p-4 rounded-2xl border border-neutral-200/80 bg-white hover:border-violet-300 hover:shadow-md transition-all dark:border-neutral-800 dark:bg-neutral-900 flex items-center gap-4">
+                            <div className="rounded-xl bg-violet-50 p-2.5 text-violet-600 dark:bg-violet-900/30 dark:text-violet-400 group-hover:scale-110 transition-transform">
+                                <Target size={18} />
+                            </div>
+                            <div className="flex-1">
+                                <p className="font-bold text-sm text-neutral-900 dark:text-neutral-100">Analyse de Profil</p>
+                                <p className="text-xs text-neutral-500">Score de visibilité</p>
+                            </div>
+                            <ChevronRight size={16} className="text-neutral-400 group-hover:text-violet-500" />
+                        </Link>
+
+                        {/* Tool 3 */}
+                        <Link href="/dashboard/advice" className="group p-4 rounded-2xl border border-neutral-200/80 bg-white hover:border-rose-300 hover:shadow-md transition-all dark:border-neutral-800 dark:bg-neutral-900 flex items-center gap-4">
+                            <div className="rounded-xl bg-rose-50 p-2.5 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400 group-hover:scale-110 transition-transform">
+                                <PlayCircle size={18} />
+                            </div>
+                            <div className="flex-1">
+                                <p className="font-bold text-sm text-neutral-900 dark:text-neutral-100">Coaching Vidéo</p>
+                                <p className="text-xs text-neutral-500">Astuces d'experts RH</p>
+                            </div>
+                            <ChevronRight size={16} className="text-neutral-400 group-hover:text-rose-500" />
                         </Link>
                     </div>
 
-                    <Card className="border-dashed border-2 bg-neutral-50/50 dark:bg-neutral-900/20">
-                        <CardContent className="flex flex-col items-center py-12 text-center">
-                            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white dark:bg-neutral-900 shadow-sm border border-neutral-100 dark:border-neutral-800">
-                                <Briefcase size={28} className="text-neutral-300 dark:text-neutral-600" />
-                            </div>
-                            <h3 className="font-heading text-body-lg font-semibold text-neutral-800 dark:text-neutral-200">
-                                Complétez votre profil
-                            </h3>
-                            <p className="mt-2 text-body-sm text-neutral-500 max-w-sm leading-relaxed">
-                                Importez votre CV ou remplissez votre profil pour que nous puissions vous recommander des offres (Emplois, Stages, Alternances) adaptées.
-                            </p>
-                            <Link href="/dashboard/profile" className="mt-6">
-                                <Button variant="outline" size="md" className="font-semibold shadow-sm">
-                                    Mettre à jour mon profil
-                                </Button>
-                            </Link>
-                        </CardContent>
-                    </Card>
-                </div>
-
-                {/* Resources Sidebar */}
-                <div className="space-y-4">
-                    <h2 className="font-heading text-heading-sm font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-                        <BookOpen size={18} className="text-secondary-500" />
-                        Ressources
-                    </h2>
-
-                    <Card className="hover:border-primary-300 transition-colors group cursor-pointer overflow-hidden relative">
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-primary-50/50 dark:to-primary-900/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <CardContent className="p-5 flex items-start gap-4 h-full relative z-10">
-                            <div className="rounded-lg bg-primary-50 p-2.5 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 shrink-0">
-                                <FileText size={18} />
-                            </div>
-                            <div>
-                                <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">Notre Générateur de CV</p>
-                                <p className="text-xs text-neutral-500 mt-1 leading-relaxed">Créez un CV professionnel en 5 minutes avec nos modèles exclusifs.</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="hover:border-accent-300 transition-colors group cursor-pointer overflow-hidden relative">
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-accent-50/50 dark:to-accent-900/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <CardContent className="p-5 flex items-start gap-4 h-full relative z-10">
-                            <div className="rounded-lg bg-accent-50 p-2.5 dark:bg-accent-950/40 text-accent-600 dark:text-accent-400 shrink-0">
-                                <Briefcase size={18} />
-                            </div>
-                            <div>
-                                <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">Préparer ses entretiens</p>
-                                <p className="text-xs text-neutral-500 mt-1 leading-relaxed">Les 30 questions les plus posées par les recruteurs en RCA.</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-
                 </div>
             </div>
+
         </div>
     );
 }

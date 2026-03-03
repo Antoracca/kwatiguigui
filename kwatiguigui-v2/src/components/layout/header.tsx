@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   Building2,
@@ -63,12 +63,12 @@ const NAV_CATEGORIES = [
       color: "from-primary-500/20 to-primary-600/5",
     },
     links: [
-      { href: "/jobs?type=formal", label: "Emplois Formels", icon: Building2, description: "CDI, CDD, Secteur Privé & Public" },
-      { href: "/jobs?type=informal", label: "Missions & Informel", icon: Hammer, description: "Journalier, missions courtes, artisanat" },
-      { href: "/jobs?type=freelance", label: "Freelance & Indépendants", icon: Laptop, description: "Missions pour les experts" },
-      { href: "/dashboard/candidat/cv", label: "Créer un CV", icon: FileText, description: "Mettez en valeur vos compétences" },
-      { href: "/info/salaires", label: "Guide des salaires", icon: FileBadge, description: "Découvrez les rémunérations par secteur" },
-      { href: "/jobs?type=stage", label: "Stages & Alternances", icon: GraduationCap, description: "Pour les étudiants et jeunes diplômés" },
+      { href: "/demandeurs-emploi/emplois-formels", label: "Emplois Formels", icon: Building2, description: "CDI, CDD, Secteur Privé & Public" },
+      { href: "/demandeurs-emploi/missions-informel", label: "Missions & Informel", icon: Hammer, description: "Journalier, missions courtes, artisanat" },
+      { href: "/demandeurs-emploi/freelance-independants", label: "Freelance & Indépendants", icon: Laptop, description: "Missions pour les experts" },
+      { href: "/demandeurs-emploi/creer-cv", label: "Créer un CV", icon: FileText, description: "Mettez en valeur vos compétences" },
+      { href: "/demandeurs-emploi/guide-salaires", label: "Guide des salaires", icon: FileBadge, description: "Découvrez les rémunérations par secteur" },
+      { href: "/demandeurs-emploi/stages-alternances", label: "Stages & Alternances", icon: GraduationCap, description: "Pour les étudiants et jeunes diplômés" },
     ]
   },
   {
@@ -84,10 +84,10 @@ const NAV_CATEGORIES = [
       color: "from-secondary-500/20 to-secondary-600/5",
     },
     links: [
-      { href: "/dashboard/entreprise/cvtheque", label: "CVthèque Africaine", icon: FileSearch, description: "Trouvez les meilleurs profils en RCA" },
-      { href: "/pricing", label: "Tarifs & Solutions", icon: CreditCard, description: "Boostez vos visibilités de recrutement" },
+      { href: "/entreprises/cvtheque-africaine", label: "CVthèque Africaine", icon: FileSearch, description: "Trouvez les meilleurs profils en RCA" },
+      { href: "/entreprises/tarifs-solutions", label: "Tarifs & Solutions", icon: CreditCard, description: "Boostez la visibilité de vos recrutements" },
       { href: "/entreprises/marque-employeur", label: "Marque Employeur", icon: Medal, description: "Attirez les talents avec votre page" },
-      { href: "/dashboard/entreprise/jobs", label: "Gérer vos offres", icon: Megaphone, description: "Suivez vos candidatures en temps réel" },
+      { href: "/entreprises/gestion-offres", label: "Gérer vos offres", icon: Megaphone, description: "Suivez vos candidatures en temps réel" },
     ]
   },
   {
@@ -560,3 +560,9 @@ export function Header() {
     </header>
   );
 }
+
+
+
+
+
+
