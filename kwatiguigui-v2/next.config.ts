@@ -92,6 +92,13 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
   },
 
+  // Explicitly set root to prevent Turbopack from inferring a wrong root
+  // from parent lockfiles, which can cause duplicate React resolution and
+  // useContext null crashes during /_global-error prerender on Vercel.
+  turbopack: {
+    root: __dirname,
+  },
+
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion", "date-fns"],
   },
