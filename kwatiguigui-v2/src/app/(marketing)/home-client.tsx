@@ -36,7 +36,8 @@ import {
     BadgeAlert,
     Ban,
     BriefcaseBusiness,
-    ArrowRightLeft
+    ArrowRightLeft,
+    UserCircle
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -1071,7 +1072,7 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
             </section>
 
             {/* ==================================================================
-          FINAL CTA (Massive Footer Intro)
+          FINAL CTA (Massive Footer Intro — Smart auth-aware)
           ================================================================== */}
             <section className="relative overflow-hidden bg-neutral-900 py-32 dark:bg-neutral-950">
                 <div className="absolute inset-0">
@@ -1085,21 +1086,87 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h2 className="font-heading text-[clamp(2.5rem,5vw,4.5rem)] font-extrabold tracking-tight text-white leading-none">
-                        Prêt à accélérer ?
-                    </h2>
-                    <p className="mx-auto mt-6 max-w-2xl text-xl text-neutral-400">
-                        Rejoignez l'écosystème professionnel le plus dynamique de RCA.
-                        L'inscription prend littéralement 2 minutes.
-                    </p>
-                    <div className="mt-12 flex flex-col items-center justify-center gap-6 sm:flex-row">
-                        <Button asChild size="xl" className="w-full sm:w-auto h-16 px-10 rounded-2xl bg-white text-neutral-950 font-bold hover:bg-neutral-200 transition-all hover:scale-105">
-                            <Link href="/register" className="flex items-center">
-                                Créer mon compte gratuit
-                                <ArrowRight className="ml-2 w-5 h-5" />
-                            </Link>
-                        </Button>
-                    </div>
+                    {!isLoggedIn ? (
+                        /* === Non-connecté : CTA standard === */
+                        <>
+                            <h2 className="font-heading text-[clamp(2.5rem,5vw,4.5rem)] font-extrabold tracking-tight text-white leading-none">
+                                Prêt à accélérer ?
+                            </h2>
+                            <p className="mx-auto mt-6 max-w-2xl text-xl text-neutral-400">
+                                Rejoignez l'écosystème professionnel le plus dynamique de RCA.
+                                L'inscription prend littéralement 2 minutes.
+                            </p>
+                            <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                                <Button asChild size="xl" className="w-full sm:w-auto h-16 px-10 rounded-2xl bg-white text-neutral-950 font-bold hover:bg-neutral-200 transition-all hover:scale-105">
+                                    <Link href="/register" className="flex items-center">
+                                        Créer mon compte gratuit
+                                        <ArrowRight className="ml-2 w-5 h-5" />
+                                    </Link>
+                                </Button>
+                                <Button asChild size="xl" variant="outline" className="w-full sm:w-auto h-16 px-10 rounded-2xl border-neutral-600 text-neutral-300 hover:border-neutral-400 hover:bg-neutral-800 hover:text-white transition-all">
+                                    <Link href="/register?type=employer" className="flex items-center">
+                                        Je suis recruteur
+                                    </Link>
+                                </Button>
+                            </div>
+                        </>
+                    ) : userType === "employer" ? (
+                        /* === Connecté en tant qu'Employeur === */
+                        <>
+                            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-secondary-500/40 bg-secondary-500/10 px-5 py-2 text-sm font-semibold text-secondary-300">
+                                <Building2 className="h-4 w-4" /> Espace Employeur actif
+                            </div>
+                            <h2 className="font-heading text-[clamp(2rem,5vw,4rem)] font-extrabold tracking-tight text-white leading-none">
+                                Tout est prêt pour votre prochain recrutement.
+                            </h2>
+                            <p className="mx-auto mt-6 max-w-2xl text-xl text-neutral-400">
+                                Votre dashboard entreprise vous attend. Publiez vos offres, explorez la CVthèque et gérez vos candidatures.
+                            </p>
+                            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                                <Button asChild size="xl" className="w-full sm:w-auto h-16 px-10 rounded-2xl bg-secondary-500 text-white font-bold hover:bg-secondary-400 transition-all hover:scale-105">
+                                    <Link href="/dashboard" className="flex items-center">
+                                        Accéder à mon dashboard
+                                        <ArrowRight className="ml-2 w-5 h-5" />
+                                    </Link>
+                                </Button>
+                                <Button asChild size="xl" variant="outline" className="w-full sm:w-auto h-16 px-10 rounded-2xl border-neutral-600 text-neutral-300 hover:border-primary-500 hover:bg-primary-950 hover:text-primary-300 transition-all">
+                                    <Link href="/register" className="flex items-center gap-2">
+                                        <UserPlus className="w-4 h-4" />
+                                        Créer un profil Candidat aussi
+                                    </Link>
+                                </Button>
+                            </div>
+                            <p className="mt-6 text-sm text-neutral-500">Vous pouvez avoir un compte employeur <strong className="text-neutral-400">+ un profil candidat</strong> en parallèle.</p>
+                        </>
+                    ) : (
+                        /* === Connecté en tant que Candidat / Seeker === */
+                        <>
+                            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-500/40 bg-primary-500/10 px-5 py-2 text-sm font-semibold text-primary-300">
+                                <UserCircle className="h-4 w-4" /> Profil Candidat actif
+                            </div>
+                            <h2 className="font-heading text-[clamp(2rem,5vw,4rem)] font-extrabold tracking-tight text-white leading-none">
+                                Votre prochaine opportunité est à portée de clic.
+                            </h2>
+                            <p className="mx-auto mt-6 max-w-2xl text-xl text-neutral-400">
+                                Explorez des offres qualifiées, postulez & suivez vos candidatures depuis votre espace personnel.
+                            </p>
+                            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                                <Button asChild size="xl" className="w-full sm:w-auto h-16 px-10 rounded-2xl bg-primary-600 text-white font-bold hover:bg-primary-500 transition-all hover:scale-105">
+                                    <Link href="/dashboard" className="flex items-center">
+                                        Mon espace candidat
+                                        <ArrowRight className="ml-2 w-5 h-5" />
+                                    </Link>
+                                </Button>
+                                <Button asChild size="xl" variant="outline" className="w-full sm:w-auto h-16 px-10 rounded-2xl border-neutral-600 text-neutral-300 hover:border-secondary-500 hover:bg-secondary-950 hover:text-secondary-300 transition-all">
+                                    <Link href="/register?type=employer" className="flex items-center gap-2">
+                                        <Building2 className="w-4 h-4" />
+                                        Créer un espace Entreprise aussi
+                                    </Link>
+                                </Button>
+                            </div>
+                            <p className="mt-6 text-sm text-neutral-500">Vous êtes aussi décideur ou dirigeant ? Ouvrez un espace entreprise <strong className="text-neutral-400">gratuitement</strong>.</p>
+                        </>
+                    )}
                 </motion.div>
             </section>
         </>
