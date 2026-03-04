@@ -973,22 +973,22 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
             {/* ==================================================================
           PRICING SECTION (SaaS 4-Tier Model)
           ================================================================== */}
-            <section className="bg-neutral-50 py-32 dark:bg-neutral-900/40 relative overflow-hidden" id="tarifs">
+            <section className="relative overflow-hidden bg-neutral-50 py-16 sm:py-20 lg:py-24 xl:py-32 dark:bg-neutral-900/40" id="tarifs">
                 <motion.div
-                    className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10"
+                    className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.6 }}
                 >
-                    <div className="mb-24 text-center max-w-3xl mx-auto">
-                        <Badge variant="outline" className="mb-6 px-4 py-2 border-primary-500/30 bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400">
+                    <div className="mx-auto mb-12 max-w-3xl text-center sm:mb-16 lg:mb-24">
+                        <Badge variant="outline" className="mb-4 border-primary-500/30 bg-primary-50 px-3 py-1.5 text-xs text-primary-700 dark:bg-primary-900/20 dark:text-primary-400 sm:mb-6 sm:px-4 sm:py-2 sm:text-sm">
                             Tarification Flexible
                         </Badge>
-                        <h2 className="font-heading text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-neutral-900 dark:text-neutral-50 tracking-tight leading-none">
-                            Investissez dans votre <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-primary-300">succès</span>
+                        <h2 className="font-heading text-[clamp(1.9rem,6vw,4rem)] font-extrabold tracking-tight leading-tight text-neutral-900 dark:text-neutral-50 sm:leading-none">
+                            Investissez dans votre <span className="bg-gradient-to-r from-primary-500 to-primary-300 bg-clip-text text-transparent">succès</span>
                         </h2>
-                        <p className="mt-6 text-xl text-neutral-500 dark:text-neutral-400">
+                        <p className="mt-4 text-base text-neutral-500 dark:text-neutral-400 sm:mt-6 sm:text-lg lg:text-xl">
                             Des forfaits ultra-complets, pensés pour maximiser votre visibilité professionnelle et optimiser vos recrutements.
                         </p>
                     </div>
@@ -997,73 +997,73 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                     <PricingCarousel whatsapp={CONTACT.WHATSAPP} />
 
                     {/* PAYMENT METHODS & ANNOUNCEMENTS BANNER */}
-                    <div className="mt-20 max-w-5xl mx-auto">
+                    <div className="mx-auto mt-12 max-w-5xl sm:mt-16 lg:mt-20">
                         {/* Guarantees Banner */}
-                        <div className="bg-gradient-to-r from-primary-600 via-indigo-600 to-primary-600 p-1 mb-8 rounded-[2rem] shadow-2xl shadow-primary-500/20">
-                            <div className="bg-white dark:bg-neutral-950 rounded-[1.8rem] px-6 py-8 sm:px-10 flex flex-col md:flex-row items-center justify-between gap-6">
-                                <div className="flex items-center gap-4">
-                                    <div className="h-14 w-14 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center shrink-0">
-                                        <ShieldCheck className="h-7 w-7 text-primary-600 dark:text-primary-400" />
+                        <div className="mb-6 rounded-2xl bg-gradient-to-r from-primary-600 via-indigo-600 to-primary-600 p-[2px] shadow-xl shadow-primary-500/20 sm:mb-8 sm:rounded-[2rem] sm:p-1 sm:shadow-2xl">
+                            <div className="flex flex-col items-center justify-between gap-5 rounded-[1.3rem] bg-white px-4 py-5 dark:bg-neutral-950 sm:rounded-[1.8rem] sm:px-6 sm:py-8 md:flex-row md:gap-6 md:px-10">
+                                <div className="flex items-start gap-3 sm:items-center sm:gap-4">
+                                    <div className="h-10 w-10 shrink-0 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center sm:h-14 sm:w-14">
+                                        <ShieldCheck className="h-5 w-5 text-primary-600 dark:text-primary-400 sm:h-7 sm:w-7" />
                                     </div>
                                     <div>
-                                        <h4 className="text-lg font-bold text-neutral-900 dark:text-white">Gagnez à tous les coups</h4>
-                                        <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400 mt-1">Profitez de nos offres exceptionnelles de lancement</p>
+                                        <h4 className="text-base font-bold leading-tight text-neutral-900 dark:text-white sm:text-lg">Gagnez à tous les coups</h4>
+                                        <p className="mt-1 text-xs font-medium text-neutral-500 dark:text-neutral-400 sm:text-sm">Profitez de nos offres exceptionnelles de lancement</p>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 w-full md:w-auto text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                                    <div className="flex items-center gap-2"><CheckCircle size={18} className="text-green-500" /> Satisfaction remboursée</div>
-                                    <div className="flex items-center gap-2"><Gift size={18} className="text-primary-500" /> 3 mois d'essai offerts</div>
-                                    <div className="flex items-center gap-2"><Lock size={18} className="text-neutral-400" /> Sans engagement</div>
-                                    <div className="flex items-center gap-2"><Handshake size={18} className="text-indigo-500" /> Parrainage & Codes promo</div>
+                                <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2.5 text-xs font-semibold text-neutral-700 dark:text-neutral-300 xs:grid-cols-2 sm:gap-x-6 sm:gap-y-3 sm:text-sm md:w-auto">
+                                    <div className="flex items-center gap-2 leading-snug"><CheckCircle size={16} className="text-green-500 sm:h-[18px] sm:w-[18px]" /> Satisfaction remboursée</div>
+                                    <div className="flex items-center gap-2 leading-snug"><Gift size={16} className="text-primary-500 sm:h-[18px] sm:w-[18px]" /> 3 mois d'essai offerts</div>
+                                    <div className="flex items-center gap-2 leading-snug"><Lock size={16} className="text-neutral-400 sm:h-[18px] sm:w-[18px]" /> Sans engagement</div>
+                                    <div className="flex items-center gap-2 leading-snug"><Handshake size={16} className="text-indigo-500 sm:h-[18px] sm:w-[18px]" /> Parrainage & Codes promo</div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Payment Methods */}
-                        <div className="flex flex-col items-center justify-center pt-8 border-t border-neutral-200/60 dark:border-neutral-800/60">
-                            <p className="text-sm font-bold text-neutral-400 uppercase tracking-widest mb-6">Paiements 100% sécurisés supportés</p>
-                            <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-8">
+                        <div className="flex flex-col items-center justify-center border-t border-neutral-200/60 pt-6 dark:border-neutral-800/60 sm:pt-8">
+                            <p className="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-400 sm:mb-6 sm:text-sm">Paiements 100% sécurisés supportés</p>
+                            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 lg:gap-8">
                                 {/* Badges for Payment Methods */}
                                 {/* Mobile Money (Orange) */}
-                                <div className="px-5 py-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 shadow-sm flex items-center gap-3 transition-all duration-300 hover:scale-105">
-                                    <Image src="/images/orange-money.png" alt="Mobile Money" width={40} height={40} className="object-contain" />
-                                    <span className="font-bold text-sm text-neutral-700 dark:text-neutral-300">Mobile Money</span>
+                                <div className="flex items-center gap-2 rounded-lg border border-neutral-100 bg-white px-3 py-2 shadow-sm transition-all duration-300 dark:border-neutral-800 dark:bg-neutral-900 sm:gap-3 sm:rounded-xl sm:px-5 sm:py-3 md:hover:scale-105">
+                                    <Image src="/images/orange-money.png" alt="Mobile Money" width={32} height={32} className="object-contain sm:h-10 sm:w-10" />
+                                    <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300 sm:text-sm">Mobile Money</span>
                                 </div>
 
                                 {/* Mastercard */}
-                                <div className="px-5 py-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 shadow-sm flex items-center justify-center transition-all duration-300 hover:scale-105">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76.2 46.8" className="h-6"><path fill="#EB001B" d="M23.4 46.8C10.5 46.8 0 36.3 0 23.4S10.5 0 23.4 0c7.8 0 14.7 3.9 18.9 9.8C38 13.8 35.1 18.4 35.1 23.4s2.8 9.6 7.3 13.6c-4.3 5.9-11.2 9.8-19 9.8z" /><path fill="#F79E1B" d="M52.8 46.8C45 46.8 38.1 42.9 33.9 37c4.4-4 7.3-8.6 7.3-13.6s-2.9-9.6-7.3-13.6C38.1 3.9 45 0 52.8 0 65.7 0 76.2 10.5 76.2 23.4S65.7 46.8 52.8 46.8z" /><path fill="#FF5F00" d="M42.4 23.4c0-4.9-2.9-9.6-7.3-13.6-4.4 4-7.3 8.6-7.3 13.6s2.8 9.6 7.3 13.6c4.5-4 7.3-8.6 7.3-13.6z" /></svg>
+                                <div className="flex items-center justify-center rounded-lg border border-neutral-100 bg-white px-3 py-2 shadow-sm transition-all duration-300 dark:border-neutral-800 dark:bg-neutral-900 sm:rounded-xl sm:px-5 sm:py-3 md:hover:scale-105">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76.2 46.8" className="h-5 sm:h-6"><path fill="#EB001B" d="M23.4 46.8C10.5 46.8 0 36.3 0 23.4S10.5 0 23.4 0c7.8 0 14.7 3.9 18.9 9.8C38 13.8 35.1 18.4 35.1 23.4s2.8 9.6 7.3 13.6c-4.3 5.9-11.2 9.8-19 9.8z" /><path fill="#F79E1B" d="M52.8 46.8C45 46.8 38.1 42.9 33.9 37c4.4-4 7.3-8.6 7.3-13.6s-2.9-9.6-7.3-13.6C38.1 3.9 45 0 52.8 0 65.7 0 76.2 10.5 76.2 23.4S65.7 46.8 52.8 46.8z" /><path fill="#FF5F00" d="M42.4 23.4c0-4.9-2.9-9.6-7.3-13.6-4.4 4-7.3 8.6-7.3 13.6s2.8 9.6 7.3 13.6c4.5-4 7.3-8.6 7.3-13.6z" /></svg>
                                 </div>
 
                                 {/* Visa */}
-                                <div className="px-5 py-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 shadow-sm flex items-center justify-center transition-all duration-300 hover:scale-105">
-                                    <Image src="/images/png-clipart-logo-visa-credit-card-wordmark-atm-card-visa-blue-text.png" alt="Visa" width={44} height={16} className="object-contain" />
+                                <div className="flex items-center justify-center rounded-lg border border-neutral-100 bg-white px-3 py-2 shadow-sm transition-all duration-300 dark:border-neutral-800 dark:bg-neutral-900 sm:rounded-xl sm:px-5 sm:py-3 md:hover:scale-105">
+                                    <Image src="/images/png-clipart-logo-visa-credit-card-wordmark-atm-card-visa-blue-text.png" alt="Visa" width={36} height={14} className="object-contain sm:h-4 sm:w-11" />
                                 </div>
 
                                 {/* PayPal */}
-                                <div className="px-5 py-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 shadow-sm flex items-center justify-center transition-all duration-300 hover:scale-105">
-                                    <Image src="/images/png-clipart-logo-paypal-graphics-product-computer-icons-paypal-blue-angle-thumbnail.png" alt="PayPal" width={44} height={16} className="object-contain" />
+                                <div className="flex items-center justify-center rounded-lg border border-neutral-100 bg-white px-3 py-2 shadow-sm transition-all duration-300 dark:border-neutral-800 dark:bg-neutral-900 sm:rounded-xl sm:px-5 sm:py-3 md:hover:scale-105">
+                                    <Image src="/images/png-clipart-logo-paypal-graphics-product-computer-icons-paypal-blue-angle-thumbnail.png" alt="PayPal" width={36} height={14} className="object-contain sm:h-4 sm:w-11" />
                                 </div>
 
                                 {/* GIMAC */}
-                                <div className="px-5 py-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 shadow-sm flex items-center justify-center transition-all duration-300 hover:scale-105">
-                                    <Image src="/images/gimac.png" alt="GIMAC" width={64} height={20} className="object-contain" />
+                                <div className="flex items-center justify-center rounded-lg border border-neutral-100 bg-white px-3 py-2 shadow-sm transition-all duration-300 dark:border-neutral-800 dark:bg-neutral-900 sm:rounded-xl sm:px-5 sm:py-3 md:hover:scale-105">
+                                    <Image src="/images/gimac.png" alt="GIMAC" width={52} height={18} className="object-contain sm:h-5 sm:w-16" />
                                 </div>
 
                                 {/* Virement Bancaire */}
-                                <div className="px-5 py-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 shadow-sm flex items-center gap-3 transition-all duration-300 hover:scale-105">
-                                    <div className="h-8 w-8 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
-                                        <ArrowRightLeft className="h-4 w-4 text-neutral-600 dark:text-neutral-400" />
+                                <div className="flex items-center gap-2 rounded-lg border border-neutral-100 bg-white px-3 py-2 shadow-sm transition-all duration-300 dark:border-neutral-800 dark:bg-neutral-900 sm:gap-3 sm:rounded-xl sm:px-5 sm:py-3 md:hover:scale-105">
+                                    <div className="h-7 w-7 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center sm:h-8 sm:w-8">
+                                        <ArrowRightLeft className="h-3.5 w-3.5 text-neutral-600 dark:text-neutral-400 sm:h-4 sm:w-4" />
                                     </div>
-                                    <span className="font-bold text-sm text-neutral-700 dark:text-neutral-300">Virement</span>
+                                    <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300 sm:text-sm">Virement</span>
                                 </div>
 
                                 {/* Ticket Cash */}
-                                <div className="px-5 py-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 shadow-sm flex items-center gap-3 transition-all duration-300 hover:scale-105">
-                                    <svg className="h-6 w-6 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <div className="flex items-center gap-2 rounded-lg border border-neutral-100 bg-white px-3 py-2 shadow-sm transition-all duration-300 dark:border-neutral-800 dark:bg-neutral-900 sm:gap-3 sm:rounded-xl sm:px-5 sm:py-3 md:hover:scale-105">
+                                    <svg className="h-5 w-5 text-emerald-500 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
                                     </svg>
-                                    <span className="font-bold text-sm text-neutral-700 dark:text-neutral-300">Ticket Cash</span>
+                                    <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300 sm:text-sm">Ticket Cash</span>
                                 </div>
                             </div>
                         </div>
@@ -1072,7 +1072,7 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
             </section>
 
             {/* ==================================================================
-          FINAL CTA (Massive Footer Intro — Smart auth-aware)
+          FINAL CTA (Massive Footer Intro - Smart auth-aware)
           ================================================================== */}
             <section className="relative overflow-hidden bg-neutral-900 py-32 dark:bg-neutral-950">
                 <div className="absolute inset-0">

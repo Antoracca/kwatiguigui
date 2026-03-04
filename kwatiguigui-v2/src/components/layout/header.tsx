@@ -279,7 +279,7 @@ export function Header() {
       )}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="relative z-20 mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-2 px-4 sm:px-6 lg:px-8 xl:gap-4 2xl:gap-6">
+      <div className="relative z-20 mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-1.5 px-4 sm:px-6 lg:gap-2 lg:px-8 xl:gap-3 2xl:gap-6">
 
         {/* LOGO AREA */}
         <Link
@@ -288,7 +288,7 @@ export function Header() {
           onClick={() => setActiveMenu(null)}
         >
           {/* Logo container, responsive sizing maintaining aspect ratio */}
-          <div className="relative h-12 w-[160px] sm:h-14 sm:w-[200px] xl:h-16 xl:w-[220px] 2xl:w-[240px]">
+          <div className="relative h-11 w-[150px] sm:h-12 sm:w-[172px] lg:h-12 lg:w-[168px] xl:h-16 xl:w-[220px] 2xl:w-[240px]">
             <Image
               src="/images/logoprincipal.png"
               alt="KWATIGUIGUI"
@@ -300,7 +300,7 @@ export function Header() {
         </Link>
 
         {/* Desktop navigation — visible à partir de xl (1280px) */}
-        <nav className="hidden h-full flex-1 items-center justify-center gap-1 xl:flex 2xl:gap-2" role="navigation">
+        <nav className="hidden h-full flex-1 items-center justify-center gap-0.5 lg:flex xl:gap-1 2xl:gap-2" role="navigation">
           {NAV_CATEGORIES.map((category) => {
             const isActiveRoute = pathname === category.href || pathname.startsWith(category.href + "/");
             const isHovered = activeMenu === category.id;
@@ -314,12 +314,13 @@ export function Header() {
                 <Link
                   href={category.href}
                   className={cn(
-                    "group flex items-center gap-1 rounded-full px-2 2xl:px-3 py-1.5 text-[13px] xl:text-sm font-semibold transition-all duration-200 whitespace-nowrap",
+                    "group flex items-center gap-1 rounded-full px-1.5 xl:px-2 2xl:px-3 py-1.5 text-[12px] xl:text-[13px] 2xl:text-sm font-semibold transition-all duration-200 whitespace-nowrap",
                     isActiveRoute ? "text-primary-600 dark:text-primary-400" : "text-neutral-700 dark:text-neutral-300",
                     isHovered ? "bg-primary-50 dark:bg-primary-950/50 text-primary-700 dark:text-primary-300" : "hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-50 dark:hover:bg-neutral-900"
                   )}
                 >
-                  {category.label}
+                  <span className="xl:hidden">{category.id === "candidats" ? "Candidats" : category.label}</span>
+                  <span className="hidden xl:inline">{category.label}</span>
                   {/* Optional Badge */}
                   {category.badge && (
                     <span className="ml-1.5 inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold tracking-wide text-amber-700 dark:bg-amber-900/40 dark:text-amber-400 uppercase animate-pulse">
@@ -340,7 +341,7 @@ export function Header() {
         </nav>
 
         {/* Desktop actions — visible à partir de xl (1280px) */}
-        <div className="hidden flex-shrink-0 items-center justify-end gap-1.5 xl:flex xl:gap-2">
+        <div className="hidden flex-shrink-0 items-center justify-end gap-1 lg:flex lg:gap-1.5 xl:gap-2">
 
 
 
@@ -360,10 +361,10 @@ export function Header() {
             <div className="h-9 w-28 animate-pulse rounded-lg bg-neutral-100 dark:bg-neutral-800" />
           ) : user ? (
             <>
-              <div className="relative hidden xl:block 2xl:hidden group xl:mr-4" data-user-menu>
+              <div className="relative hidden lg:block 2xl:hidden group lg:mr-2 xl:mr-4" data-user-menu>
                 <button
                   type="button"
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-[13px] font-semibold text-primary-700 shadow-sm transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-primary-400 dark:hover:bg-neutral-800"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-2 py-1.5 text-[12px] xl:px-2.5 xl:text-[13px] font-semibold text-primary-700 shadow-sm transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-primary-400 dark:hover:bg-neutral-800"
                   aria-label="Mon compte"
                 >
                   <div className="relative h-6 w-6 overflow-hidden rounded-full border border-neutral-100 bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800 flex items-center justify-center">
@@ -485,7 +486,7 @@ export function Header() {
             </>
           ) : (
             <>
-              <div className="relative hidden xl:block 2xl:hidden group xl:mr-4">
+              <div className="relative hidden lg:block 2xl:hidden group lg:mr-2 xl:mr-4">
                 <button
                   type="button"
                   className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-[13px] font-semibold text-primary-700 shadow-sm transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-primary-400 dark:hover:bg-neutral-800"
@@ -533,7 +534,7 @@ export function Header() {
         <button
           ref={mobileToggleRef}
           type="button"
-          className="relative z-50 rounded-lg p-2 text-neutral-600 hover:bg-neutral-100 xl:hidden dark:text-neutral-300 dark:hover:bg-neutral-800 transition-colors"
+          className="relative z-50 rounded-lg p-1.5 text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800 lg:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
           aria-expanded={mobileOpen}
@@ -623,15 +624,15 @@ export function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
-            className="fixed inset-0 top-[72px] z-40 bg-white dark:bg-neutral-950 overflow-y-auto pb-24 xl:hidden"
+            className="fixed inset-0 top-[72px] z-40 h-[calc(100dvh-72px)] overflow-y-auto overscroll-contain bg-white pb-16 dark:bg-neutral-950 lg:hidden"
           >
-            <div className="px-5 py-6 flex flex-col gap-8">
+            <div className="px-4 py-4 sm:px-5 sm:py-5 flex flex-col gap-5 sm:gap-6">
 
               {/* Mobile Auth Actions */}
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2.5">
                 {user ? (
                   <>
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-primary-50 dark:bg-primary-950/40 border border-primary-200 dark:border-primary-800/50">
+                    <div className="flex items-center gap-2.5 rounded-lg border border-primary-200 bg-primary-50 p-2.5 dark:border-primary-800/50 dark:bg-primary-950/40 sm:gap-3 sm:p-3">
                       <div className="h-10 w-10 rounded-full bg-primary-600 dark:bg-primary-500 flex items-center justify-center text-white font-bold shrink-0">
                         {user.email?.[0]?.toUpperCase() ?? "U"}
                       </div>
@@ -646,7 +647,7 @@ export function Header() {
                       { href: "/dashboard/jobs", icon: Briefcase, label: "Mes annonces" },
                       { href: "/dashboard/messages", icon: MessageSquare, label: "Messages" },
                     ].map(item => (
-                      <Button key={item.href} asChild variant="outline" className="w-full justify-start gap-3 text-body-md py-5 rounded-xl border-neutral-200 dark:border-neutral-800">
+                      <Button key={item.href} asChild variant="outline" className="w-full justify-start gap-2.5 rounded-lg border-neutral-200 py-3.5 text-sm dark:border-neutral-800">
                         <Link href={item.href} onClick={() => setMobileOpen(false)}>
                           <item.icon className="h-5 w-5 text-neutral-500" />
                           {item.label}
@@ -664,13 +665,13 @@ export function Header() {
                   </>
                 ) : (
                   <>
-                    <Button asChild className="w-full text-body-md py-6 rounded-xl bg-primary-600 text-white font-semibold">
+                    <Button asChild className="w-full rounded-lg bg-primary-600 py-4 text-sm font-semibold text-white">
                       <Link href="/register" onClick={() => setMobileOpen(false)}>
                         <UserPlus className="mr-2 h-5 w-5" />
                         Créer un compte gratuit
                       </Link>
                     </Button>
-                    <Button asChild variant="outline" className="w-full text-body-md py-6 rounded-xl border-neutral-200 dark:border-neutral-800 font-semibold text-neutral-700 dark:text-neutral-300">
+                    <Button asChild variant="outline" className="w-full rounded-lg border-neutral-200 py-4 text-sm font-semibold text-neutral-700 dark:border-neutral-800 dark:text-neutral-300">
                       <Link href="/login" onClick={() => setMobileOpen(false)}>
                         <LogIn className="mr-2 h-5 w-5" />
                         Se connecter
@@ -681,16 +682,16 @@ export function Header() {
               </div>
 
               {/* Mobile Categories */}
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4 sm:gap-5">
                 {NAV_CATEGORIES.map((category, idx) => (
                   <motion.div
                     key={category.id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.05 + (idx * 0.05) }}
-                    className="flex flex-col gap-3"
+                    className="flex flex-col gap-2.5"
                   >
-                    <h2 className="text-heading-sm font-bold text-neutral-900 dark:text-white border-b border-neutral-100 dark:border-neutral-800 pb-2 flex items-center justify-between">
+                    <h2 className="flex items-center justify-between border-b border-neutral-100 pb-2 text-base font-bold text-neutral-900 dark:border-neutral-800 dark:text-white sm:text-lg">
                       {category.label}
                       {category.badge && (
                         <span className="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold tracking-wide text-amber-700 dark:bg-amber-900/40 dark:text-amber-400 uppercase">
@@ -703,10 +704,10 @@ export function Header() {
                         <Link
                           key={link.href}
                           href={link.href}
-                          className="flex items-center gap-4 text-body-lg font-medium text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 p-2 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
+                          className="flex items-center gap-3 rounded-lg p-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-primary-600 dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-primary-400 sm:text-[15px]"
                           onClick={() => setMobileOpen(false)}
                         >
-                          <div className="flex items-center justify-center w-8 h-8 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-500">
+                          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 sm:h-8 sm:w-8">
                             <link.icon className="w-4 h-4" />
                           </div>
                           {link.label}
@@ -722,12 +723,12 @@ export function Header() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="mt-4 border-t border-neutral-100 pt-6 dark:border-neutral-800 flex items-center justify-between"
+                className="mt-2 flex items-center justify-between border-t border-neutral-100 pt-4 dark:border-neutral-800 sm:mt-4 sm:pt-6"
               >
-                <span className="text-body-sm font-medium text-neutral-500">Mode d'affichage</span>
+                <span className="text-xs font-medium text-neutral-500 sm:text-sm">Mode d'affichage</span>
                 <button
                   onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  className="flex items-center gap-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 px-4 py-2.5 text-body-sm font-medium text-neutral-900 dark:text-white"
+                  className="flex items-center gap-2 rounded-lg bg-neutral-100 px-3 py-2 text-xs font-medium text-neutral-900 dark:bg-neutral-800 dark:text-white sm:px-4 sm:py-2.5 sm:text-sm"
                 >
                   {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
                   {theme === "dark" ? "Passer au clair" : "Passer au sombre"}
