@@ -160,7 +160,8 @@ export const PRICING = {
   PREMIUM_MONTHLY: 2_500,
   PREMIUM_BIANNUAL: 12_500,
   PREMIUM_ANNUAL: 25_000,
-  SEEKER_PRO_MONTHLY: 5_000,
+  SEEKER_STANDARD_MONTHLY: 2_499,
+  SEEKER_PRO_MONTHLY: 4_900,
   CURRENCY: "FCFA",
   CURRENCY_ISO: "XAF",
   JOB_EXPIRY_DAYS: 30,
@@ -201,32 +202,45 @@ export const PRICING_PLANS = [
 
 export const SEEKER_PRICING_PLANS = [
   {
-    name: "Gratuit (Standard)",
+    name: "Gratuit",
     price: 0,
     period: null,
-    description: "Le strict minimum pour postuler.",
+    description: "Le strict minimum pour débuter.",
     featured: false,
     features: [
-      "Creer un CV basique",
-      "Postuler aux annonces (limite)",
-      "Acces aux conseils carriere",
+      "Création de profil basique",
+      "Visibilité standard",
+      "Accès aux Masterclasses"
     ],
-    cta: "Commencer gratuitement",
+    cta: "Inclus",
   },
   {
-    name: "Pack VIP / Pro",
-    price: 5_000,
+    name: "Standard",
+    price: 2_499,
     period: "mois",
-    description: "10x plus de visibilite aupres des recruteurs.",
+    description: "Multipliez vos chances par 5.",
+    featured: false,
+    features: [
+      "3 mois gratuits, puis 2 499 FCFA après (sans engagement)",
+      "Mise en avant Prioritaire",
+      "Support WhatsApp 24/7",
+      "Recommandations d'offres prioritaires"
+    ],
+    cta: "Débuter mon essai de 3 mois",
+  },
+  {
+    name: "VIP / PRO",
+    price: 4_900,
+    period: "mois",
+    description: "L'arme absolue pour être recruté.",
     featured: true,
     features: [
-      "Essai de 3 mois Gratuits",
-      "Profil booste & Traitement rapide",
-      "Generateur de CV Premium",
-      "Missions Stages & Alternances en priorite",
-      "Contact WhatsApp direct avec l'employeur",
+      "3 mois gratuits, puis 4 900 FCFA après (sans engagement)",
+      "Messagerie Directe (in-app) avec les recruteurs",
+      "Mise en avant instantanée absolue",
+      "Analyse avancée de Profil & CV"
     ],
-    cta: "Debuter mon essai de 3 mois",
+    cta: "Débuter mon essai de 3 mois",
   },
 ] as const;
 

@@ -13,7 +13,17 @@ import {
   Shield,
   Zap,
   MessageSquare,
-  PhoneCall,
+  User,
+  Eye,
+  BookOpen,
+  ArrowUpCircle,
+  Target,
+  FileText,
+  MessageCircle,
+  BrainCircuit,
+  Lock,
+  Video,
+  Gift,
 } from "lucide-react";
 
 import { formatPrice, formatDate } from "@/lib/utils";
@@ -72,38 +82,56 @@ const EMPLOYER_PLANS = [
 
 const SEEKER_PLANS = [
   {
-    id: "seeker_standard",
-    label: "Standard (Gratuit)",
-    description: "Pour commencer votre recherche d'emploi et créer un profil de base.",
+    id: "seeker_gratuit",
+    label: "Gratuit",
+    description: "Le strict minimum pour débuter.",
     amount: 0,
     months: 1,
     badge: null,
     savings: null,
     perMonth: 0,
+    promo: null,
     features: [
-      "Création de CV basique",
-      "Recherche d'offres standard",
-      "Visibilité normale du profil",
-      "Accès aux conseils carrière limités"
+      { text: "Création de profil basique", icon: User },
+      { text: "Visibilité standard", icon: Eye },
+      { text: "Accès aux conseils", icon: BookOpen }
+    ],
+    highlight: false,
+  },
+  {
+    id: "seeker_standard_monthly",
+    label: "Standard",
+    description: "Multipliez vos chances par 5.",
+    amount: PRICING.SEEKER_STANDARD_MONTHLY,
+    months: 1,
+    badge: "Équilibré",
+    savings: null,
+    perMonth: PRICING.SEEKER_STANDARD_MONTHLY,
+    promo: "3 mois gratuits puis 2 499 FCFA après, sans engagement",
+    features: [
+      { text: "Création de CV Pro (PDF, QR)", icon: FileText },
+      { text: "Mise en avant Prioritaire", icon: ArrowUpCircle },
+      { text: "Support 24/7", icon: MessageSquare },
+      { text: "Recommandations ciblées", icon: Target },
     ],
     highlight: false,
   },
   {
     id: "seeker_pro_monthly",
-    label: "VIP Premium",
-    description: "Dominez le marché de l'emploi en contactant directement les recruteurs.",
+    label: "PRO VIP",
+    description: "L'arme absolue pour être recruté.",
     amount: PRICING.SEEKER_PRO_MONTHLY,
     months: 1,
-    badge: "3 Mois Offerts",
+    badge: "Populaire",
     savings: null,
     perMonth: PRICING.SEEKER_PRO_MONTHLY,
+    promo: "3 mois gratuits puis 4 900 FCFA après, sans engagement",
     features: [
-      "✨ Mise en avant instantanée de votre profil",
-      "💬 Messagerie directe (in-app) avec les recruteurs",
-      "📱 Accès aux numéros WhatsApp des entreprises",
-      "⚡ Recommandations d'offres prioritaires",
-      "📊 Analyse avancée de profil et de CV",
-      "🔓 Accès illimité aux Masterclasses Vidéos"
+      { text: "Contact Direct Recruteurs", icon: MessageCircle },
+      { text: "Mise en avant absolue", icon: Zap },
+      { text: "Analyse avancée de Profil", icon: BrainCircuit },
+      { text: "Offres exclusives (inédites)", icon: Lock },
+      { text: "Masterclasses illimitées", icon: Video }
     ],
     highlight: true,
   }
@@ -348,7 +376,7 @@ export function PaymentClient({
             </h2>
 
             {userType === "seeker" ? (
-              <div className="grid gap-6 lg:grid-cols-2 max-w-4xl">
+              <div className="grid gap-6 lg:grid-cols-3 max-w-6xl">
                 {PLANS.map((p: any) => (
                   <button
                     key={p.id}
@@ -365,23 +393,23 @@ export function PaymentClient({
                   >
                     {/* Badge */}
                     {p.badge && (
-                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-1.5 text-sm font-bold text-white shadow-lg">
+                      <div className={["absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-bold shadow-md", p.highlight ? "bg-gradient-to-r from-amber-400 to-orange-500 text-white" : "bg-neutral-800 text-white dark:bg-white dark:text-neutral-900"].join(" ")}>
                         {p.badge}
                       </div>
                     )}
 
                     <div className="mb-6">
-                      <h3 className="flex items-center gap-2 font-heading text-2xl font-black text-neutral-900 dark:text-neutral-100">
-                        {p.highlight && <Crown className="h-6 w-6 text-amber-500" strokeWidth={2.5} />}
+                      <h3 className="flex items-center gap-2 font-heading text-xl font-black text-neutral-900 dark:text-neutral-100 uppercase tracking-tight">
+                        {p.highlight && <Crown className="h-5 w-5 text-amber-500" strokeWidth={2.5} />}
                         {p.label}
                       </h3>
-                      <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400 min-h-[40px]">
+                      <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400 min-h-[40px] leading-snug">
                         {p.description}
                       </p>
                     </div>
 
-                    <div className="mb-6 flex items-baseline gap-2">
-                      <span className="font-heading text-4xl font-black text-neutral-900 dark:text-white">
+                    <div className="mb-4 flex items-baseline gap-1">
+                      <span className="font-heading text-3xl font-black text-neutral-900 dark:text-white">
                         {p.amount === 0 ? "0 FCFA" : formatPrice(p.amount)}
                       </span>
                       {p.amount > 0 && (
@@ -389,20 +417,30 @@ export function PaymentClient({
                       )}
                     </div>
 
-                    <div className="flex-1 space-y-4">
-                      {p.features.map((feature: string, idx: number) => (
-                        <div key={idx} className="flex items-start gap-3">
-                          <CheckCircle2
-                            className={[
-                              "mt-0.5 h-5 w-5 shrink-0",
-                              p.highlight ? "text-amber-500" : "text-primary-500"
-                            ].join(" ")}
-                          />
-                          <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                            {feature}
-                          </span>
-                        </div>
-                      ))}
+                    {p.promo && (
+                      <div className="mb-5 rounded-lg border border-accent-200 bg-accent-50 p-2.5 text-center text-xs font-bold text-accent-700 dark:border-accent-800 dark:bg-accent-950 dark:text-accent-300 shadow-sm flex items-center justify-center gap-2">
+                        <Gift className="h-4 w-4" />
+                        <span>{p.promo}</span>
+                      </div>
+                    )}
+
+                    <div className="flex-1 space-y-3">
+                      {p.features.map((feature: any, idx: number) => {
+                        const Icon = feature.icon || CheckCircle2;
+                        return (
+                          <div key={idx} className="flex items-start gap-2.5">
+                            <Icon
+                              className={[
+                                "mt-0.5 h-4 w-4 shrink-0",
+                                p.highlight ? "text-amber-500" : p.amount === 0 ? "text-neutral-400" : "text-primary-500"
+                              ].join(" ")}
+                            />
+                            <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300 leading-snug">
+                              {feature.text}
+                            </span>
+                          </div>
+                        );
+                      })}
                     </div>
 
                     {/* Sélection indicator */}
