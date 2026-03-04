@@ -1,310 +1,147 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import {
-  Globe,
-  Heart,
-  MessageCircle,
-  Shield,
-  Sparkles,
+  ArrowRight,
+  Target,
+  Globe2,
   Users,
-  Zap,
-  MapPin,
-  Mail,
-  Phone,
-  ChevronDown,
+  ShieldCheck,
+  Building2,
+  Rocket
 } from "lucide-react";
 
-import { MISSION, VALUES, TIMELINE, FAQ_ITEMS, CONTACT } from "@/lib/constants";
-import { FaqAccordion } from "@/components/marketing/faq-accordion";
-
 export const metadata: Metadata = {
-  title: "A propos — KWATIGUIGUI",
+  title: "À propos de KWATIGUIGUI - Notre mission en RCA",
   description:
-    "Decouvrez la mission, les valeurs et l'histoire de KWATIGUIGUI, la premiere plateforme d'emploi de la Republique Centrafricaine.",
-  openGraph: {
-    title: "A propos de KWATIGUIGUI",
-    description: "La premiere plateforme d'emploi de RCA.",
-    type: "website",
-  },
+    "Découvrez KWATIGUIGUI, la première plateforme de recrutement et d'opportunités en République Centrafricaine. Notre mission, nos valeurs et notre vision pour l'emploi.",
   alternates: { canonical: "/about" },
 };
 
-const VALUE_ICONS = [Globe, Heart, Zap, Shield, Sparkles, Users] as const;
-const VALUE_COLORS = [
-  "bg-primary-50 text-primary-500 dark:bg-primary-950",
-  "bg-secondary-50 text-secondary-500 dark:bg-secondary-950",
-  "bg-accent-50 text-accent-600 dark:bg-accent-950",
-  "bg-purple-50 text-purple-500 dark:bg-purple-950",
-  "bg-pink-50 text-pink-500 dark:bg-pink-950",
-  "bg-teal-50 text-teal-500 dark:bg-teal-950",
+const valeurs = [
+  {
+    title: "Transparence",
+    description: "Des offres claires, des profils vérifiés, aucune mauvaise surprise pour les entreprises ni pour les candidats.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Inclusion",
+    description: "Nous digitalisons l'accès à l'emploi pour tous, des jeunes diplômés aux profils très expérimentés.",
+    icon: Users,
+  },
+  {
+    title: "Impact Local",
+    description: "Conçu spécifiquement pour le marché centrafricain, en comprenant les réalités économiques et sociales locales.",
+    icon: Target,
+  },
+  {
+    title: "Innovation",
+    description: "Des outils modernes (CVthèque, Matching IA) pour accélérer le développement professionnel en RCA.",
+    icon: Rocket,
+  },
 ] as const;
 
 export default function AboutPage() {
-  const jsonLdOrg = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "KWATIGUIGUI",
-    url: "https://kwatiguigui.org",
-    description: MISSION,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Bangui",
-      addressCountry: "CF",
-    },
-    contactPoint: {
-      "@type": "ContactPoint",
-      telephone: "+236-74-14-34-34",
-      contactType: "customer service",
-      availableLanguage: "French",
-    },
-  };
-
-  const jsonLdFaq = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQ_ITEMS.map((faq) => ({
-      "@type": "Question",
-      name: faq.question,
-      acceptedAnswer: { "@type": "Answer", text: faq.answer },
-    })),
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrg) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
-      />
+      {/* HERO SECTION */}
+      <section className="section-padding relative overflow-hidden bg-[radial-gradient(circle_at_20%_20%,rgba(14,116,144,0.16),transparent_45%),radial-gradient(circle_at_80%_0%,rgba(30,64,175,0.2),transparent_40%),linear-gradient(180deg,#f8fbff_0%,#ffffff_55%)] dark:bg-[radial-gradient(circle_at_20%_20%,rgba(14,116,144,0.14),transparent_45%),radial-gradient(circle_at_80%_0%,rgba(59,130,246,0.14),transparent_40%),linear-gradient(180deg,#050816_0%,#0a0f1f_55%)]">
+        <div className="pointer-events-none absolute -left-20 top-20 h-48 w-48 rounded-full bg-primary-400/20 blur-3xl" />
+        <div className="pointer-events-none absolute -right-16 top-24 h-56 w-56 rounded-full bg-secondary-400/20 blur-3xl" />
 
-      {/* Hero */}
-      <section className="section-padding hero-gradient">
-        <div className="container-main">
-          <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary-100 bg-primary-50 px-4 py-2 text-fluid-sm font-medium text-primary-700 dark:border-primary-800 dark:bg-primary-950 dark:text-primary-300">
-              <Globe className="h-4 w-4" />
-              La premiere plateforme emploi de la RCA
+        <div className="container-main relative">
+          <div className="mx-auto max-w-4xl text-center">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white/90 px-4 py-2 text-fluid-sm font-semibold text-primary-700 shadow-sm dark:border-primary-800 dark:bg-neutral-900/80 dark:text-primary-300">
+              <Globe2 className="h-4 w-4" />
+              À propos de nous
             </div>
-            <h1 className="mt-4 font-heading text-fluid-6xl font-bold leading-tight text-neutral-900 dark:text-neutral-100">
-              A propos de{" "}
-              <span className="text-gradient-primary">KWATIGUIGUI</span>
+
+            <h1 className="font-heading text-fluid-5xl font-black leading-tight text-neutral-900 dark:text-white">
+              Structurer le marché de l'emploi en
+              <span className="text-gradient-primary"> République Centrafricaine.</span>
             </h1>
-            <p className="mt-6 text-fluid-lg leading-relaxed text-neutral-600 dark:text-neutral-400">
-              {MISSION}
+
+            <p className="mx-auto mt-6 max-w-3xl text-fluid-lg text-neutral-600 dark:text-neutral-300">
+              KWATIGUIGUI n'est pas qu'un simple site d'annonces. C'est l'écosystème numérique central qui reconnecte le talent local aux véritables opportunités professionnelles et entrepreneuriales du pays.
             </p>
 
-            {/* Stats row */}
-            <div className="mt-10 flex flex-wrap justify-center gap-8">
-              {[
-                { value: "3 500+", label: "Utilisateurs" },
-                { value: "1 200+", label: "Offres publiees" },
-                { value: "20", label: "Regions" },
-                { value: "800+", label: "Mises en relation" },
-              ].map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <p className="font-heading text-fluid-3xl font-bold text-primary-600 dark:text-primary-400">
-                    {stat.value}
-                  </p>
-                  <p className="text-fluid-sm text-neutral-500">{stat.label}</p>
-                </div>
-              ))}
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+              <Link
+                href="/register"
+                className="inline-flex min-h-[46px] items-center gap-2 rounded-full bg-primary-600 px-6 py-2.5 text-fluid-sm font-bold text-white shadow-lg shadow-primary-600/30 transition-all hover:-translate-y-0.5 hover:bg-primary-700"
+              >
+                Rejoignez le mouvement
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Mission */}
+      {/* NOTRE VISION */}
       <section className="section-padding section-alt">
-        <div className="container-narrow text-center">
-          <h2 className="font-heading text-fluid-4xl font-bold text-neutral-900 dark:text-neutral-100">
-            Notre mission
-          </h2>
-          <p className="mt-4 text-fluid-lg leading-relaxed text-neutral-600 dark:text-neutral-400">
-            Connecter chaque Centrafricain — des villes aux villages — avec les opportunites
-            professionnelles qui correspondent a ses competences et ses aspirations.
-            KWATIGUIGUI est plus qu&apos;une plateforme : c&apos;est un moteur de developpement economique
-            pour la Republique Centrafricaine.
-          </p>
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            {[
-              {
-                icon: Globe,
-                title: "Portee nationale",
-                desc: "Presente dans les 20 regions de la RCA",
-              },
-              {
-                icon: Shield,
-                title: "Confiance",
-                desc: "Annonces moderees et utilisateurs verifies",
-              },
-              {
-                icon: Heart,
-                title: "Impact social",
-                desc: "Emploi accessible a tous, sans discrimination",
-              },
-            ].map(({ icon: Icon, title, desc }) => (
+        <div className="container-main">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+            <div className="order-2 lg:order-1 relative h-64 sm:h-80 lg:h-[400px] rounded-3xl overflow-hidden bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center border border-neutral-300 dark:border-neutral-700">
+              <Building2 className="h-24 w-24 text-neutral-400 dark:text-neutral-600" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary-600/10 to-transparent" />
+            </div>
+
+            <div className="order-1 lg:order-2">
+              <h2 className="font-heading text-fluid-4xl font-bold text-neutral-900 dark:text-white">
+                Notre Vision
+              </h2>
+              <p className="mt-4 text-fluid-base text-neutral-600 dark:text-neutral-300 leading-relaxed">
+                Jusqu'à présent, le marché centrafricain a manqué d'infrastructures digitales pour fluidifier le recrutement. Les talents peinent à se rendre visibles, et les employeurs perdent un temps précieux à chercher les bons profils.
+              </p>
+              <p className="mt-4 text-fluid-base text-neutral-600 dark:text-neutral-300 leading-relaxed">
+                <strong className="text-neutral-900 dark:text-white">Notre objectif :</strong> centraliser, sécuriser et moderniser ce processus. Nous voulons offrir la même qualité de service numérique que n'importe quelle autre plateforme globale, mais 100% pensée pour le tissu socio-économique de Bangui et des provinces.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* VALEURS */}
+      <section className="section-padding">
+        <div className="container-main">
+          <div className="mb-12 text-center">
+            <h2 className="font-heading text-fluid-4xl font-bold text-neutral-900 dark:text-white">
+              Nos piliers fondamentaux
+            </h2>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {valeurs.map((item) => (
               <div
-                key={title}
-                className="rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900"
+                key={item.title}
+                className="group rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary-300 hover:shadow-xl dark:border-neutral-700 dark:bg-neutral-900"
               >
-                <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary-50 dark:bg-primary-950">
-                  <Icon className="h-5 w-5 text-primary-500" />
+                <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950 dark:text-primary-400">
+                  <item.icon className="h-6 w-6" />
                 </div>
-                <p className="font-heading text-fluid-base font-semibold text-neutral-900 dark:text-neutral-100">
-                  {title}
-                </p>
-                <p className="mt-1 text-fluid-sm text-neutral-500">{desc}</p>
+                <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-white">{item.title}</h3>
+                <p className="mt-3 text-fluid-sm text-neutral-600 dark:text-neutral-300">{item.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Values */}
-      <section className="section-padding">
-        <div className="container-main">
-          <div className="mb-12 text-center">
-            <h2 className="font-heading text-fluid-4xl font-bold text-neutral-900 dark:text-neutral-100">
-              Nos valeurs
-            </h2>
-            <p className="mt-3 text-fluid-lg text-neutral-500 dark:text-neutral-400">
-              Les principes qui guident chaque decision que nous prenons
-            </p>
-          </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {VALUES.map((value, index) => {
-              const Icon = VALUE_ICONS[index] ?? Globe;
-              const colorClass = VALUE_COLORS[index] ?? VALUE_COLORS[0];
-              return (
-                <div
-                  key={value.title}
-                  className="card-hover rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-700 dark:bg-neutral-900"
-                >
-                  <div
-                    className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl ${colorClass}`}
-                  >
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">
-                    {value.title}
-                  </h3>
-                  <p className="mt-2 text-fluid-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
-                    {value.description}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Timeline */}
-      <section className="section-padding section-alt">
-        <div className="container-narrow">
-          <div className="mb-12 text-center">
-            <h2 className="font-heading text-fluid-4xl font-bold text-neutral-900 dark:text-neutral-100">
-              Notre histoire
-            </h2>
-            <p className="mt-3 text-fluid-lg text-neutral-500 dark:text-neutral-400">
-              De l&apos;idee au service national
-            </p>
-          </div>
-          <div className="relative">
-            {/* Vertical line */}
-            <div className="absolute left-5 top-0 h-full w-px bg-gradient-to-b from-primary-300 via-primary-400 to-transparent dark:from-primary-700 dark:via-primary-800" />
-
-            <div className="space-y-8">
-              {TIMELINE.map((event, index) => (
-                <div key={index} className="relative flex gap-6">
-                  {/* Dot */}
-                  <div className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 shadow-md shadow-primary-500/30 font-heading text-xs font-bold text-white">
-                    {event.year.slice(-2)}
-                  </div>
-                  {/* Content */}
-                  <div className="flex-1 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
-                    <p className="font-heading text-fluid-sm font-bold text-primary-600 dark:text-primary-400">
-                      {event.year}
-                    </p>
-                    <p className="mt-1 text-fluid-base text-neutral-700 dark:text-neutral-300">
-                      {event.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ accordion */}
+      {/* CTA ALIGNMENT */}
       <section className="section-padding">
         <div className="container-narrow">
-          <div className="mb-12 text-center">
-            <h2 className="font-heading text-fluid-4xl font-bold text-neutral-900 dark:text-neutral-100">
-              Questions frequentes
-            </h2>
-          </div>
-          <FaqAccordion items={FAQ_ITEMS} />
-        </div>
-      </section>
-
-      {/* Contact */}
-      <section className="section-padding section-alt">
-        <div className="container-narrow">
-          <div className="mb-10 text-center">
-            <h2 className="font-heading text-fluid-4xl font-bold text-neutral-900 dark:text-neutral-100">
-              Contactez-nous
-            </h2>
-            <p className="mt-3 text-fluid-lg text-neutral-500 dark:text-neutral-400">
-              Notre equipe est disponible pour repondre a vos questions
+          <div className="rounded-3xl border border-secondary-200 bg-secondary-50 p-10 text-center dark:border-secondary-800 dark:bg-secondary-950/30">
+            <h2 className="font-heading text-fluid-3xl font-bold text-neutral-900 dark:text-white">Faites partie de l'histoire</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-fluid-base text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Que vous soyez une entreprise cherchant à dénicher son prochain cadre, ou un jeune talent prêt à prouver sa valeur, KWATIGUIGUI est votre nouveau point de départ.
             </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-3">
-            <a
-              href={CONTACT.WHATSAPP_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="card-hover flex flex-col items-center gap-3 rounded-2xl border border-secondary-200 bg-secondary-50 p-6 text-center transition-all dark:border-secondary-800 dark:bg-secondary-950/30"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary-100 dark:bg-secondary-900">
-                <MessageCircle className="h-6 w-6 text-secondary-600 dark:text-secondary-400" />
-              </div>
-              <p className="font-heading text-fluid-sm font-semibold text-secondary-800 dark:text-secondary-300">
-                WhatsApp
-              </p>
-              <p className="text-fluid-sm text-secondary-600 dark:text-secondary-400">
-                {CONTACT.WHATSAPP}
-              </p>
-            </a>
-
-            <a
-              href={`mailto:${CONTACT.EMAIL}`}
-              className="card-hover flex flex-col items-center gap-3 rounded-2xl border border-primary-200 bg-primary-50 p-6 text-center transition-all dark:border-primary-800 dark:bg-primary-950/30"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-900">
-                <Mail className="h-6 w-6 text-primary-600 dark:text-primary-400" />
-              </div>
-              <p className="font-heading text-fluid-sm font-semibold text-primary-800 dark:text-primary-300">
-                Email
-              </p>
-              <p className="text-fluid-sm text-primary-600 dark:text-primary-400">
-                {CONTACT.EMAIL}
-              </p>
-            </a>
-
-            <div className="flex flex-col items-center gap-3 rounded-2xl border border-neutral-200 bg-white p-6 text-center dark:border-neutral-700 dark:bg-neutral-900">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800">
-                <MapPin className="h-6 w-6 text-neutral-600 dark:text-neutral-400" />
-              </div>
-              <p className="font-heading text-fluid-sm font-semibold text-neutral-800 dark:text-neutral-200">
-                Adresse
-              </p>
-              <p className="text-fluid-sm text-neutral-500">
-                {CONTACT.ADDRESS}
-              </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+              <Link
+                href="/about/equipe"
+                className="inline-flex min-h-[46px] items-center gap-2 rounded-full border border-neutral-300 bg-white px-6 py-2.5 text-fluid-sm font-semibold text-neutral-700 transition-colors hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200"
+              >
+                Découvrir l'équipe
+              </Link>
             </div>
           </div>
         </div>
