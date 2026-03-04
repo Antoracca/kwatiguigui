@@ -24,11 +24,35 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
+const SCROLL_LOCK_ATTR = "data-scroll-lock-count";
+
+function lockBodyScroll() {
+  const body = document.body;
+  const count = Number(body.getAttribute(SCROLL_LOCK_ATTR) ?? "0") + 1;
+  body.setAttribute(SCROLL_LOCK_ATTR, String(count));
+  body.style.overflow = "hidden";
+}
+
+function unlockBodyScroll() {
+  const body = document.body;
+  const nextCount = Math.max(
+    0,
+    Number(body.getAttribute(SCROLL_LOCK_ATTR) ?? "0") - 1,
+  );
+
+  if (nextCount === 0) {
+    body.removeAttribute(SCROLL_LOCK_ATTR);
+    body.style.overflow = "";
+    return;
+  }
+
+  body.setAttribute(SCROLL_LOCK_ATTR, String(nextCount));
+}
 const CandidatureIcon = ({ className, size = 18 }: { className?: string; size?: number }) => (
   <Image src="/images/candidature.png" alt="Candidatures" width={size} height={size} className={className} />
 );
@@ -169,20 +193,42 @@ function SidebarContent({
 export function DashboardSidebar({ userType }: { userType: "seeker" | "employer" | "company" | null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+  const openButtonRef = useRef<HTMLButtonElement>(null);
+  const drawerRef = useRef<HTMLElement>(null);
 
   // Close drawer on route change
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
 
-  // Prevent body scroll when drawer is open
+  // Prevent body scroll when drawer is open + keyboard escape
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
+    if (!mobileOpen) return;
+
+    lockBodyScroll();
+
+    const firstFocusable = drawerRef.current?.querySelector<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"]), input, select, textarea',
+    );
+    firstFocusable?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobileOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      unlockBodyScroll();
+    };
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    if (!mobileOpen) {
+      openButtonRef.current?.focus();
     }
-    return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
   return (
@@ -194,10 +240,13 @@ export function DashboardSidebar({ userType }: { userType: "seeker" | "employer"
 
       {/* ── MOBILE hamburger button (fixed, bottom-left, visible < lg) ── */}
       <button
+        ref={openButtonRef}
         type="button"
         onClick={() => setMobileOpen(true)}
         className="fixed bottom-5 left-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-primary-600 text-white shadow-lg shadow-primary-900/30 transition-all hover:bg-primary-700 active:scale-95 lg:hidden"
         aria-label="Ouvrir le menu"
+        aria-controls="dashboard-sidebar-mobile"
+        aria-expanded={mobileOpen}
       >
         <Menu size={22} />
       </button>
@@ -220,6 +269,12 @@ export function DashboardSidebar({ userType }: { userType: "seeker" | "employer"
 
             {/* Slide-in panel */}
             <motion.aside
+              id="dashboard-sidebar-mobile"
+              ref={drawerRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Menu du tableau de bord"
+              tabIndex={-1}
               key="sidebar-drawer"
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
@@ -301,3 +356,4 @@ export function AdminSidebar() {
     </aside>
   );
 }
+

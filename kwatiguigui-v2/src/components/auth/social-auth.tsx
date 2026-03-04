@@ -64,6 +64,12 @@ const PROVIDERS: ProviderConfig[] = [
   { id: "linkedin_oidc", name: "LinkedIn", icon: LinkedInIcon, enabled: false },
 ];
 
+
+function normalizeNextPath(value: string | null): string {
+  if (!value) return "/dashboard";
+  if (!value.startsWith("/") || value.startsWith("//")) return "/dashboard";
+  return value;
+}
 // ---------------------------------------------------------------------------
 // SocialAuth
 // ---------------------------------------------------------------------------
@@ -78,11 +84,17 @@ export function SocialAuth() {
 
     const supabase = createClient();
 
+    const query = new URLSearchParams(window.location.search);
+    const next = normalizeNextPath(query.get("callbackUrl"));
+    const callbackUrl = new URL("/api/auth/callback", window.location.origin);
+    callbackUrl.searchParams.set("next", next);
+    sessionStorage.setItem("kwt-post-oauth-next", next);
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
         // Supabase redirige ici après authentification
-        redirectTo: `${window.location.origin}/api/auth/callback`,
+        redirectTo: callbackUrl.toString(),
         // Demander l'accès à l'email (nécessaire pour créer le profil)
         scopes: provider === "google" ? "openid email profile" : undefined,
         // Forcer l'affichage du sélecteur de compte Google
@@ -91,6 +103,7 @@ export function SocialAuth() {
     });
 
     if (error) {
+      sessionStorage.removeItem("kwt-post-oauth-next");
       setOauthError(`Erreur ${error.message}`);
       setLoading(null);
     }

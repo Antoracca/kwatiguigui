@@ -848,7 +848,7 @@ export function ProfileForm({
         </div>
 
         {/* ── Performance indicators panel ─────────────────────────────────── */}
-        <div className="grid grid-cols-3 divide-x divide-neutral-100 border-t border-neutral-100 bg-neutral-50/70 px-5 py-4 dark:divide-neutral-800 dark:border-neutral-800 dark:bg-white/[0.02]">
+        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-neutral-100 border-t border-neutral-100 bg-neutral-50/70 px-5 py-4 dark:divide-neutral-800 dark:border-neutral-800 dark:bg-white/[0.02]">
 
           {/* 1. Complétude du profil */}
           <div className="flex flex-col gap-2 pr-4">
@@ -890,7 +890,7 @@ export function ProfileForm({
                 ))}
               </div>
               <span className={[
-                "whitespace-nowrap text-xs font-semibold",
+                "text-xs font-semibold",
                 coherenceState === "impossible"
                   ? "text-error-600 dark:text-error-400"
                   : "text-primary-600 dark:text-primary-400",
@@ -1569,7 +1569,7 @@ export function ProfileForm({
           size="lg"
           loading={isPending}
           disabled={isPending || coherenceState === "impossible"}
-          className="min-w-[200px] bg-primary-600 text-white hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-40"
+          className="w-full sm:w-auto sm:min-w-[200px] bg-primary-600 text-white hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Save size={16} />
           Enregistrer les modifications
@@ -1584,3 +1584,4 @@ export function ProfileForm({
     </form>
   );
 }
+

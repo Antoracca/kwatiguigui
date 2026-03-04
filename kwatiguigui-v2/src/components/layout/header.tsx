@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import {
   Building2,
@@ -48,6 +48,30 @@ import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { useAuthContext } from "@/components/providers/auth-provider";
 
+const SCROLL_LOCK_ATTR = "data-scroll-lock-count";
+
+function lockBodyScroll() {
+  const body = document.body;
+  const count = Number(body.getAttribute(SCROLL_LOCK_ATTR) ?? "0") + 1;
+  body.setAttribute(SCROLL_LOCK_ATTR, String(count));
+  body.style.overflow = "hidden";
+}
+
+function unlockBodyScroll() {
+  const body = document.body;
+  const nextCount = Math.max(
+    0,
+    Number(body.getAttribute(SCROLL_LOCK_ATTR) ?? "0") - 1,
+  );
+
+  if (nextCount === 0) {
+    body.removeAttribute(SCROLL_LOCK_ATTR);
+    body.style.overflow = "";
+    return;
+  }
+
+  body.setAttribute(SCROLL_LOCK_ATTR, String(nextCount));
+}
 // --- MEGA MENU DATA (Indeed Inspired) ---
 const NAV_CATEGORIES = [
   {
@@ -139,6 +163,8 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
   const [profileAvatar, setProfileAvatar] = React.useState<string | null>(null);
+  const mobileToggleRef = React.useRef<HTMLButtonElement>(null);
+  const mobileMenuRef = React.useRef<HTMLDivElement>(null);
 
   const supabase = createClient();
 
@@ -201,6 +227,34 @@ export function Header() {
     setMobileOpen(false);
     setActiveMenu(null);
   }, [pathname]);
+  React.useEffect(() => {
+    if (!mobileOpen) return;
+
+    lockBodyScroll();
+
+    const firstFocusable = mobileMenuRef.current?.querySelector<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"]), input, select, textarea',
+    );
+    firstFocusable?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobileOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      unlockBodyScroll();
+    };
+  }, [mobileOpen]);
+
+  React.useEffect(() => {
+    if (!mobileOpen) {
+      mobileToggleRef.current?.focus();
+    }
+  }, [mobileOpen]);
 
   const handleMouseEnter = (id: string) => {
     if (menuTimeoutRef.current) clearTimeout(menuTimeoutRef.current);
@@ -225,7 +279,7 @@ export function Header() {
       )}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 lg:gap-8 px-4 sm:px-6 lg:px-8 relative z-20">
+      <div className="relative z-20 mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-2 px-4 sm:px-6 lg:px-8 xl:gap-4 2xl:gap-6">
 
         {/* LOGO AREA */}
         <Link
@@ -234,7 +288,7 @@ export function Header() {
           onClick={() => setActiveMenu(null)}
         >
           {/* Logo container, responsive sizing maintaining aspect ratio */}
-          <div className="relative h-12 w-[160px] sm:h-14 sm:w-[200px] lg:h-16 lg:w-[240px]">
+          <div className="relative h-12 w-[160px] sm:h-14 sm:w-[200px] xl:h-16 xl:w-[220px] 2xl:w-[240px]">
             <Image
               src="/images/logoprincipal.png"
               alt="KWATIGUIGUI"
@@ -245,8 +299,8 @@ export function Header() {
           </div>
         </Link>
 
-        {/* Desktop navigation — visible à partir de lg (1024px) */}
-        <nav className="hidden lg:flex flex-1 items-center justify-center gap-1 xl:gap-2 h-full" role="navigation">
+        {/* Desktop navigation — visible à partir de xl (1280px) */}
+        <nav className="hidden h-full flex-1 items-center justify-center gap-1 xl:flex 2xl:gap-2" role="navigation">
           {NAV_CATEGORIES.map((category) => {
             const isActiveRoute = pathname === category.href || pathname.startsWith(category.href + "/");
             const isHovered = activeMenu === category.id;
@@ -260,7 +314,7 @@ export function Header() {
                 <Link
                   href={category.href}
                   className={cn(
-                    "group flex items-center gap-1.5 rounded-full px-3 lg:px-4 py-2 text-sm lg:text-body-md font-semibold transition-all duration-200 whitespace-nowrap",
+                    "group flex items-center gap-1 rounded-full px-2 2xl:px-3 py-1.5 text-[13px] xl:text-sm font-semibold transition-all duration-200 whitespace-nowrap",
                     isActiveRoute ? "text-primary-600 dark:text-primary-400" : "text-neutral-700 dark:text-neutral-300",
                     isHovered ? "bg-primary-50 dark:bg-primary-950/50 text-primary-700 dark:text-primary-300" : "hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-50 dark:hover:bg-neutral-900"
                   )}
@@ -285,101 +339,189 @@ export function Header() {
           })}
         </nav>
 
-        {/* Desktop actions — visible à partir de lg (1024px) */}
-        <div className="hidden lg:flex flex-shrink-0 items-center justify-end gap-2 lg:gap-3">
+        {/* Desktop actions — visible à partir de xl (1280px) */}
+        <div className="hidden flex-shrink-0 items-center justify-end gap-1.5 xl:flex xl:gap-2">
+
+
 
           {/* Theme toggle */}
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="rounded-full p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white"
+            className="relative hidden 2xl:inline-flex rounded-full p-1.5 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white"
             aria-label="Changer le theme"
           >
-            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           </button>
 
-          <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-800 hidden lg:block mx-1" />
-
+          <div className="mx-0.5 hidden h-5 w-px bg-neutral-200 dark:bg-neutral-800 2xl:block" />
           {/* Auth / User area */}
           {authLoading ? (
             <div className="h-9 w-28 animate-pulse rounded-lg bg-neutral-100 dark:bg-neutral-800" />
           ) : user ? (
-            <div className="relative" data-user-menu>
-              <button
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-2 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 px-1.5 py-1.5 pr-4 text-neutral-700 dark:text-neutral-300 font-semibold text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-all shadow-sm"
-              >
-                <div className="relative h-8 w-8 overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center shrink-0 border border-neutral-100 dark:border-neutral-700">
-                  {profileAvatar ? (
-                    <Image
-                      src={profileAvatar}
-                      alt="Avatar"
-                      fill
-                      className="object-cover"
-                    />
-                  ) : (
-                    <User className="h-4 w-4 text-neutral-500" />
-                  )}
-                </div>
-                Mon espace
-                <ChevronDown size={14} className={cn("ml-1 text-neutral-400 transition-transform duration-200", userMenuOpen ? "rotate-180 text-primary-500" : "")} />
-              </button>
-              <AnimatePresence>
-                {userMenuOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 shadow-xl z-50 overflow-hidden"
-                  >
-                    <div className="px-4 py-3 border-b border-neutral-100 dark:border-neutral-800">
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400">Connecté en tant que</p>
-                      <p className="text-sm font-semibold text-neutral-900 dark:text-white truncate">{user.email}</p>
-                    </div>
-                    <div className="py-1">
-                      {[
-                        { href: "/dashboard", icon: Target, label: "Tableau de bord" },
-                        { href: "/dashboard/profile", icon: User, label: "Mon profil" },
-                        { href: "/dashboard/jobs", icon: Briefcase, label: "Mes annonces" },
-                        { href: "/dashboard/messages", icon: MessageSquare, label: "Messages" },
-                      ].map(item => (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-900 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                        >
-                          <item.icon size={16} className="text-neutral-400 shrink-0" />
-                          {item.label}
-                        </Link>
-                      ))}
-                    </div>
-                    <div className="border-t border-neutral-100 dark:border-neutral-800 py-1">
-                      <button
-                        type="button"
-                        onClick={handleSignOut}
-                        className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+            <>
+              <div className="relative hidden xl:block 2xl:hidden group xl:mr-4" data-user-menu>
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-[13px] font-semibold text-primary-700 shadow-sm transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-primary-400 dark:hover:bg-neutral-800"
+                  aria-label="Mon compte"
+                >
+                  <div className="relative h-6 w-6 overflow-hidden rounded-full border border-neutral-100 bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800 flex items-center justify-center">
+                    {profileAvatar ? (
+                      <Image
+                        src={profileAvatar}
+                        alt="Avatar"
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <User className="h-3.5 w-3.5 text-neutral-500" />
+                    )}
+                  </div>
+                  Mon compte
+                  <ChevronDown className="h-3.5 w-3.5 text-neutral-400 transition-transform duration-200 group-hover:rotate-180" />
+                </button>
+
+                <div className="pointer-events-none invisible absolute right-0 top-full z-50 mt-2 w-52 translate-y-1 overflow-hidden rounded-xl border border-neutral-200 bg-white opacity-0 shadow-xl transition-all duration-200 group-hover:pointer-events-auto group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 dark:border-neutral-800 dark:bg-neutral-950">
+                  <div className="px-3.5 py-2 border-b border-neutral-100 dark:border-neutral-800">
+                    <p className="text-[11px] text-neutral-500 dark:text-neutral-400">Connecté</p>
+                    <p className="text-[13px] font-semibold text-neutral-900 dark:text-white truncate">{user.email}</p>
+                  </div>
+                  <div className="py-1">
+                    {[
+                      { href: "/dashboard", icon: Target, label: "Tableau de bord" },
+                      { href: "/dashboard/profile", icon: User, label: "Mon profil" },
+                      { href: "/dashboard/jobs", icon: Briefcase, label: "Mes annonces" },
+                      { href: "/dashboard/messages", icon: MessageSquare, label: "Messages" },
+                    ].map(item => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="flex items-center gap-2 px-3.5 py-2.5 text-[13px] font-semibold text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-primary-600 dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-primary-400"
                       >
-                        <LogIn size={16} className="rotate-180 shrink-0" />
-                        Déconnexion
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                        <item.icon className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                  <div className="border-t border-neutral-100 dark:border-neutral-800 py-1">
+                    <button
+                      type="button"
+                      onClick={handleSignOut}
+                      className="flex w-full items-center gap-2 px-3.5 py-2.5 text-[13px] font-semibold text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
+                    >
+                      <LogIn className="h-3.5 w-3.5 rotate-180 shrink-0" />
+                      Déconnexion
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative hidden 2xl:block" data-user-menu>
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className="flex items-center gap-2 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 px-1.5 py-1.5 pr-4 text-neutral-700 dark:text-neutral-300 font-semibold text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-all shadow-sm"
+                >
+                  <div className="relative h-8 w-8 overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center shrink-0 border border-neutral-100 dark:border-neutral-700">
+                    {profileAvatar ? (
+                      <Image
+                        src={profileAvatar}
+                        alt="Avatar"
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <User className="h-4 w-4 text-neutral-500" />
+                    )}
+                  </div>
+                  Mon espace
+                  <ChevronDown size={14} className={cn("ml-1 text-neutral-400 transition-transform duration-200", userMenuOpen ? "rotate-180 text-primary-500" : "")} />
+                </button>
+                <AnimatePresence>
+                  {userMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 shadow-xl z-50 overflow-hidden"
+                    >
+                      <div className="px-4 py-3 border-b border-neutral-100 dark:border-neutral-800">
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">Connecté en tant que</p>
+                        <p className="text-sm font-semibold text-neutral-900 dark:text-white truncate">{user.email}</p>
+                      </div>
+                      <div className="py-1">
+                        {[
+                          { href: "/dashboard", icon: Target, label: "Tableau de bord" },
+                          { href: "/dashboard/profile", icon: User, label: "Mon profil" },
+                          { href: "/dashboard/jobs", icon: Briefcase, label: "Mes annonces" },
+                          { href: "/dashboard/messages", icon: MessageSquare, label: "Messages" },
+                        ].map(item => (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setUserMenuOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-900 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                          >
+                            <item.icon size={16} className="text-neutral-400 shrink-0" />
+                            {item.label}
+                          </Link>
+                        ))}
+                      </div>
+                      <div className="border-t border-neutral-100 dark:border-neutral-800 py-1">
+                        <button
+                          type="button"
+                          onClick={handleSignOut}
+                          className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                        >
+                          <LogIn size={16} className="rotate-180 shrink-0" />
+                          Déconnexion
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </>
           ) : (
             <>
-              <Button asChild variant="ghost" className="hidden lg:flex font-semibold px-4 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-primary-700 dark:text-primary-400">
+              <div className="relative hidden xl:block 2xl:hidden group xl:mr-4">
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-[13px] font-semibold text-primary-700 shadow-sm transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-primary-400 dark:hover:bg-neutral-800"
+                  aria-label="Options de connexion"
+                >
+                  <User className="h-3.5 w-3.5" />
+                  Espace compte
+                  <ChevronDown className="h-3.5 w-3.5 text-neutral-400 transition-transform duration-200 group-hover:rotate-180" />
+                </button>
+                <div className="pointer-events-none invisible absolute right-0 top-full z-50 mt-2 w-44 translate-y-1 overflow-hidden rounded-xl border border-neutral-200 bg-white opacity-0 shadow-xl transition-all duration-200 group-hover:pointer-events-auto group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 dark:border-neutral-800 dark:bg-neutral-950">
+                  <Link
+                    href="/login"
+                    className="flex items-center gap-2 px-3.5 py-2.5 text-[13px] font-semibold text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-primary-600 dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-primary-400"
+                  >
+                    <LogIn className="h-3.5 w-3.5" />
+                    Connexion
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="flex items-center gap-2 border-t border-neutral-100 px-3.5 py-2.5 text-[13px] font-semibold text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-primary-600 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-primary-400"
+                  >
+                    <UserPlus className="h-3.5 w-3.5" />
+                    S'inscrire
+                  </Link>
+                </div>
+              </div>
+
+              <Button asChild variant="ghost" className="hidden 2xl:flex font-semibold text-sm px-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-primary-700 dark:text-primary-400">
                 <Link href="/login">
                   <User size={18} className="mr-2" />
                   Connexion
                 </Link>
               </Button>
-              <Button asChild className="bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-500 dark:hover:bg-primary-600 rounded-lg px-5 font-semibold transition-all shadow-sm flex items-center gap-2">
+              <Button asChild className="hidden 2xl:flex bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-500 dark:hover:bg-primary-600 rounded-lg px-2.5 2xl:px-3 text-sm font-semibold transition-all shadow-sm items-center gap-1.5 whitespace-nowrap">
                 <Link href="/register">
-                  <UserPlus size={18} />
+                  <UserPlus className="h-4 w-4 2xl:h-[18px] 2xl:w-[18px]" />
                   S'inscrire
                 </Link>
               </Button>
@@ -387,12 +529,15 @@ export function Header() {
           )}
         </div>
 
-        {/* Mobile/tablet hamburger — visible en dessous de lg (1024px) */}
+        {/* Mobile/tablet hamburger — visible en dessous de xl (1280px) */}
         <button
-          className="relative z-50 rounded-lg p-2 text-neutral-600 hover:bg-neutral-100 lg:hidden dark:text-neutral-300 dark:hover:bg-neutral-800 transition-colors"
+          ref={mobileToggleRef}
+          type="button"
+          className="relative z-50 rounded-lg p-2 text-neutral-600 hover:bg-neutral-100 xl:hidden dark:text-neutral-300 dark:hover:bg-neutral-800 transition-colors"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
           aria-expanded={mobileOpen}
+          aria-controls="site-mobile-menu"
         >
           {mobileOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
@@ -468,11 +613,17 @@ export function Header() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
+            id="site-mobile-menu"
+            ref={mobileMenuRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu principal mobile"
+            tabIndex={-1}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
-            className="fixed inset-0 top-[72px] z-40 bg-white dark:bg-neutral-950 overflow-y-auto pb-24 lg:hidden"
+            className="fixed inset-0 top-[72px] z-40 bg-white dark:bg-neutral-950 overflow-y-auto pb-24 xl:hidden"
           >
             <div className="px-5 py-6 flex flex-col gap-8">
 

@@ -41,6 +41,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import { PricingCarousel } from "@/components/marketing/pricing-carousel";
@@ -53,7 +54,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CountUp } from "@/components/ui/count-up";
 import { CONTACT } from "@/lib/constants";
-import { formatPrice } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
 // Demo job data for homepage (static, no DB needed)
@@ -176,7 +177,7 @@ const AnnouncementTicker = () => {
             <div className="absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white dark:from-neutral-950 to-transparent z-10 pointer-events-none" />
 
             <motion.div
-                className="flex whitespace-nowrap gap-20 sm:gap-24 px-4 w-max items-center"
+                className="flex whitespace-nowrap gap-8 sm:gap-12 lg:gap-20 px-4 w-max items-center"
                 animate={{ x: ["0%", "-50%"] }}
                 transition={{
                     duration: 50,
@@ -224,6 +225,88 @@ const AnimatedSearchJobIcon = () => (
     </div>
 );
 
+
+function EnterpriseTypewriterHeading() {
+    const enterpriseHeadline = "Recrutez efficacement";
+    const [visibleChars, setVisibleChars] = useState(0);
+    const [typingStarted, setTypingStarted] = useState(false);
+    const headingRef = useRef<HTMLHeadingElement | null>(null);
+
+    useEffect(() => {
+        const node = headingRef.current;
+        if (!node) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const entry = entries[0];
+                if (entry?.isIntersecting) {
+                    setTypingStarted(true);
+                    observer.disconnect();
+                }
+            },
+            { threshold: 0.2, rootMargin: "-10% 0px -10% 0px" },
+        );
+
+        observer.observe(node);
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        if (!typingStarted) return;
+
+        let frameId = 0;
+        const charsPerSecond = 52;
+        const startAt = performance.now();
+
+        const step = (now: number) => {
+            const elapsed = (now - startAt) / 1000;
+            const next = Math.min(
+                enterpriseHeadline.length,
+                Math.floor(elapsed * charsPerSecond),
+            );
+
+            setVisibleChars((prev) => (next > prev ? next : prev));
+
+            if (next < enterpriseHeadline.length) {
+                frameId = window.requestAnimationFrame(step);
+            }
+        };
+
+        frameId = window.requestAnimationFrame(step);
+        return () => window.cancelAnimationFrame(frameId);
+    }, [enterpriseHeadline.length, typingStarted]);
+
+    const typedText = enterpriseHeadline.slice(0, visibleChars);
+    const completed = visibleChars >= enterpriseHeadline.length;
+
+    return (
+        <h2
+            ref={headingRef}
+            className="font-heading text-[clamp(2.25rem,5vw,4rem)] font-extrabold text-white tracking-tight leading-[1.08] mt-2"
+        >
+            <span className="sr-only">{enterpriseHeadline}.</span>
+            <span aria-hidden="true" className="inline-flex items-baseline whitespace-nowrap">
+                <span>{typedText}</span>
+                {completed && (
+                    <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.12 }}
+                        className="inline text-secondary-400"
+                    >
+                        .
+                    </motion.span>
+                )}
+                <span
+                    className={cn(
+                        "ml-0.5 inline-block h-[0.95em] w-[2px] rounded-full translate-y-[2px] bg-secondary-400",
+                        completed ? "opacity-0" : "animate-pulse",
+                    )}
+                />
+            </span>
+        </h2>
+    );
+}
 interface HomeClientProps {
     isLoggedIn?: boolean;
     userType?: string | null;
@@ -387,7 +470,7 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
 
                         {/* Hero Lottie Animation */}
                         <motion.div
-                            className="mt-6 sm:mt-12 flex justify-center w-[120%] sm:w-full max-w-[320px] sm:max-w-[600px] lg:max-w-[700px] mx-auto -ml-[10%] sm:ml-auto mb-8 sm:mb-16"
+                            className="mt-6 sm:mt-12 flex justify-center w-full max-w-[320px] sm:max-w-[600px] lg:max-w-[700px] mx-auto mb-8 sm:mb-16"
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.5, duration: 0.8 }}
@@ -478,32 +561,17 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20">
                         <div className="mb-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                             <div className="lg:col-span-7 text-center lg:text-left">
-                                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-neutral-800 bg-neutral-900/80 px-4 py-1.5 text-sm font-semibold text-neutral-400">
-                                    <Building2 size={16} className="text-secondary-400" />
-                                    <span>Vous êtes une entreprise ?</span>
-                                </div>
-                                <h2 className="font-heading text-[clamp(2.25rem,5vw,4rem)] font-extrabold text-white tracking-tight leading-none mt-2">
-                                    {"Recrutez efficacement".split("").map((char, index) => (
-                                        <motion.span
-                                            key={index}
-                                            initial={{ opacity: 0 }}
-                                            whileInView={{ opacity: 1 }}
-                                            viewport={{ once: true, margin: "-100px" }}
-                                            transition={{ duration: 0.03, delay: index * 0.04 + 0.3 }}
-                                        >
-                                            {char}
-                                        </motion.span>
-                                    ))}
-                                    <motion.span
-                                        initial={{ opacity: 0 }}
-                                        whileInView={{ opacity: 1 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.03, delay: "Recrutez efficacement".length * 0.04 + 0.3 }}
-                                        className="text-secondary-400"
-                                    >
-                                        .
-                                    </motion.span>
-                                </h2>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 8 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true, margin: "-120px" }}
+                                    transition={{ duration: 0.35, ease: "easeOut" }}
+                                    className="mb-4 inline-flex items-center gap-2 rounded-full border border-secondary-400/40 bg-secondary-500/15 px-5 py-2 text-sm font-bold text-secondary-100 shadow-[0_10px_30px_-15px_rgba(56,189,248,0.55)]"
+                                >
+                                    <Building2 size={16} className="text-secondary-300" />
+                                    <span className="tracking-wide">Vous êtes une entreprise ?</span>
+                                </motion.div>
+                                <EnterpriseTypewriterHeading />
                                 <p className="mt-6 text-lg text-neutral-400 max-w-2xl mx-auto lg:mx-0">
                                     Trouvez les meilleurs talents en République Centrafricaine grâce à une méthode ciblée en 4 étapes simples.
                                 </p>
@@ -841,7 +909,7 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
 
                         {/* Popular searches */}
                         <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-4 px-2">
-                            <span className="text-sm font-medium text-neutral-400 whitespace-nowrap">Recherches populaires :</span>
+                            <span className="text-sm font-medium text-neutral-400">Recherches populaires :</span>
                             <div className="flex flex-wrap items-center gap-2 w-full">
                                 <Link href="/jobs?q=Bangui" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800/40 hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 transition-colors">
                                     <Search size={12} className="text-neutral-400" /> Bangui
@@ -1037,3 +1105,4 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
         </>
     );
 }
+

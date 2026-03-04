@@ -147,7 +147,7 @@ export function PricingCarousel({ whatsapp }: { whatsapp: string }) {
     );
 
     return (
-        <div className="relative w-full max-w-7xl mx-auto h-[650px] md:h-[600px] flex items-center justify-center pt-8 cursor-grab active:cursor-grabbing overflow-visible z-20">
+        <div className="relative w-full max-w-7xl mx-auto h-[620px] sm:h-[650px] md:h-[600px] flex items-center justify-center pt-8 cursor-grab active:cursor-grabbing overflow-hidden z-20">
             {plansToRender.map((plan, index) => {
                 const offset = (index - activeIndex + plansToRender.length * 2) % plansToRender.length;
                 const normalizedOffset = offset > 2 ? offset - plansToRender.length : offset;
@@ -156,7 +156,7 @@ export function PricingCarousel({ whatsapp }: { whatsapp: string }) {
                 const isCenter = normalizedOffset === 0;
 
                 // Increase the gap significantly using more rem/px
-                const xPos = normalizedOffset * 280; // Widen the gap between side cards
+                const xPos = normalizedOffset * 240; // Keep side cards visible without forcing overflow on laptops
                 const zIndex = 50 - Math.abs(normalizedOffset) * 10;
                 const scale = 1 - Math.abs(normalizedOffset) * 0.15; // More pronounced scale difference
                 const opacity = 1 - Math.abs(normalizedOffset) * 0.3;
@@ -178,7 +178,7 @@ export function PricingCarousel({ whatsapp }: { whatsapp: string }) {
                             duration: 0.6,
                             ease: [0.32, 0.72, 0, 1]
                         }}
-                        className={`absolute w-full max-w-[340px] md:max-w-[380px] p-8 xl:p-10 rounded-3xl border ${plan.border || 'border-neutral-200 dark:border-neutral-800'} ${plan.gradient || 'bg-white/90 dark:bg-neutral-950/90'} backdrop-blur-md flex flex-col shadow-2xl ${isCenter ? 'shadow-neutral-400/30 border-2 border-primary-500 scale-100' : 'shadow-none cursor-pointer'} transition-all`}
+                        className={`absolute w-full max-w-[300px] sm:max-w-[340px] md:max-w-[380px] p-8 xl:p-10 rounded-3xl border ${plan.border || 'border-neutral-200 dark:border-neutral-800'} ${plan.gradient || 'bg-white/90 dark:bg-neutral-950/90'} backdrop-blur-md flex flex-col shadow-2xl ${isCenter ? 'shadow-neutral-400/30 border-2 border-primary-500 scale-100' : 'shadow-none cursor-pointer'} transition-all`}
                         style={{ perspective: 1000 }}
                     >
                         {/* Overlay to dim unselected cards and create that overlapping blur look */}
@@ -233,7 +233,7 @@ export function PricingCarousel({ whatsapp }: { whatsapp: string }) {
                                 asChild
                                 className={`w-full h-14 rounded-2xl font-bold transition-all text-sm sm:text-base ${plan.buttonClass || 'bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200'}`}
                             >
-                                <Link href={plan.ctaLink} className="truncate px-2">{plan.ctaText}</Link>
+                                <Link href={plan.ctaLink} className="px-2 text-center whitespace-normal leading-tight">{plan.ctaText}</Link>
                             </Button>
                             {plan.id === 'plan0' && (
                                 <p className="text-[10px] uppercase tracking-wider text-neutral-500 text-center font-bold">100% sans carte de crédit</p>
@@ -259,3 +259,4 @@ export function PricingCarousel({ whatsapp }: { whatsapp: string }) {
         </div>
     );
 }
+

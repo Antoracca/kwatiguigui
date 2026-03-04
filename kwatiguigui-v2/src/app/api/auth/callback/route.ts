@@ -1,6 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
+function getSafeNextPath(raw: string | null): string {
+  if (!raw) return "/dashboard";
+  const value = raw.trim();
+  if (!value.startsWith("/") || value.startsWith("//")) return "/dashboard";
+  return value;
+}
 
 /**
  * GET /api/auth/callback
@@ -18,6 +24,7 @@ import { createClient } from "@/lib/supabase/server";
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code  = searchParams.get("code");
+  const next = searchParams.get("next");
   const error = searchParams.get("error");
   const errorDescription = searchParams.get("error_description");
 
@@ -46,6 +53,7 @@ export async function GET(request: NextRequest) {
   }
 
   const user = sessionData.user;
+  const destination = getSafeNextPath(next);
 
   // ── Vérifier si le profil existe déjà ────────────────────────────────────
   const { data: existingProfile } = await supabase
@@ -55,12 +63,7 @@ export async function GET(request: NextRequest) {
     .maybeSingle();
 
   if (existingProfile) {
-    // Utilisateur connu — s'il a déjà complété l'onboarding (city non vide)
-    // → dashboard, sinon → onboarding pour compléter
-    const destination =
-      existingProfile.city && existingProfile.city.trim().length > 0
-        ? "/dashboard"
-        : "/onboarding";
+    // Utilisateur connu — rediriger vers la destination demandée (ou dashboard)
     return NextResponse.redirect(new URL(destination, origin));
   }
 
@@ -126,5 +129,5 @@ export async function GET(request: NextRequest) {
     // On continue quand même — l'onboarding détectera le profil absent ou incomplet
   }
 
-  return NextResponse.redirect(new URL("/onboarding", origin));
+  return NextResponse.redirect(new URL(destination, origin));
 }

@@ -30,13 +30,89 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const supabase = createClient();
+    let cancelled = false;
+    const consumePendingOAuthNext = (): string | null => {
+      try {
+        const raw = sessionStorage.getItem("kwt-post-oauth-next");
+        if (!raw) return null;
+        sessionStorage.removeItem("kwt-post-oauth-next");
+        if (!raw.startsWith("/") || raw.startsWith("//")) return null;
+        return raw;
+      } catch {
+        return null;
+      }
+    };
 
-    // Initialise from the current session immediately
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setIsLoading(false);
-    });
+    const redirectIfPendingOAuthNext = () => {
+      const next = consumePendingOAuthNext();
+      if (!next) return;
+      const current = `${window.location.pathname}${window.location.search}`;
+      if (current !== next) {
+        window.location.replace(next);
+      }
+    };
+    const url = new URL(window.location.href);
+    const code = url.searchParams.get("code");
+
+    // Fallback: if OAuth lands on a non-callback URL with ?code=, forward to callback route.
+    if (code && !url.pathname.startsWith("/api/auth/callback")) {
+      const nextRaw =
+        url.searchParams.get("next") ??
+        url.searchParams.get("callbackUrl") ??
+        "/dashboard";
+      const next =
+        nextRaw.startsWith("/") && !nextRaw.startsWith("//")
+          ? nextRaw
+          : "/dashboard";
+      const callbackUrl = new URL("/api/auth/callback", window.location.origin);
+      callbackUrl.searchParams.set("code", code);
+      callbackUrl.searchParams.set("next", next);
+      window.location.replace(callbackUrl.toString());
+      return;
+    }
+
+    const bootstrapAuth = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (cancelled) return;
+
+      if (session?.user) {
+        setSession(session);
+        setUser(session.user);
+        setIsLoading(false);
+        redirectIfPendingOAuthNext();
+        return;
+      }
+
+      // Fallback to server-known auth via cookies (covers OAuth callback race conditions).
+      try {
+        const response = await fetch("/api/auth/session", {
+          method: "GET",
+          credentials: "include",
+          cache: "no-store",
+        });
+
+        if (!cancelled && response.ok) {
+          const payload = (await response.json()) as { user: User | null };
+          setUser(payload.user ?? null);
+          if (payload.user) {
+            redirectIfPendingOAuthNext();
+          }
+        }
+      } catch {
+        if (!cancelled) {
+          setUser(null);
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void bootstrapAuth();
 
     // Subscribe to subsequent auth state changes (login, logout, token refresh)
     const {
@@ -45,9 +121,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       setIsLoading(false);
+      if (session?.user) {
+        redirectIfPendingOAuthNext();
+      }
     });
 
     return () => {
+      cancelled = true;
       subscription.unsubscribe();
     };
   }, []);
