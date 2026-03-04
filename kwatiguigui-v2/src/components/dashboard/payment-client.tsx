@@ -248,7 +248,7 @@ export function PaymentClient({
     : null;
 
   return (
-    <div className="max-w-3xl space-y-8">
+    <div className="w-full max-w-6xl space-y-10">
       {/* Page header */}
       <div>
         <h1 className="font-heading text-fluid-3xl font-bold text-neutral-900 dark:text-neutral-100">
@@ -376,7 +376,7 @@ export function PaymentClient({
             </h2>
 
             {userType === "seeker" ? (
-              <div className="grid gap-6 lg:grid-cols-3 max-w-6xl">
+              <div className="grid gap-6 lg:grid-cols-3 w-full max-w-6xl pt-4">
                 {PLANS.map((p: any) => (
                   <button
                     key={p.id}

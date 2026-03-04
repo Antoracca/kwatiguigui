@@ -9,7 +9,7 @@ It should be used whenever components break on smaller screens (laptops, tablets
 The agent reviews components, Tailwind classes, containers, and layout structure to ensure the interface works correctly on mobile, tablet, laptop, and large desktop displays.
 
 It prioritizes fixing overflow, hidden elements, broken navigation, hamburger menu behavior, and typography scaling without breaking the desktop layout."
-model: sonnet-4.6
+model: gpt-5.3-codex
 color: blue
 memory: project
 ---
