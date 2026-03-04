@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { createClient } from "@/lib/supabase/server";
 import HomeClient from "./home-client";
 
 export const metadata: Metadata = {
@@ -8,6 +9,21 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-export default function HomePage() {
-  return <HomeClient />;
+export default async function HomePage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let userType = null;
+  if (user) {
+    const { data: dbUser } = await supabase
+      .from("users")
+      .select("user_type")
+      .eq("id", user.id)
+      .single();
+    if (dbUser) {
+      userType = (dbUser as any).user_type;
+    }
+  }
+
+  return <HomeClient isLoggedIn={!!user} userType={userType} />;
 }

@@ -224,8 +224,12 @@ const AnimatedSearchJobIcon = () => (
     </div>
 );
 
-// ---------------------------------------------------------------------------
-export default function HomeClient() {
+interface HomeClientProps {
+    isLoggedIn?: boolean;
+    userType?: string | null;
+}
+
+export default function HomeClient({ isLoggedIn = false, userType = null }: HomeClientProps) {
     // Motion variants for staggered intro
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -505,7 +509,7 @@ export default function HomeClient() {
                                 </p>
                                 <div className="mt-8 hidden lg:block">
                                     <Button asChild size="xl" className="h-14 px-8 rounded-xl bg-secondary-500 hover:bg-secondary-600 text-white font-bold transition-all shadow-lg shadow-secondary-500/20">
-                                        <Link href="/register?type=employer">
+                                        <Link href="/entreprises">
                                             Commencer à recruter
                                         </Link>
                                     </Button>
@@ -574,7 +578,7 @@ export default function HomeClient() {
 
                         <div className="mt-12 text-center lg:hidden">
                             <Button asChild size="xl" className="w-full h-14 rounded-xl bg-secondary-500 hover:bg-secondary-600 text-white font-bold transition-all">
-                                <Link href="/register?type=employer">
+                                <Link href="/entreprises">
                                     Commencer à recruter
                                 </Link>
                             </Button>
@@ -627,11 +631,19 @@ export default function HomeClient() {
                                     Valorisez vos compétences et accédez à des dizaines d'offres qualifiées, vérifiées par nos équipes, grâce à une démarche guidée en 4 étapes simples.
                                 </p>
                                 <div className="mt-8 hidden lg:block">
-                                    <Button asChild size="xl" className="h-14 px-8 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold transition-all shadow-lg shadow-primary-600/20">
-                                        <Link href="/register">
-                                            Créer mon profil
-                                        </Link>
-                                    </Button>
+                                    {isLoggedIn ? (
+                                        <Button asChild size="xl" className="h-14 px-8 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold transition-all shadow-lg shadow-primary-600/20">
+                                            <Link href="/dashboard">
+                                                Accéder à mon espace
+                                            </Link>
+                                        </Button>
+                                    ) : (
+                                        <Button asChild size="xl" className="h-14 px-8 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold transition-all shadow-lg shadow-primary-600/20">
+                                            <Link href="/register">
+                                                Créer mon profil
+                                            </Link>
+                                        </Button>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -668,11 +680,19 @@ export default function HomeClient() {
                         </div>
 
                         <div className="mt-12 text-center lg:hidden">
-                            <Button asChild size="xl" className="w-full h-14 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold transition-all">
-                                <Link href="/register">
-                                    Créer mon profil
-                                </Link>
-                            </Button>
+                            {isLoggedIn ? (
+                                <Button asChild size="xl" className="w-full h-14 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold transition-all">
+                                    <Link href="/dashboard">
+                                        Accéder à mon espace
+                                    </Link>
+                                </Button>
+                            ) : (
+                                <Button asChild size="xl" className="w-full h-14 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold transition-all">
+                                    <Link href="/register">
+                                        Créer mon profil
+                                    </Link>
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </div>
