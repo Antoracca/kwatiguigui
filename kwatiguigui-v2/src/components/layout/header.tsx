@@ -300,7 +300,7 @@ export function Header() {
         </Link>
 
         {/* Desktop navigation — visible à partir de xl (1280px) */}
-        <nav className="hidden h-full flex-1 items-center justify-center gap-0.5 lg:flex xl:gap-1 2xl:gap-2" role="navigation">
+        <nav className="hidden h-full flex-1 items-center justify-center gap-0.5 xl:flex xl:gap-1 2xl:gap-2" role="navigation">
           {NAV_CATEGORIES.map((category) => {
             const isActiveRoute = pathname === category.href || pathname.startsWith(category.href + "/");
             const isHovered = activeMenu === category.id;
@@ -341,7 +341,7 @@ export function Header() {
         </nav>
 
         {/* Desktop actions — visible à partir de xl (1280px) */}
-        <div className="hidden flex-shrink-0 items-center justify-end gap-1 lg:flex lg:gap-1.5 xl:gap-2">
+        <div className="hidden flex-shrink-0 items-center justify-end gap-1 xl:flex xl:gap-1.5 2xl:gap-2">
 
 
 
@@ -534,7 +534,7 @@ export function Header() {
         <button
           ref={mobileToggleRef}
           type="button"
-          className="relative z-50 rounded-lg p-1.5 text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800 lg:hidden"
+          className="relative z-50 rounded-lg p-1.5 text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800 xl:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
           aria-expanded={mobileOpen}

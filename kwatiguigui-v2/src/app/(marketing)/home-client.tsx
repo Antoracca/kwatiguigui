@@ -367,7 +367,7 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                             {/* Massive H1 Typography */}
                             <motion.h1
                                 variants={itemVariants}
-                                className="font-heading text-[clamp(2.5rem,6vw,4.5rem)] font-extrabold leading-[1.05] tracking-tight text-neutral-900 dark:text-white"
+                                className="font-heading text-[clamp(2.5rem,6vw,4.5rem)] font-extrabold leading-[1.05] tracking-tight text-neutral-900 dark:text-white break-words"
                             >
                                 La plateforme qui connecte <br className="hidden sm:block" />
                                 <span className="text-primary-600 dark:text-primary-400">
@@ -383,7 +383,7 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                             </motion.p>
 
                             {/* CTAs */}
-                            <motion.div variants={itemVariants} className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center w-full">
+                            <motion.div variants={itemVariants} className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:flex-wrap w-full">
                                 <Link href="/jobs" className="w-full sm:w-auto">
                                     <Button
                                         size="xl"
@@ -441,21 +441,21 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                         className="mt-16 sm:mt-24 w-full"
                     >
                         <div className="mx-auto max-w-5xl rounded-3xl bg-white p-2 sm:p-3 shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:bg-neutral-900/80 backdrop-blur-md border border-neutral-100 dark:border-neutral-800">
-                            <form action="/jobs" className="flex flex-col sm:flex-row items-center gap-2">
+                            <form action="/jobs" className="flex flex-col md:flex-row items-center gap-2">
                                 <div className="flex-1 w-full relative">
                                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                         <AnimatedSearchJobIcon />
                                     </div>
                                     <input type="text" name="q" placeholder="Quel poste recherchez-vous ?" className="w-full h-14 sm:h-16 pl-14 pr-4 bg-transparent border-none text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:outline-none focus:ring-0 font-medium" />
                                 </div>
-                                <div className="hidden sm:block w-px h-8 bg-neutral-200 dark:bg-neutral-700" />
+                                <div className="hidden md:block w-px h-8 bg-neutral-200 dark:bg-neutral-700" />
                                 <div className="flex-1 w-full relative">
                                     <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                                         <MapPin className="h-5 w-5 text-neutral-400" />
                                     </div>
                                     <input type="text" name="q" placeholder="Ville ou quartier..." className="w-full h-14 sm:h-16 pl-14 pr-4 bg-transparent border-none text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:outline-none focus:ring-0 font-medium" />
                                 </div>
-                                <Button type="submit" size="xl" className="w-full sm:w-auto h-14 sm:h-16 px-10 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-bold transition-transform hover:scale-105 shadow-lg shadow-primary-600/20">
+                                <Button type="submit" size="xl" className="w-full md:w-auto h-14 sm:h-16 px-10 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-bold transition-transform hover:scale-105 shadow-lg shadow-primary-600/20">
                                     Rechercher
                                 </Button>
                             </form>
@@ -605,7 +605,7 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                                 </div>
                                 {/* Floating decorative badges */}
                                 <motion.div
-                                    className="absolute -top-4 -right-4 bg-white dark:bg-neutral-800 p-3 rounded-2xl shadow-xl flex items-center justify-center border border-neutral-100 dark:border-neutral-700 text-secondary-500 z-20"
+                                    className="absolute top-0 right-0 sm:-top-4 sm:-right-4 bg-white dark:bg-neutral-800 p-3 rounded-2xl shadow-xl flex items-center justify-center border border-neutral-100 dark:border-neutral-700 text-secondary-500 z-20"
                                     animate={{ y: [0, -10, 0] }}
                                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                                 >
@@ -679,7 +679,7 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                                 </div>
                                 {/* Floating decorative badges */}
                                 <motion.div
-                                    className="absolute -bottom-4 -left-4 bg-white dark:bg-neutral-800 p-4 rounded-full shadow-xl flex items-center justify-center border border-neutral-100 dark:border-neutral-700 text-primary-500 z-20"
+                                    className="absolute bottom-0 left-0 sm:-bottom-4 sm:-left-4 bg-white dark:bg-neutral-800 p-4 rounded-full shadow-xl flex items-center justify-center border border-neutral-100 dark:border-neutral-700 text-primary-500 z-20"
                                     animate={{ y: [0, 10, 0] }}
                                     transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                                 >

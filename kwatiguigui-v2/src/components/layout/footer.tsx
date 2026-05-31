@@ -88,9 +88,9 @@ export function Footer() {
   return (
     <footer className="border-t border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-950 relative">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-12 lg:gap-16 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-12 lg:gap-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {/* Brand & Mission (Takes 2 columns on large screens) */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="sm:col-span-2 lg:col-span-3 xl:col-span-2 space-y-6">
             <Link href="/" className="inline-block transition-transform hover:opacity-90 active:scale-95">
               <div className="relative h-12 w-48 sm:h-14 sm:w-56">
                 {/* Mode clair */}
