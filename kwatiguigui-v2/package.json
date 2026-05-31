@@ -7,7 +7,7 @@
     "dev": "next dev --webpack",
     "dev:turbo": "next dev --turbopack",
     "build": "next build",
-    "postinstall": "node -e \"require('fs').copyFileSync('node_modules/@lottiefiles/dotlottie-web/dist/dotlottie-player.wasm','public/dotlottie-player.wasm')\"",
+    "postinstall": "node scripts/copy-wasm.js",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
