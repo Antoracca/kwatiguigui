@@ -45,7 +45,7 @@ const PLANS: PricingPlan[] = [
         price: "2 500",
         suffix: "/ mois",
         popularBadge: "Recommandé",
-        gradient: "from-white to-primary-50/30 dark:from-neutral-950 dark:to-primary-950/20",
+        gradient: "bg-gradient-to-br from-white to-primary-50 dark:from-neutral-950 dark:to-primary-950",
         border: "border-primary-200 dark:border-primary-900/50",
         features: [
             "Mise en avant du profil",
@@ -207,7 +207,7 @@ export function PricingCarousel({ whatsapp }: { whatsapp: string }) {
                             duration: isCompact ? 0.42 : 0.6,
                             ease: [0.32, 0.72, 0, 1],
                         }}
-                        className={`absolute w-full max-w-[84vw] xs:max-w-[320px] sm:max-w-[340px] md:max-w-[380px] p-5 sm:p-8 xl:p-10 rounded-3xl border ${plan.border || "border-neutral-200 dark:border-neutral-800"} ${plan.gradient || "bg-white/90 dark:bg-neutral-950/90"} backdrop-blur-md flex flex-col shadow-2xl ${isCenter ? "shadow-neutral-400/30 border-2 border-primary-500 scale-100" : "shadow-none cursor-pointer"} ${isFarOnCompact ? "pointer-events-none" : ""} transition-all will-change-transform`}
+                        className={`absolute w-full max-w-[84vw] xs:max-w-[320px] sm:max-w-[340px] md:max-w-[380px] p-5 sm:p-8 xl:p-10 rounded-3xl border ${plan.border || "border-neutral-200 dark:border-neutral-800"} ${plan.gradient || "bg-white dark:bg-neutral-950"} flex flex-col shadow-2xl ${isCenter ? "shadow-neutral-400/30 border-2 border-primary-500 scale-100" : "shadow-none cursor-pointer"} ${isFarOnCompact ? "pointer-events-none" : ""} transition-all will-change-transform`}
                         style={{ perspective: 1000 }}
                     >
                         {!isCenter && (
