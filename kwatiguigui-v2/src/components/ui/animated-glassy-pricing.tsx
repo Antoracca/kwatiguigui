@@ -160,10 +160,9 @@ export const PricingCard = ({
   planName, description, price, suffix = "/ mois", features, buttonText, buttonLink = "/register", isPopular = false, buttonVariant = 'primary'
 }: PricingCardProps) => {
   const cardClasses = `
-    backdrop-blur-xl bg-gradient-to-br rounded-3xl shadow-xl flex-1 w-full max-w-sm mx-auto px-6 py-8 md:px-8 md:py-10 flex flex-col transition-all duration-300
-    from-white/60 to-white/30 border border-neutral-200/50
-    dark:from-neutral-900/60 dark:to-neutral-900/30 dark:border-neutral-800/50 dark:backdrop-brightness-[0.91]
-    ${isPopular ? 'md:scale-105 relative ring-2 ring-primary-500/30 dark:ring-primary-500/50 shadow-2xl z-10 bg-white/80 dark:bg-neutral-900/80' : 'z-0'}
+    bg-white dark:bg-neutral-900 rounded-3xl shadow-xl flex-1 w-full max-w-sm mx-auto px-6 py-8 md:px-8 md:py-10 flex flex-col transition-all duration-300
+    border border-neutral-200/50 dark:border-neutral-800/50
+    ${isPopular ? 'md:scale-105 relative ring-2 ring-primary-500/30 dark:ring-primary-500/50 shadow-2xl z-10' : 'z-0'}
   `;
   const buttonClasses = `
     mt-auto w-full py-3.5 rounded-xl font-bold text-sm transition-all
