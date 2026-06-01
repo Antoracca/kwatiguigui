@@ -35,17 +35,18 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  // Fetch profile — need user_type (sidebar) + city/job_type (onboarding guard)
+  // Fetch profile — need user_type (sidebar) + city (onboarding guard)
   const { data: profile } = await supabase
     .from("profiles")
-    .select("user_type, city, job_type")
+    .select("user_type, city")
     .eq("id", user.id)
     .single();
 
   // Guard : si le profil n'existe pas ou est incomplet (utilisateur OAuth ayant
   // abandonné le onboarding), on redirige vers /onboarding pour complétion.
-  // NE s'applique PAS aux profils complets — city + job_type remplis = onboarding terminé.
-  if (!profile || !profile.city?.trim() || !profile.job_type?.trim()) {
+  // Critère = la ville (le poste recherché a été supprimé) — DOIT rester
+  // identique à celui de la page /onboarding pour éviter toute boucle de redirection.
+  if (!profile || !profile.city?.trim()) {
     redirect("/onboarding");
   }
 
