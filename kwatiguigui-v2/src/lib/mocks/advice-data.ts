@@ -142,7 +142,7 @@ En assumant pleinement votre parcours, vous transformez une faiblesse perçue en
         imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80",
         isNew: true,
         author: {
-            name: "Data Team Kwatiguigui",
+            name: "Data Team Kussala",
             role: "Analystes Marché",
             avatarUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=150&q=80",
         },

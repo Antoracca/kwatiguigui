@@ -56,7 +56,7 @@ export default function AuthLayout({
 
       {/* Footer */}
       <p className="mt-8 sm:mt-12 text-center text-body-xs text-neutral-400 font-medium z-10">
-        &copy; {new Date().getFullYear()} KWATIGUIGUI. Tous droits réservés.
+        &copy; {new Date().getFullYear()} KUSSALA. Tous droits réservés.
       </p>
     </div>
   );

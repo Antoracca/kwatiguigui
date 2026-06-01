@@ -22,7 +22,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Freelance et indépendants en RCA - Missions, revenus et structuration",
   description:
-    "Guide KWATIGUIGUI pour réussir en freelance en République centrafricaine: réalités terrain, secteurs porteurs, cadre de prestation, paiement, et évolution vers une activité stable.",
+    "Guide KUSSALA pour réussir en freelance en République centrafricaine: réalités terrain, secteurs porteurs, cadre de prestation, paiement, et évolution vers une activité stable.",
   alternates: { canonical: "/demandeurs-emploi/freelance-independants" },
 };
 
@@ -117,7 +117,6 @@ export default function FreelanceIndependantsPage() {
         <div className="container-main">
           <div className="mx-auto max-w-4xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-secondary-100 bg-secondary-50 px-4 py-2 text-fluid-sm font-medium text-secondary-700 dark:border-secondary-800 dark:bg-secondary-950 dark:text-secondary-300">
-              <Sparkles className="h-4 w-4" />
               Réalités freelance en République centrafricaine
             </div>
 
@@ -161,9 +160,7 @@ export default function FreelanceIndependantsPage() {
         <div className="container-main">
           <div className="grid gap-5 md:grid-cols-3">
             <div className="rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-700 dark:bg-neutral-900">
-              <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950 dark:text-primary-400">
-                <Target className="h-5 w-5" />
-              </div>
+              
               <h2 className="font-heading text-fluid-lg font-bold text-neutral-900 dark:text-neutral-100">
                 Positionnement clair
               </h2>
@@ -173,9 +170,7 @@ export default function FreelanceIndependantsPage() {
             </div>
 
             <div className="rounded-2xl border border-secondary-200 bg-white p-6 dark:border-secondary-800 dark:bg-neutral-900">
-              <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-secondary-50 text-secondary-600 dark:bg-secondary-950 dark:text-secondary-400">
-                <Banknote className="h-5 w-5" />
-              </div>
+              
               <h2 className="font-heading text-fluid-lg font-bold text-neutral-900 dark:text-neutral-100">
                 Paiement sécurise
               </h2>
@@ -185,9 +180,7 @@ export default function FreelanceIndependantsPage() {
             </div>
 
             <div className="rounded-2xl border border-accent-200 bg-white p-6 dark:border-accent-800 dark:bg-neutral-900">
-              <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent-50 text-accent-700 dark:bg-accent-950 dark:text-accent-500">
-                <Rocket className="h-5 w-5" />
-              </div>
+              
               <h2 className="font-heading text-fluid-lg font-bold text-neutral-900 dark:text-neutral-100">
                 ?volution progressive
               </h2>
@@ -216,9 +209,7 @@ export default function FreelanceIndependantsPage() {
                 key={sector.title}
                 className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-secondary-300 dark:border-neutral-700 dark:bg-neutral-900"
               >
-                <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
-                  <Layers className="h-4 w-4" />
-                </div>
+                
                 <h3 className="font-heading text-fluid-base font-bold text-neutral-900 dark:text-neutral-100">
                   {sector.title}
                 </h3>
@@ -243,9 +234,7 @@ export default function FreelanceIndependantsPage() {
           <div className="grid gap-4 md:grid-cols-2">
             {models.map((model) => (
               <div key={model.title} className="rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
-                <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-secondary-50 text-secondary-600 dark:bg-secondary-950 dark:text-secondary-400">
-                  <Briefcase className="h-4 w-4" />
-                </div>
+                
                 <h3 className="font-heading text-fluid-base font-bold text-neutral-900 dark:text-neutral-100">{model.title}</h3>
                 <p className="mt-2 text-fluid-sm text-neutral-600 dark:text-neutral-400">{model.detail}</p>
               </div>
@@ -258,9 +247,7 @@ export default function FreelanceIndependantsPage() {
         <div className="container-main">
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="rounded-2xl border border-primary-200 bg-primary-50/60 p-6 dark:border-primary-800 dark:bg-primary-950/20">
-              <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white text-primary-600 shadow-sm dark:bg-neutral-900 dark:text-primary-400">
-                <Shield className="h-5 w-5" />
-              </div>
+              
               <h2 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">
                 Sécuriser vos paiements
               </h2>
@@ -273,9 +260,7 @@ export default function FreelanceIndependantsPage() {
             </div>
 
             <div className="rounded-2xl border border-secondary-200 bg-secondary-50/60 p-6 dark:border-secondary-800 dark:bg-secondary-950/20">
-              <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white text-secondary-600 shadow-sm dark:bg-neutral-900 dark:text-secondary-400">
-                <ClipboardCheck className="h-5 w-5" />
-              </div>
+              
               <h2 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">
                 Minimum documentaire recommand?
               </h2>
@@ -290,7 +275,6 @@ export default function FreelanceIndependantsPage() {
 
           <div className="mt-5 rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
             <div className="flex flex-wrap items-center gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-              <BadgeCheck className="h-4 w-4 text-secondary-600" />
               Astuce terrain RCA: les clients les plus fiables travaillent avec des livrables clairs, des délais fixes et une communication constante.
             </div>
           </div>
@@ -371,9 +355,7 @@ export default function FreelanceIndependantsPage() {
                 className="group flex items-start justify-between gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 transition-colors hover:border-secondary-300 dark:border-neutral-700 dark:bg-neutral-900"
               >
                 <div className="flex items-start gap-3">
-                  <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
-                    <FileText className="h-4 w-4" />
-                  </div>
+                  
                   <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{source.title}</p>
                 </div>
                 <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-neutral-400 transition-colors group-hover:text-secondary-500" />
@@ -386,9 +368,7 @@ export default function FreelanceIndependantsPage() {
       <section className="section-padding">
         <div className="container-narrow">
           <div className="rounded-2xl border border-secondary-200 bg-secondary-50 p-8 text-center dark:border-secondary-800 dark:bg-secondary-950/30">
-            <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary-100 dark:bg-secondary-900">
-              <Handshake className="h-7 w-7 text-secondary-600 dark:text-secondary-400" />
-            </div>
+            
             <h2 className="font-heading text-fluid-2xl font-bold text-neutral-900 dark:text-neutral-100">
               Passez au niveau supérieur
             </h2>

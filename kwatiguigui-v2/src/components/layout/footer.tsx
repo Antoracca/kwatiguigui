@@ -42,20 +42,20 @@ const FOOTER_LINKS = {
       external: true,
     },
     {
-      href: "mailto:support@kwatiguigui.org",
-      label: "support@kwatiguigui.org",
+      href: "mailto:support@kussala.org",
+      label: "support@kussala.org",
       icon: Mail,
       external: false,
     },
     {
-      href: "mailto:info@kwatiguigui.org",
-      label: "info@kwatiguigui.org",
+      href: "mailto:info@kussala.org",
+      label: "info@kussala.org",
       icon: Mail,
       external: false,
     },
     {
-      href: "mailto:team@kwatiguigui.org",
-      label: "team@kwatiguigui.org",
+      href: "mailto:team@kussala.org",
+      label: "team@kussala.org",
       icon: Mail,
       external: false,
     },
@@ -96,7 +96,7 @@ export function Footer() {
                 {/* Mode clair */}
                 <Image
                   src="/images/logoprincipal.png"
-                  alt="Kwatiguigui"
+                  alt="Kussala"
                   fill
                   className="object-contain object-left block dark:hidden"
                   priority
@@ -104,7 +104,7 @@ export function Footer() {
                 {/* Mode sombre */}
                 <Image
                   src="/images/logosecondaire.png"
-                  alt="Kwatiguigui"
+                  alt="Kussala"
                   fill
                   className="object-contain object-left hidden dark:block"
                   priority
@@ -205,7 +205,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="mt-16 flex flex-col items-center justify-between gap-6 border-t border-neutral-200/60 pt-8 dark:border-neutral-800/60 sm:flex-row text-center sm:text-left">
           <p className="text-body-sm font-medium text-neutral-500 dark:text-neutral-400 flex-1">
-            &copy; {currentYear} KWATIGUIGUI. Tous droits réservés.
+            &copy; {currentYear} KUSSALA. Tous droits réservés.
           </p>
           <div className="flex items-center gap-4 flex-wrap justify-center">
             <p className="flex items-center gap-1.5 text-body-sm font-medium text-neutral-500 dark:text-neutral-400">

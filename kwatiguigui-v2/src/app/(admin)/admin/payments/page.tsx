@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Paiements — Admin KWATIGUIGUI",
+  title: "Paiements — Admin KUSSALA",
   robots: { index: false, follow: false },
 };
 

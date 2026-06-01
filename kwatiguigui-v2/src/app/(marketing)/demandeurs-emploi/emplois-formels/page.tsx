@@ -21,7 +21,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Emplois formels en RCA - CDI, CDD, secteur privé et public",
   description:
-    "Guide pratique KWATIGUIGUI pour comprendre les emplois formels en République centrafricaine: CDI, CDD, secteur prive, secteur public, droits essentiels et pistes concretes.",
+    "Guide pratique KUSSALA pour comprendre les emplois formels en République centrafricaine: CDI, CDD, secteur prive, secteur public, droits essentiels et pistes concretes.",
   alternates: { canonical: "/demandeurs-emploi/emplois-formels" },
 };
 
@@ -107,7 +107,6 @@ export default function EmploisFormelsPage() {
         <div className="container-main">
           <div className="mx-auto max-w-4xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary-100 bg-primary-50 px-4 py-2 text-fluid-sm font-medium text-primary-700 dark:border-primary-800 dark:bg-primary-950 dark:text-primary-300">
-              <Sparkles className="h-4 w-4" />
               Guide spécial RCA - Emplois formels
             </div>
 
@@ -150,9 +149,7 @@ export default function EmploisFormelsPage() {
         <div className="container-main">
           <div className="grid gap-5 md:grid-cols-3">
             <div className="rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-700 dark:bg-neutral-900">
-              <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950 dark:text-primary-400">
-                <Shield className="h-5 w-5" />
-              </div>
+              
               <h2 className="font-heading text-fluid-lg font-bold text-neutral-900 dark:text-neutral-100">
                 Cadre légal clair
               </h2>
@@ -162,9 +159,7 @@ export default function EmploisFormelsPage() {
             </div>
 
             <div className="rounded-2xl border border-secondary-200 bg-white p-6 dark:border-secondary-800 dark:bg-neutral-900">
-              <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-secondary-50 text-secondary-600 dark:bg-secondary-950 dark:text-secondary-400">
-                <BadgeCheck className="h-5 w-5" />
-              </div>
+              
               <h2 className="font-heading text-fluid-lg font-bold text-neutral-900 dark:text-neutral-100">
                 Lecture pratique
               </h2>
@@ -174,9 +169,7 @@ export default function EmploisFormelsPage() {
             </div>
 
             <div className="rounded-2xl border border-accent-200 bg-white p-6 dark:border-accent-800 dark:bg-neutral-900">
-              <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent-50 text-accent-700 dark:bg-accent-950 dark:text-accent-500">
-                <Target className="h-5 w-5" />
-              </div>
+              
               <h2 className="font-heading text-fluid-lg font-bold text-neutral-900 dark:text-neutral-100">
                 Progression continue
               </h2>
@@ -202,9 +195,7 @@ export default function EmploisFormelsPage() {
 
           <div className="grid gap-5 lg:grid-cols-2">
             <div className="rounded-2xl border border-primary-200 bg-primary-50/60 p-6 dark:border-primary-800 dark:bg-primary-950/20">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-primary-600 shadow-sm dark:bg-neutral-900 dark:text-primary-400">
-                <Landmark className="h-5 w-5" />
-              </div>
+              
               <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">
                 CDI (contrat a durée indeterminee)
               </h3>
@@ -216,9 +207,7 @@ export default function EmploisFormelsPage() {
             </div>
 
             <div className="rounded-2xl border border-secondary-200 bg-secondary-50/60 p-6 dark:border-secondary-800 dark:bg-secondary-950/20">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-secondary-600 shadow-sm dark:bg-neutral-900 dark:text-secondary-400">
-                <Briefcase className="h-5 w-5" />
-              </div>
+              
               <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">
                 CDD (contrat a durée determinee)
               </h3>
@@ -296,9 +285,7 @@ export default function EmploisFormelsPage() {
                 key={sector.title}
                 className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary-300 dark:border-neutral-700 dark:bg-neutral-900"
               >
-                <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
-                  <Layers className="h-4 w-4" />
-                </div>
+                
                 <h3 className="font-heading text-fluid-base font-bold text-neutral-900 dark:text-neutral-100">
                   {sector.title}
                 </h3>
@@ -322,9 +309,7 @@ export default function EmploisFormelsPage() {
 
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="rounded-2xl border border-accent-200 bg-accent-50/60 p-6 dark:border-accent-800 dark:bg-accent-950/20">
-              <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white text-accent-700 shadow-sm dark:bg-neutral-900 dark:text-accent-500">
-                <Gavel className="h-5 w-5" />
-              </div>
+              
               <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">
                 Ce qui fait la différence
               </h3>
@@ -371,9 +356,7 @@ export default function EmploisFormelsPage() {
               "Procédure en cas de litige ou contestation",
             ].map((point) => (
               <div key={point} className="flex items-start gap-3 rounded-2xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900">
-                <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-600 dark:bg-primary-950 dark:text-primary-400">
-                  <ClipboardCheck className="h-4 w-4" />
-                </div>
+                
                 <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{point}</p>
               </div>
             ))}
@@ -456,9 +439,7 @@ export default function EmploisFormelsPage() {
                 className="group flex items-start justify-between gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 transition-colors hover:border-primary-300 dark:border-neutral-700 dark:bg-neutral-900"
               >
                 <div className="flex items-start gap-3">
-                  <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
-                    <BookOpen className="h-4 w-4" />
-                  </div>
+                  
                   <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{source.title}</p>
                 </div>
                 <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-neutral-400 transition-colors group-hover:text-primary-500" />
@@ -471,9 +452,7 @@ export default function EmploisFormelsPage() {
       <section className="section-padding">
         <div className="container-narrow">
           <div className="rounded-2xl border border-primary-200 bg-primary-50 p-8 text-center dark:border-primary-800 dark:bg-primary-950/30">
-            <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-100 dark:bg-primary-900">
-              <Users className="h-7 w-7 text-primary-600 dark:text-primary-400" />
-            </div>
+            
             <h2 className="font-heading text-fluid-2xl font-bold text-neutral-900 dark:text-neutral-100">
               Prêt à passer à l'action ?
             </h2>
@@ -492,7 +471,6 @@ export default function EmploisFormelsPage() {
                 href="/register"
                 className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-neutral-300 bg-white px-6 py-2.5 text-fluid-sm font-semibold text-neutral-700 transition-all hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-300"
               >
-                <FileText className="h-4 w-4" />
                 Créer mon compte
               </Link>
             </div>

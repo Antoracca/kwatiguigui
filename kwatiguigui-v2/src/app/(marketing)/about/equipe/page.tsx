@@ -3,8 +3,8 @@ import Link from "next/link";
 import { ArrowRight, UserCircle, HandHeart, Briefcase } from "lucide-react";
 
 export const metadata: Metadata = {
-    title: "Notre Équipe | KWATIGUIGUI RCA",
-    description: "Découvrez les fondateurs et l'équipe derrière KWATIGUIGUI, la plateforme d'emploi numéro 1 en République Centrafricaine.",
+    title: "Notre Équipe | KUSSALA RCA",
+    description: "Découvrez les fondateurs et l'équipe derrière KUSSALA, la plateforme d'emploi numéro 1 en République Centrafricaine.",
     alternates: { canonical: "/about/equipe" },
 };
 
@@ -15,7 +15,7 @@ export default function EquipePage() {
                 <div className="container-main relative text-center">
                     <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white/90 px-4 py-2 text-fluid-sm font-semibold text-primary-700 shadow-sm dark:border-primary-800 dark:bg-neutral-900/80 dark:text-primary-300">
                         <UserCircle className="h-4 w-4" />
-                        L'équipe KWATIGUIGUI
+                        L'équipe KUSSALA
                     </div>
 
                     <h1 className="font-heading text-fluid-5xl font-black leading-tight text-neutral-900 dark:text-white">
@@ -59,10 +59,9 @@ export default function EquipePage() {
                         Nous recrutons également pour renforcer notre propre équipe. Si vous êtes motivé à transformer le paysage professionnel centrafricain, regardez nos offres.
                     </p>
                     <Link
-                        href="/jobs?company=Kwatiguigui"
+                        href="/jobs?company=Kussala"
                         className="inline-flex min-h-[46px] items-center gap-2 rounded-full border border-neutral-300 bg-white px-6 py-2.5 text-fluid-sm font-semibold text-neutral-700 transition-colors hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200"
                     >
-                        <Briefcase className="h-4 w-4" />
                         Voir nos offres en interne
                     </Link>
                 </div>

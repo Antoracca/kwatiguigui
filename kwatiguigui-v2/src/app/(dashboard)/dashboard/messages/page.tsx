@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { MessagesClient } from "@/components/dashboard/messages-client";
 
 export const metadata: Metadata = {
-  title: "Messagerie — KWATIGUIGUI",
+  title: "Messagerie — KUSSALA",
   robots: { index: false, follow: false },
 };
 

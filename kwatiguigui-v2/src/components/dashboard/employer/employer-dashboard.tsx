@@ -425,7 +425,7 @@ export function EmployerDashboard({
                         <div>
                             <p className="text-body-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1">Besoin d'aide au sourcing ?</p>
                             <p className="text-xs text-neutral-500 leading-relaxed">
-                                Kwatiguigui peut sourcer des profils rares (ingénieurs, managers) sur-mesure pour vous.
+                                Kussala peut sourcer des profils rares (ingénieurs, managers) sur-mesure pour vous.
                             </p>
                             <button className="text-xs font-bold text-primary-600 mt-2 underline">Nous contacter</button>
                         </div>

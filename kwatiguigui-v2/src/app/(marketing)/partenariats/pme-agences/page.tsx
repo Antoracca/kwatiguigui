@@ -14,7 +14,7 @@ import {
 import { NetworkLottiePanel } from "@/components/marketing/enterprise/network-lottie-panel";
 
 export const metadata: Metadata = {
-  title: "Partenariats PME & Agences - KWATIGUIGUI RCA",
+  title: "Partenariats PME & Agences - KUSSALA RCA",
   description:
     "Développez vos collaborations avec les entreprises via des programmes de stage, de mission et de co-exécution.",
   alternates: { canonical: "/partenariats/pme-agences" },
@@ -42,7 +42,6 @@ export default function PmeAgencesPage() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/90 px-4 py-2 text-fluid-sm font-semibold text-emerald-700 shadow-sm dark:border-emerald-900 dark:bg-neutral-900/80 dark:text-emerald-300">
-                <Sparkles className="h-4 w-4" />
                 Verticale PME & Agences
               </div>
               <h1 className="font-heading text-fluid-5xl font-black leading-tight text-neutral-900 dark:text-white">
@@ -82,9 +81,7 @@ export default function PmeAgencesPage() {
           <div className="grid gap-4 md:grid-cols-2">
             {models.map((item) => (
               <div key={item} className="flex items-start gap-3 rounded-2xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900">
-                <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-                  <Lightbulb className="h-4 w-4" />
-                </div>
+                
                 <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{item}</p>
               </div>
             ))}
@@ -100,7 +97,6 @@ export default function PmeAgencesPage() {
               <ul className="mt-4 space-y-2">
                 {gains.map((item) => (
                   <li key={item} className="flex items-start gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-                    <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary-600 dark:text-primary-400" />
                     {item}
                   </li>
                 ))}
@@ -119,7 +115,6 @@ export default function PmeAgencesPage() {
 
           <div className="mt-6 rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
             <p className="flex items-start gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-              <FileText className="mt-0.5 h-4 w-4 shrink-0 text-neutral-500" />
               Références : Banque mondiale, OIT, IFC, OHADA.
             </p>
           </div>
@@ -135,7 +130,6 @@ export default function PmeAgencesPage() {
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <Link href="/partenariats/rejoindre" className="inline-flex min-h-[46px] items-center gap-2 rounded-full bg-emerald-600 px-6 py-2.5 text-fluid-sm font-semibold text-white hover:bg-emerald-700">
               Candidater
-              <Rocket className="h-4 w-4" />
             </Link>
             <Link href="/partenariats" className="inline-flex min-h-[46px] items-center gap-2 rounded-full border border-neutral-300 bg-white px-6 py-2.5 text-fluid-sm font-semibold text-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200">
               Retour à l’espace partenariats

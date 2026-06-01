@@ -6,7 +6,7 @@ import { AdminLoginForm } from "@/components/admin/admin-login-form";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Administration — KWATIGUIGUI",
+  title: "Administration — KUSSALA",
   robots: { index: false, follow: false },
 };
 
@@ -31,7 +31,7 @@ export default function AdminLoginPage() {
             K
           </div>
           <h1 className="font-heading text-2xl font-bold text-white">
-            KWATIGUIGUI
+            KUSSALA
           </h1>
           <p className="mt-1 text-sm text-neutral-500">Administration</p>
         </div>
@@ -45,7 +45,7 @@ export default function AdminLoginPage() {
         </div>
 
         <p className="mt-6 text-center text-xs text-neutral-600">
-          Acces reserve au personnel KWATIGUIGUI. Toutes les tentatives de connexion sont enregistrees.
+          Acces reserve au personnel KUSSALA. Toutes les tentatives de connexion sont enregistrees.
         </p>
       </div>
     </div>

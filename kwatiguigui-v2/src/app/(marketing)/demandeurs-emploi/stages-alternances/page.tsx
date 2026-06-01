@@ -51,7 +51,6 @@ export default function StagesAlternancesPage() {
         <div className="container-main">
           <div className="mx-auto max-w-4xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-secondary-100 bg-secondary-50 px-4 py-2 text-fluid-sm font-medium text-secondary-700 dark:border-secondary-800 dark:bg-secondary-950 dark:text-secondary-300">
-              <Sparkles className="h-4 w-4" />
               Focus jeunes talents - RCA
             </div>
             <h1 className="font-heading text-fluid-5xl font-bold text-neutral-900 dark:text-neutral-100">
@@ -83,9 +82,7 @@ export default function StagesAlternancesPage() {
           <div className="grid gap-4 md:grid-cols-2">
             {stageKit.map((k) => (
               <div key={k} className="flex items-start gap-3 rounded-2xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900">
-                <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary-50 text-secondary-600 dark:bg-secondary-950 dark:text-secondary-400">
-                  <ClipboardCheck className="h-4 w-4" />
-                </div>
+                
                 <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{k}</p>
               </div>
             ))}
@@ -97,9 +94,7 @@ export default function StagesAlternancesPage() {
         <div className="container-main">
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="rounded-2xl border border-primary-200 bg-primary-50/60 p-6 dark:border-primary-800 dark:bg-primary-950/20">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-primary-600 dark:bg-neutral-900 dark:text-primary-400">
-                <Target className="h-5 w-5" />
-              </div>
+              
               <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">Où candidater en priorité</h3>
               <ul className="mt-4 space-y-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
                 {targets.map((t) => (
@@ -112,9 +107,7 @@ export default function StagesAlternancesPage() {
             </div>
 
             <div className="rounded-2xl border border-accent-200 bg-accent-50/60 p-6 dark:border-accent-800 dark:bg-accent-950/20">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-accent-700 dark:bg-neutral-900 dark:text-accent-500">
-                <BadgeCheck className="h-5 w-5" />
-              </div>
+              
               <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">Comment se démarquer</h3>
               <ul className="mt-4 space-y-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
                 <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-accent-600" />Montrer une vraie motivation métier.</li>
@@ -158,9 +151,7 @@ export default function StagesAlternancesPage() {
             ].map((s) => (
               <a key={s.href} href={s.href} target="_blank" rel="noopener noreferrer" className="group flex items-start justify-between gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 hover:border-secondary-300 dark:border-neutral-700 dark:bg-neutral-900">
                 <div className="flex items-start gap-3">
-                  <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
-                    <FileText className="h-4 w-4" />
-                  </div>
+                  
                   <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{s.title}</p>
                 </div>
                 <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-neutral-400 group-hover:text-secondary-500" />

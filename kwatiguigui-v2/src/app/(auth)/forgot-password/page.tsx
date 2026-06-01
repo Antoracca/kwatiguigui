@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Mot de passe oublié",
-  description: "Pas de panique ! Réinitialiser votre mot de passe KWATIGUIGUI.",
+  description: "Pas de panique ! Réinitialiser votre mot de passe KUSSALA.",
   robots: { index: false, follow: false },
 };
 

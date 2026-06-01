@@ -11,9 +11,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "À propos de KWATIGUIGUI - Notre mission en RCA",
+  title: "À propos de KUSSALA - Notre mission en RCA",
   description:
-    "Découvrez KWATIGUIGUI, la première plateforme de recrutement et d'opportunités en République Centrafricaine. Notre mission, nos valeurs et notre vision pour l'emploi.",
+    "Découvrez KUSSALA, la première plateforme de recrutement et d'opportunités en République Centrafricaine. Notre mission, nos valeurs et notre vision pour l'emploi.",
   alternates: { canonical: "/about" },
 };
 
@@ -61,7 +61,7 @@ export default function AboutPage() {
             </h1>
 
             <p className="mx-auto mt-6 max-w-3xl text-fluid-lg text-neutral-600 dark:text-neutral-300">
-              KWATIGUIGUI n'est pas qu'un simple site d'annonces. C'est l'écosystème numérique central qui reconnecte le talent local aux véritables opportunités professionnelles et entrepreneuriales du pays.
+              KUSSALA n'est pas qu'un simple site d'annonces. C'est l'écosystème numérique central qui reconnecte le talent local aux véritables opportunités professionnelles et entrepreneuriales du pays.
             </p>
 
             <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
@@ -133,7 +133,7 @@ export default function AboutPage() {
           <div className="rounded-3xl border border-secondary-200 bg-secondary-50 p-10 text-center dark:border-secondary-800 dark:bg-secondary-950/30">
             <h2 className="font-heading text-fluid-3xl font-bold text-neutral-900 dark:text-white">Faites partie de l'histoire</h2>
             <p className="mx-auto mt-4 max-w-2xl text-fluid-base text-neutral-600 dark:text-neutral-300 leading-relaxed">
-              Que vous soyez une entreprise cherchant à dénicher son prochain cadre, ou un jeune talent prêt à prouver sa valeur, KWATIGUIGUI est votre nouveau point de départ.
+              Que vous soyez une entreprise cherchant à dénicher son prochain cadre, ou un jeune talent prêt à prouver sa valeur, KUSSALA est votre nouveau point de départ.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link

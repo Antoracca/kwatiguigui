@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Connexion",
-  description: "Connectez-vous à votre compte KWATIGUIGUI.",
+  description: "Connectez-vous à votre compte KUSSALA.",
   robots: { index: false, follow: false },
 };
 
@@ -21,7 +21,7 @@ export default function LoginPage() {
         <div className="relative h-20 w-20 mb-4 drop-shadow-md">
           <Image
             src="/images/Favicon.png"
-            alt="Kwatiguigui Logo"
+            alt="Kussala Logo"
             fill
             className="object-contain"
             priority

@@ -968,7 +968,7 @@ export function ProfileForm({
           label="Nom d'utilisateur"
           name="username"
           defaultValue={initialValues.username}
-          placeholder="ex: KwatiguiguiUser99"
+          placeholder="ex: KussalaUser99"
           icon={<AtSign size={15} />}
           isEditing={editing.has("username")}
           onToggle={() => toggle("username")}
@@ -1312,7 +1312,7 @@ export function ProfileForm({
               </p>
               <p className="mt-0.5 text-[11px] leading-relaxed text-neutral-500 dark:text-neutral-400">
                 {cvPublic
-                  ? "Votre CV est visible par tous les recruteurs, agences et employeurs inscrits sur KWATIGUIGUI."
+                  ? "Votre CV est visible par tous les recruteurs, agences et employeurs inscrits sur KUSSALA."
                   : "Activez cette option pour que les recruteurs et employeurs puissent consulter votre CV directement depuis votre annonce."}
               </p>
               {cvPublicError && (

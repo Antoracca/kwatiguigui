@@ -10,14 +10,14 @@ import "@/styles/globals.css";
 // ---------------------------------------------------------------------------
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ?? "https://kwatiguigui.org",
+    process.env.NEXT_PUBLIC_APP_URL ?? "https://kussala.org",
   ),
   title: {
-    default: "KWATIGUIGUI - Premiere plateforme d'emploi de la RCA",
-    template: "%s | KWATIGUIGUI",
+    default: "KUSSALA - Premiere plateforme d'emploi de la RCA",
+    template: "%s | KUSSALA",
   },
   description:
-    "Trouvez un emploi ou recrutez en Republique Centrafricaine. KWATIGUIGUI connecte employeurs et chercheurs d'emploi dans les 20 regions du pays.",
+    "Trouvez un emploi ou recrutez en Republique Centrafricaine. KUSSALA connecte employeurs et chercheurs d'emploi dans les 20 regions du pays.",
   keywords: [
     "emploi",
     "travail",
@@ -27,12 +27,12 @@ export const metadata: Metadata = {
     "recrutement",
     "offre d'emploi",
     "chercheur d'emploi",
-    "KWATIGUIGUI",
+    "KUSSALA",
     "Republique Centrafricaine",
   ],
-  authors: [{ name: "KWATIGUIGUI" }],
-  creator: "KWATIGUIGUI",
-  publisher: "KWATIGUIGUI",
+  authors: [{ name: "KUSSALA" }],
+  creator: "KUSSALA",
+  publisher: "KUSSALA",
   formatDetection: {
     email: false,
     address: false,
@@ -41,23 +41,23 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "fr_FR",
-    url: "https://kwatiguigui.org",
-    siteName: "KWATIGUIGUI",
-    title: "KWATIGUIGUI - Premiere plateforme d'emploi de la RCA",
+    url: "https://kussala.org",
+    siteName: "KUSSALA",
+    title: "KUSSALA - Premiere plateforme d'emploi de la RCA",
     description:
-      "Trouvez un emploi ou recrutez en Republique Centrafricaine. KWATIGUIGUI connecte employeurs et chercheurs d'emploi dans les 20 regions du pays.",
+      "Trouvez un emploi ou recrutez en Republique Centrafricaine. KUSSALA connecte employeurs et chercheurs d'emploi dans les 20 regions du pays.",
     images: [
       {
         url: "/images/og-default.png",
         width: 1200,
         height: 630,
-        alt: "KWATIGUIGUI - Plateforme d'emploi RCA",
+        alt: "KUSSALA - Plateforme d'emploi RCA",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "KWATIGUIGUI - Premiere plateforme d'emploi de la RCA",
+    title: "KUSSALA - Premiere plateforme d'emploi de la RCA",
     description:
       "Trouvez un emploi ou recrutez en Republique Centrafricaine.",
     images: ["/images/og-default.png"],

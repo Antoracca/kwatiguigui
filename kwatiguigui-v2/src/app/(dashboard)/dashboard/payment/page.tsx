@@ -6,7 +6,7 @@ import { PaymentClient } from "@/components/dashboard/payment-client";
 import type { Database } from "@/types/database";
 
 export const metadata: Metadata = {
-  title: "Abonnement Premium — KWATIGUIGUI",
+  title: "Abonnement Premium — KUSSALA",
   robots: { index: false, follow: false },
 };
 

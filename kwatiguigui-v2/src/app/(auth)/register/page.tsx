@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Inscription",
   description:
-    "Créez votre compte KWATIGUIGUI gratuitement. Trouvez un emploi ou recrutez en République Centrafricaine.",
+    "Créez votre compte KUSSALA gratuitement. Trouvez un emploi ou recrutez en République Centrafricaine.",
   robots: { index: false, follow: false },
 };
 
@@ -21,7 +21,7 @@ export default function RegisterPage() {
         <div className="relative h-20 w-20 mb-4 drop-shadow-md">
           <Image
             src="/images/Favicon.png"
-            alt="Kwatiguigui Logo"
+            alt="Kussala Logo"
             fill
             className="object-contain"
             priority

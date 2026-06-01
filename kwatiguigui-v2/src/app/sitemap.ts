@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://kwatiguigui.org";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://kussala.org";
   const now = new Date();
 
   // ---------------------------------------------------------------------------

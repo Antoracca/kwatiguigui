@@ -509,7 +509,7 @@ export function RegisterForm() {
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="text-center space-y-2">
               <h2 className="text-xl font-heading font-bold text-neutral-900 dark:text-white">
-                Bienvenue sur Kwatiguigui
+                Bienvenue sur Kussala
               </h2>
               <p className="text-body-sm text-neutral-500 dark:text-neutral-400">
                 Sélectionnez le type de compte qui correspond à vos besoins :

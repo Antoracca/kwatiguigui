@@ -117,7 +117,7 @@ function SuccessView({ onClose }: { onClose: () => void }) {
           Demande envoyée !
         </h3>
         <p className="text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
-          Votre demande de session coaching a été transmise à notre équipe RH Kwatiguigui.
+          Votre demande de session coaching a été transmise à notre équipe RH Kussala.
         </p>
         <div className="flex items-start gap-3 rounded-2xl border border-green-200 bg-green-50 px-4 py-4 text-left dark:border-green-800/40 dark:bg-green-900/20">
           <MailCheck className="mt-0.5 h-5 w-5 shrink-0 text-green-600 dark:text-green-400" />
@@ -246,7 +246,7 @@ export function CoachingBooking() {
 
       <p className="mb-6 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
         Besoin d&apos;aller plus loin ? Réservez une session de 30 minutes avec un expert RH
-        Kwatiguigui pour auditer votre profil.
+        Kussala pour auditer votre profil.
       </p>
 
       {/* Dialog */}
@@ -281,7 +281,7 @@ export function CoachingBooking() {
                         Réserver votre session
                       </Dialog.Title>
                       <p id="coaching-desc" className="text-xs text-neutral-400">
-                        30 min · Expert RH Kwatiguigui
+                        30 min · Expert RH Kussala
                       </p>
                     </div>
                   </div>

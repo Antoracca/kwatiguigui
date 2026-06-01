@@ -6,7 +6,7 @@ import { AdminUsersClient } from "@/components/admin/admin-users-client";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Utilisateurs — Admin KWATIGUIGUI",
+  title: "Utilisateurs — Admin KUSSALA",
   robots: { index: false, follow: false },
 };
 

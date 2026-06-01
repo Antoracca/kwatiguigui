@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { OnboardingForm } from "@/components/auth/onboarding-form";
 
 export const metadata = {
-  title: "Finaliser votre profil — KWATIGUIGUI",
+  title: "Finaliser votre profil — KUSSALA",
   robots: { index: false },
 };
 

@@ -328,7 +328,7 @@ export function AdminSidebar() {
         <p className="font-heading text-body-sm font-semibold text-neutral-900 dark:text-neutral-100">
           Administration
         </p>
-        <p className="text-body-xs text-neutral-500">KWATIGUIGUI</p>
+        <p className="text-body-xs text-neutral-500">KUSSALA</p>
       </div>
       <nav className="flex flex-col gap-1 p-4">
         {ADMIN_NAV.map((item) => {

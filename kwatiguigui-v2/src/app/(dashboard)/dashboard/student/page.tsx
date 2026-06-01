@@ -8,7 +8,7 @@ import type { StudentProfileValues, StudentProfileData } from "@/components/dash
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Stages & Alternance — KWATIGUIGUI",
+  title: "Stages & Alternance — KUSSALA",
   description: "Gérez votre profil étudiant, vos disponibilités pour les stages et alternances.",
   robots: { index: false, follow: false },
 };

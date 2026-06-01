@@ -47,7 +47,6 @@ export default function GuideSalairesPage() {
         <div className="container-main">
           <div className="mx-auto max-w-4xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent-100 bg-accent-50 px-4 py-2 text-fluid-sm font-medium text-accent-700 dark:border-accent-800 dark:bg-accent-950 dark:text-accent-500">
-              <Sparkles className="h-4 w-4" />
               Repères de rémunération en contexte RCA
             </div>
             <h1 className="font-heading text-fluid-5xl font-bold text-neutral-900 dark:text-neutral-100">
@@ -93,9 +92,7 @@ export default function GuideSalairesPage() {
         <div className="container-main">
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="rounded-2xl border border-primary-200 bg-primary-50/60 p-6 dark:border-primary-800 dark:bg-primary-950/20">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-primary-600 dark:bg-neutral-900 dark:text-primary-400">
-                <Calculator className="h-5 w-5" />
-              </div>
+              
               <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">Méthode simple en 3 étapes</h3>
               <ol className="mt-4 space-y-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
                 <li>1. Relever 5 à 10 offres proches (poste, ville, niveau).</li>
@@ -105,9 +102,7 @@ export default function GuideSalairesPage() {
             </div>
 
             <div className="rounded-2xl border border-secondary-200 bg-secondary-50/60 p-6 dark:border-secondary-800 dark:bg-secondary-950/20">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-secondary-600 dark:bg-neutral-900 dark:text-secondary-400">
-                <Scale className="h-5 w-5" />
-              </div>
+              
               <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">Négociation responsable</h3>
               <ul className="mt-4 space-y-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
                 {negotiation.map((n) => (
@@ -143,9 +138,7 @@ export default function GuideSalairesPage() {
             ].map((s) => (
               <a key={s.href} href={s.href} target="_blank" rel="noopener noreferrer" className="group flex items-start justify-between gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 hover:border-accent-300 dark:border-neutral-700 dark:bg-neutral-900">
                 <div className="flex items-start gap-3">
-                  <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
-                    <FileText className="h-4 w-4" />
-                  </div>
+                  
                   <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{s.title}</p>
                 </div>
                 <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-neutral-400 group-hover:text-accent-500" />

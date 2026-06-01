@@ -111,7 +111,7 @@ export default async function ProfileAnalysisPage() {
 
             <p className="max-w-3xl text-neutral-600 dark:text-neutral-400 text-lg leading-relaxed">
                 Les recruteurs utilisent des filtres spécifiques pour trouver des candidats. Notre algorithme analyse
-                votre profil KWATIGUIGUI pour vous dire exactement ce qui vous manque pour apparaître en tête de liste.
+                votre profil KUSSALA pour vous dire exactement ce qui vous manque pour apparaître en tête de liste.
             </p>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -227,7 +227,7 @@ export default async function ProfileAnalysisPage() {
                         <div className="relative z-10">
                             <h3 className="font-heading font-bold text-lg mb-2">Conseil d'Expert</h3>
                             <p className="text-primary-100 text-sm leading-relaxed mb-4">
-                                L'algorithme KWATIGUIGUI donne une pondération extrêmement élevée à votre photo de profil (+20 pts). Dans le domaine du BTP et du service, montrer son visage renforce considérablement le sentiment de confiance.
+                                L'algorithme KUSSALA donne une pondération extrêmement élevée à votre photo de profil (+20 pts). Dans le domaine du BTP et du service, montrer son visage renforce considérablement le sentiment de confiance.
                             </p>
                             <Button asChild variant="secondary" className="w-full font-bold rounded-full bg-white text-primary-700 hover:bg-neutral-50">
                                 <Link href="/dashboard/cv-builder">

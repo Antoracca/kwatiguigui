@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import HomeClient from "./home-client";
 
 export const metadata: Metadata = {
-  title: "KWATIGUIGUI - Premiere plateforme d'emploi de la RCA",
+  title: "KUSSALA - Premiere plateforme d'emploi de la RCA",
   description:
     "Trouvez un emploi ou recrutez en Republique Centrafricaine. Plus de 1 200 offres, 3 500 utilisateurs, 20 regions couvertes. Inscription gratuite.",
   alternates: { canonical: "/" },

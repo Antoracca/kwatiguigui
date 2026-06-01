@@ -115,14 +115,14 @@ export async function POST(request: NextRequest) {
         phone,
         amount,
         reference,
-        description: `Abonnement KWATIGUIGUI Premium (${durationDays} jours)`,
+        description: `Abonnement KUSSALA Premium (${durationDays} jours)`,
       });
     } else {
       operatorResponse = await initiateTelecelPayment({
         phone,
         amount,
         reference,
-        description: `Abonnement KWATIGUIGUI Premium (${durationDays} jours)`,
+        description: `Abonnement KUSSALA Premium (${durationDays} jours)`,
       });
     }
 

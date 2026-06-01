@@ -18,9 +18,9 @@ import {
 import { NetworkLottiePanel } from "@/components/marketing/enterprise/network-lottie-panel";
 
 export const metadata: Metadata = {
-  title: "Partenariats RCA - Développez votre activité avec KWATIGUIGUI",
+  title: "Partenariats RCA - Développez votre activité avec KUSSALA",
   description:
-    "Espace Partenariats KWATIGUIGUI : PME, agences, sous-traitance, vendeurs et logistique pour accélérer la croissance en République centrafricaine.",
+    "Espace Partenariats KUSSALA : PME, agences, sous-traitance, vendeurs et logistique pour accélérer la croissance en République centrafricaine.",
   alternates: { canonical: "/partenariats" },
 };
 
@@ -70,7 +70,6 @@ export default function PartenariatsPage() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-white/90 px-4 py-2 text-fluid-sm font-semibold text-amber-700 shadow-sm dark:border-amber-900 dark:bg-neutral-900/80 dark:text-amber-300">
-                <Sparkles className="h-4 w-4" />
                 Espace Partenariats - Niveau stratégique
               </div>
 
@@ -80,7 +79,7 @@ export default function PartenariatsPage() {
               </h1>
 
               <p className="mt-5 max-w-2xl text-fluid-lg text-neutral-600 dark:text-neutral-300">
-                KWATIGUIGUI connecte les acteurs de terrain aux besoins réels des entreprises :
+                KUSSALA connecte les acteurs de terrain aux besoins réels des entreprises :
                 sous-traitants, fournisseurs, logisticiens, PME et agences. Objectif : exécuter plus vite,
                 mieux et avec plus de valeur.
               </p>
@@ -166,7 +165,6 @@ export default function PartenariatsPage() {
 
           <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50/80 p-5 dark:border-amber-800 dark:bg-amber-950/20">
             <p className="flex items-start gap-2 text-fluid-sm text-amber-900 dark:text-amber-200">
-              <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0" />
               Une règle simple : partenariat fort = attentes claires + engagement mesurable + communication continue.
             </p>
           </div>
@@ -193,9 +191,7 @@ export default function PartenariatsPage() {
                 className="group flex items-start justify-between gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 transition-colors hover:border-amber-300 dark:border-neutral-700 dark:bg-neutral-900"
               >
                 <div className="flex items-start gap-3">
-                  <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
-                    <FileText className="h-4 w-4" />
-                  </div>
+                  
                   <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{source.title}</p>
                 </div>
                 <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-neutral-400 transition-colors group-hover:text-amber-500" />
@@ -208,9 +204,7 @@ export default function PartenariatsPage() {
       <section className="section-padding">
         <div className="container-narrow">
           <div className="rounded-3xl border border-amber-200 bg-amber-50 p-8 text-center dark:border-amber-800 dark:bg-amber-950/25">
-            <div className="mx-auto mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100 dark:bg-amber-900">
-              <Handshake className="h-7 w-7 text-amber-700 dark:text-amber-300" />
-            </div>
+            
             <h2 className="font-heading text-fluid-2xl font-bold text-neutral-900 dark:text-white">Passez au niveau partenariat premium</h2>
             <p className="mx-auto mt-3 max-w-2xl text-fluid-base text-neutral-600 dark:text-neutral-300">
               Ouvrez des collaborations plus solides, plus visibles et plus profitables dès maintenant.
@@ -218,7 +212,6 @@ export default function PartenariatsPage() {
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <Link href="/partenariats/rejoindre" className="inline-flex min-h-[46px] items-center gap-2 rounded-full bg-amber-500 px-6 py-2.5 text-fluid-sm font-semibold text-amber-950 hover:bg-amber-600">
                 Rejoindre le réseau
-                <Rocket className="h-4 w-4" />
               </Link>
               <Link href="/partenariats/pme-agences" className="inline-flex min-h-[46px] items-center gap-2 rounded-full border border-neutral-300 bg-white px-6 py-2.5 text-fluid-sm font-semibold text-neutral-700 hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200">
                 Explorer les modules

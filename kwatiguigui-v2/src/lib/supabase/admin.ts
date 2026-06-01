@@ -9,7 +9,7 @@ import type { Database } from "@/types/database";
 // will fail loudly during SSR/build rather than silently in production.
 if (typeof window !== "undefined") {
   throw new Error(
-    "[kwatiguigui] src/lib/supabase/admin.ts a ete importe cote client. " +
+    "[kussala] src/lib/supabase/admin.ts a ete importe cote client. " +
       "Ce module expose la SERVICE_ROLE_KEY qui bypass toutes les RLS. " +
       "N'importer ce fichier QUE depuis: API Route Handlers, Server Actions, scripts.",
   );

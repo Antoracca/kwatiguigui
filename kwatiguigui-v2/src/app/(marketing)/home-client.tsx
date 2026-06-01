@@ -42,20 +42,78 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { 
+    Buildings, PencilSimple, Users as UsersPhosphor, 
+    Handshake as HandshakePhosphor, Desktop, 
+    UserCirclePlus, MagnifyingGlass, PaperPlaneRight, ChartLineUp,
+    Network, Brain, Robot, CheckCircle as CheckCirclePhosphor
+} from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { ModernPricingPage, PricingCardProps } from "@/components/ui/animated-glassy-pricing";
+import { HeroSection } from "@/components/marketing/hero-section";
+import { DomainFusion } from "@/components/marketing/domain-fusion";
+import { CommunityNetwork } from "@/components/marketing/community-network";
+import { QuickSearchForm } from "@/components/marketing/quick-search";
+import { AnnouncementTicker } from "@/components/marketing/announcement-ticker";
 import { SearchableSelect } from "@/components/ui/searchable-select";
-import { PricingCarousel } from "@/components/marketing/pricing-carousel";
-import { HeroGlobe } from "@/components/marketing/hero-globe";
-import { RcaMapBg } from "@/components/ui/rca-map-bg";
-
 import { JobCard } from "@/components/jobs/job-card";
+import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CountUp } from "@/components/ui/count-up";
 import { CONTACT } from "@/lib/constants";
 import { cn, formatPrice } from "@/lib/utils";
+
+// ---------------------------------------------------------------------------
+// Pricing Plans Data
+// ---------------------------------------------------------------------------
+const myPricingPlans: PricingCardProps[] = [
+    {
+        planName: 'Découverte',
+        description: 'L\'essentiel pour démarrer',
+        price: '0',
+        features: [
+            'Création de profil basique',
+            'Postulation illimitée',
+            'Alertes emplois standards',
+            'Support par email'
+        ],
+        buttonText: 'Commencer gratuitement',
+        buttonLink: '/register',
+        buttonVariant: 'secondary'
+    },
+    {
+        planName: 'Standard',
+        description: 'Pour particuliers premium',
+        price: '2 500',
+        features: [
+            'Mise en avant du profil',
+            'Accès prioritaire aux offres',
+            'Outil CV optimisé IA',
+            'Statut "Profil Vérifié"'
+        ],
+        buttonText: 'Choisir Standard',
+        buttonLink: '/register',
+        isPopular: true,
+        buttonVariant: 'primary'
+    },
+    {
+        planName: 'Pro',
+        description: 'Pour PME et agences',
+        price: '7 500',
+        features: [
+            'Publications illimitées',
+            'Gestion des candidatures (ATS)',
+            'Accès restreint Base CV',
+            'Marque employeur basique'
+        ],
+        buttonText: 'Choisir Pro',
+        buttonLink: '/register?type=employer',
+        buttonVariant: 'secondary'
+    }
+];
 
 // ---------------------------------------------------------------------------
 // Demo job data for homepage (static, no DB needed)
@@ -154,77 +212,6 @@ const JOB_CATEGORIES = [
     { name: "Vendeur", icon: TrendingUp, count: "0" },
 ];
 
-// ---------------------------------------------------------------------------
-// Announcement Ticker
-// ---------------------------------------------------------------------------
-const TICKER_MESSAGES = [
-    { text: "Sécurité garantie : Kwatiguigui ne demandera jamais d'argent aux candidats.", icon: ShieldCheck },
-    { text: "Transparence totale : aucun frais caché lors de vos recrutements.", icon: CheckSquare },
-    { text: "Confidentialité de vos données personnelles et professionnelles assurée.", icon: Lock },
-    { text: "Trouvez un emploi, un stage, ou une mission freelance de qualité.", icon: Search },
-    { text: "Solution complète de recrutement structuré pour les entreprises.", icon: Building2 },
-    { text: "Fiabilité et accompagnement dédié pour propulser votre carrière.", icon: TrendingUp },
-    { text: "Protection anti-fraude déployée sur toutes les annonces (Zéro Scam).", icon: Ban }
-];
-
-const AnnouncementTicker = () => {
-    // Duplicate messages so the loop is seamless: animate x from 0% to -50%
-    const doubled = [...TICKER_MESSAGES, ...TICKER_MESSAGES];
-
-    return (
-        <div className="w-full overflow-hidden border-b border-neutral-100 dark:border-neutral-900 bg-transparent py-3 flex items-center relative z-20">
-            {/* Gradient masks for smooth fade effect at edges */}
-            <div className="absolute top-0 left-0 w-16 h-full bg-gradient-to-r from-white dark:from-neutral-950 to-transparent z-10 pointer-events-none" />
-            <div className="absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white dark:from-neutral-950 to-transparent z-10 pointer-events-none" />
-
-            <motion.div
-                className="flex whitespace-nowrap gap-8 sm:gap-12 lg:gap-20 px-4 w-max items-center"
-                animate={{ x: ["0%", "-50%"] }}
-                transition={{
-                    duration: 50,
-                    ease: "linear",
-                    repeat: Infinity,
-                    repeatType: "loop",
-                }}
-            >
-                {doubled.map((msg, i) => {
-                    const Icon = msg.icon;
-                    return (
-                        <div key={i} className="flex-none text-sm font-semibold text-neutral-800 dark:text-neutral-200 tracking-wide flex items-center gap-3">
-                            <Icon size={16} className="text-secondary-500" />
-                            {msg.text}
-                        </div>
-                    );
-                })}
-            </motion.div>
-        </div>
-    );
-};
-
-// ---------------------------------------------------------------------------
-// Animated Custom Search Icon
-// ---------------------------------------------------------------------------
-const AnimatedSearchJobIcon = () => (
-    <div className="relative flex items-center justify-center w-6 h-6 text-primary-600 dark:text-primary-400">
-        <motion.svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="absolute inset-0 w-full h-full"
-            animate={{ rotate: [0, 20, -10, 0] }}
-            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
-        >
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-        </motion.svg>
-        <span className="text-[6px] font-black absolute top-[45%] left-[45%] -translate-x-1/2 -translate-y-1/2 text-neutral-900 dark:text-white">
-            JOB
-        </span>
-    </div>
-);
 
 
 function EnterpriseTypewriterHeading() {
@@ -256,7 +243,7 @@ function EnterpriseTypewriterHeading() {
         if (!typingStarted) return;
 
         let frameId = 0;
-        const charsPerSecond = 52;
+        const charsPerSecond = 12;
         const startAt = performance.now();
 
         const step = (now: number) => {
@@ -283,27 +270,29 @@ function EnterpriseTypewriterHeading() {
     return (
         <h2
             ref={headingRef}
-            className="font-heading text-[clamp(2.25rem,5vw,4rem)] font-extrabold text-white tracking-tight leading-[1.08] mt-2"
+            className="font-heading text-[clamp(2.25rem,5vw,4rem)] font-extrabold text-neutral-900 dark:text-white tracking-tight leading-[1.08] mt-2"
         >
             <span className="sr-only">{enterpriseHeadline}.</span>
-            <span aria-hidden="true" className="inline-flex items-baseline whitespace-nowrap">
-                <span>{typedText}</span>
-                {completed && (
-                    <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.12 }}
-                        className="inline text-secondary-400"
-                    >
-                        .
-                    </motion.span>
-                )}
-                <span
-                    className={cn(
-                        "ml-0.5 inline-block h-[0.95em] w-[2px] rounded-full translate-y-[2px] bg-secondary-400",
-                        completed ? "opacity-0" : "animate-pulse",
+            <span aria-hidden="true" className="inline-flex items-baseline flex-wrap">
+                <span className="inline-block">
+                    <span>{typedText}</span>
+                    {completed && (
+                        <motion.span
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.12 }}
+                            className="inline text-secondary-500"
+                        >
+                            .
+                        </motion.span>
                     )}
-                />
+                    <span
+                        className={cn(
+                            "ml-0.5 inline-block h-[0.95em] w-[2px] rounded-full translate-y-[2px] bg-secondary-500",
+                            completed ? "opacity-0" : "animate-pulse",
+                        )}
+                    />
+                </span>
             </span>
         </h2>
     );
@@ -344,236 +333,57 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                     initial="hidden"
                     animate="visible"
                 >
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-                        {/* LEFT COLUMN: Copywriting & CTAs (7 cols) */}
-                        <div className="lg:col-span-7 flex flex-col items-start text-left relative">
-                            {/* RCA Map Background Watermark */}
-                            <div className="absolute top-[40%] left-[45%] w-[130%] sm:w-[110%] -translate-x-1/2 -translate-y-1/2 opacity-[0.04] dark:opacity-[0.05] pointer-events-none -z-10 text-primary-900 dark:text-primary-100 drop-shadow-sm">
-                                <RcaMapBg />
-                            </div>
-
-                            {/* Pre-title credibility tag */}
-                            <motion.div variants={itemVariants} className="mb-8 w-fit overflow-hidden rounded-2xl bg-gradient-to-r from-primary-600/10 to-transparent p-[1px] dark:from-primary-400/20 backdrop-blur-sm">
-                                <div className="flex items-center gap-3 rounded-[15px] bg-white/60 px-4 py-2.5 dark:bg-neutral-950/60 transition-all hover:bg-white/80 dark:hover:bg-neutral-950/80">
-                                    <div className="flex items-center justify-center rounded-lg bg-primary-100 p-2 dark:bg-primary-900/40 border border-primary-200/50 dark:border-primary-800/50">
-                                        <ShieldCheck className="h-5 w-5 text-primary-600 dark:text-primary-400" />
-                                    </div>
-                                    <p className="text-sm font-bold text-neutral-900 dark:text-white sm:text-base">
-                                        Lancement Exclusif <span className="mx-2 hidden sm:inline-block font-normal text-neutral-300 dark:text-neutral-700">|</span> <span className="font-medium text-primary-600 dark:text-primary-400 block sm:inline">100% Sécurisé & Vérifié</span>
-                                    </p>
-                                </div>
-                            </motion.div>
-
-                            {/* Massive H1 Typography */}
-                            <motion.h1
-                                variants={itemVariants}
-                                className="font-heading text-[clamp(2.5rem,6vw,4.5rem)] font-extrabold leading-[1.05] tracking-tight text-neutral-900 dark:text-white break-words"
-                            >
-                                La plateforme qui connecte <br className="hidden sm:block" />
-                                <span className="text-primary-600 dark:text-primary-400">
-                                    talents et entreprises
-                                </span>
-                            </motion.h1>
-
-                            <motion.p
-                                variants={itemVariants}
-                                className="mt-6 max-w-xl text-[clamp(1.125rem,2vw,1.25rem)] leading-relaxed text-neutral-500 dark:text-neutral-400 font-medium"
-                            >
-                                Emplois, Stages, Prestations. Rejoignez nos 100+ membres fondateurs et participez à la structuration du grand réseau professionnel de la République Centrafricaine.
-                            </motion.p>
-
-                            {/* CTAs */}
-                            <motion.div variants={itemVariants} className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:flex-wrap w-full">
-                                <Link href="/jobs" className="w-full sm:w-auto">
-                                    <Button
-                                        size="xl"
-                                        className="w-full sm:w-auto h-14 px-8 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-100 text-base font-bold transition-all shadow-lg shadow-neutral-900/10"
-                                    >
-                                        Trouver un emploi
-                                    </Button>
-                                </Link>
-                                <Link href="/register?type=employer" className="w-full sm:w-auto">
-                                    <Button
-                                        size="xl"
-                                        variant="outline"
-                                        className="w-full sm:w-auto h-14 px-8 rounded-xl border-neutral-300 text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-900/50 text-base font-bold transition-all"
-                                    >
-                                        Publier une offre
-                                    </Button>
-                                </Link>
-                                <Link href="#comment-ca-marche" className="w-full sm:w-auto hidden md:block ml-2">
-                                    <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        className="text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 font-medium px-4 h-14"
-                                    >
-                                        Découvrir comment ça fonctionne
-                                    </Button>
-                                </Link>
-                            </motion.div>
-
-                            {/* Trust snippet underneath CTAs */}
-                            <motion.div variants={itemVariants} className="mt-8 flex items-center gap-3 text-sm text-neutral-500 dark:text-neutral-400">
-                                <div className="flex -space-x-2">
-                                    {['A', 'K', 'J'].map((initial, i) => (
-                                        <div key={i} className="h-8 w-8 rounded-full border-2 border-white dark:border-neutral-950 bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-xs font-bold text-neutral-400 dark:text-neutral-500">
-                                            {initial}
-                                        </div>
-                                    ))}
-                                </div>
-                                <span className="font-medium">Créons ensemble l'écosystème de demain.</span>
-                            </motion.div>
-
-                        </div>
-
-                        {/* RIGHT COLUMN: Globe 3D (5 cols) */}
-                        <motion.div
-                            variants={itemVariants}
-                            className="lg:col-span-5 relative w-full max-w-lg mx-auto lg:max-w-full lg:mt-0 mt-8"
-                        >
-                            <HeroGlobe />
-                        </motion.div>
+                    <HeroSection />
+                    <div className="relative z-30 -mt-24 sm:-mt-32 lg:mt-0">
+                        <QuickSearchForm />
                     </div>
 
-                    {/* QUICK SEARCH BAR (Floating) */}
+                    {/* Hero Lottie Animation */}
                     <motion.div
-                        variants={itemVariants}
-                        className="mt-16 sm:mt-24 w-full"
+                        className="mt-6 sm:mt-12 flex justify-center w-full max-w-[320px] sm:max-w-[600px] lg:max-w-[700px] mx-auto mb-8 sm:mb-16"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.5, duration: 0.8 }}
                     >
-                        <div className="mx-auto max-w-5xl rounded-3xl bg-white p-2 sm:p-3 shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:bg-neutral-900/80 backdrop-blur-md border border-neutral-100 dark:border-neutral-800">
-                            <form action="/jobs" className="flex flex-col md:flex-row items-center gap-2">
-                                <div className="flex-1 w-full relative">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                        <AnimatedSearchJobIcon />
-                                    </div>
-                                    <input type="text" name="q" placeholder="Quel poste recherchez-vous ?" className="w-full h-14 sm:h-16 pl-14 pr-4 bg-transparent border-none text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:outline-none focus:ring-0 font-medium" />
-                                </div>
-                                <div className="hidden md:block w-px h-8 bg-neutral-200 dark:bg-neutral-700" />
-                                <div className="flex-1 w-full relative">
-                                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                                        <MapPin className="h-5 w-5 text-neutral-400" />
-                                    </div>
-                                    <input type="text" name="q" placeholder="Ville ou quartier..." className="w-full h-14 sm:h-16 pl-14 pr-4 bg-transparent border-none text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:outline-none focus:ring-0 font-medium" />
-                                </div>
-                                <Button type="submit" size="xl" className="w-full md:w-auto h-14 sm:h-16 px-10 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-bold transition-transform hover:scale-105 shadow-lg shadow-primary-600/20">
-                                    Rechercher
-                                </Button>
-                            </form>
-                        </div>
-                        {/* Popular searches */}
-                        <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm text-neutral-500 font-medium">
-                            <span>Recherches fréquentes :</span>
-                            <Link href="/jobs?q=Chauffeur" className="px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-800/40 hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors">Chauffeur</Link>
-                            <Link href="/jobs?q=Menagere" className="px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-800/40 hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors">Aide ménagère</Link>
-                            <Link href="/jobs?q=Comptable" className="px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-800/40 hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors">Comptable</Link>
-                            <Link href="/jobs?q=Macon" className="px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-800/40 hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors">Maçon</Link>
-                        </div>
-
-                        {/* Hero Lottie Animation */}
-                        <motion.div
-                            className="mt-6 sm:mt-12 flex justify-center w-full max-w-[320px] sm:max-w-[600px] lg:max-w-[700px] mx-auto mb-8 sm:mb-16"
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.5, duration: 0.8 }}
-                        >
-                            <DotLottieReact
-                                src="/images/Searching.lottie"
-                                loop
-                                autoplay
-                                className="w-full h-auto object-contain transform scale-110 sm:scale-125"
-                            />
-                        </motion.div>
+                        <DotLottieReact
+                            src="/images/Searching.lottie"
+                            loop
+                            autoplay
+                            className="w-full h-auto object-contain transform scale-110 sm:scale-125"
+                        />
                     </motion.div>
-
                 </motion.div>
             </section>
 
             {/* ==================================================================
-          CATEGORIES SECTION (Minimalist / No Cards)
+          EXPLORE BY DOMAIN (Fusion Vertical & Bento)
           ================================================================== */}
-            <section className="bg-white pt-16 pb-32 sm:pt-24 dark:bg-neutral-950 relative z-10">
-                <motion.div
-                    className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                >
-                    <div className="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-                        <div className="max-w-2xl">
-                            <h2 className="font-heading text-[clamp(2rem,4vw,3rem)] font-extrabold text-neutral-900 dark:text-neutral-50 tracking-tight leading-tight">
-                                Explorez par domaine
-                            </h2>
-                            <p className="mt-4 text-xl text-neutral-500 dark:text-neutral-400">
-                                Du secteur formel à l'artisanat, trouvez la mission qui correspond à votre expertise.
-                            </p>
-                        </div>
-                        <Link
-                            href="/jobs"
-                            className="group inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-5 py-2.5 text-sm font-semibold text-neutral-900 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] transition-all hover:border-neutral-300 hover:bg-neutral-50 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:border-neutral-700 dark:hover:bg-neutral-800"
-                        >
-                            Voir toutes les catégories
-                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                        </Link>
-                    </div>
+            <DomainFusion />
 
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3 lg:grid-cols-4">
-                        {JOB_CATEGORIES.map((cat, idx) => {
-                            const Icon = cat.icon;
-                            return (
-                                <motion.div
-                                    key={cat.name}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: idx * 0.05, duration: 0.5 }}
-                                >
-                                    <Link
-                                        href={`/jobs?job_type=${encodeURIComponent(cat.name)}`}
-                                        className="group flex flex-col items-start gap-4 p-5 rounded-2xl border border-transparent bg-transparent transition-all duration-300 hover:border-neutral-200 hover:bg-white hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:hover:border-neutral-800 dark:hover:bg-neutral-900/50"
-                                    >
-                                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-100 text-neutral-600 transition-colors duration-300 group-hover:bg-neutral-900 group-hover:text-white dark:bg-neutral-800 dark:text-neutral-400 dark:group-hover:bg-white dark:group-hover:text-neutral-900">
-                                            <Icon size={22} strokeWidth={1.5} />
-                                        </div>
-                                        <div>
-                                            <p className="font-heading text-lg font-bold text-neutral-900 dark:text-neutral-50 transition-colors group-hover:text-primary-600 dark:group-hover:text-primary-400">
-                                                {cat.name}
-                                            </p>
-                                            <p className="mt-1 flex items-center gap-2 text-sm font-medium text-neutral-500 dark:text-neutral-500">
-                                                <span className="inline-flex items-center justify-center rounded bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 text-xs font-semibold text-neutral-600 dark:text-neutral-400 font-mono tracking-widest">{cat.count}</span> {cat.count === "0" || cat.count === "1" ? "offre" : "offres"}
-                                            </p>
-                                        </div>
-                                    </Link>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
-                </motion.div>
-            </section>
+            {/* ==================================================================
+          COMMUNITY NETWORK (3D Marquee)
+          ================================================================== */}
+            <CommunityNetwork />
 
             {/* ==================================================================
           HOW IT WORKS (Transversal Diagonal Design B2B / B2C)
           ================================================================== */}
             <section id="comment-ca-marche" className="relative w-full overflow-hidden">
 
-                {/* --- B2B SECTION (Top, Dark, Skewed Background) --- */}
-                <div className="relative bg-neutral-950 pt-24 pb-32 lg:pb-40 z-10 
+                {/* Wrapper for the drop shadow since clip-path cuts off shadows */}
+                <div className="relative w-full drop-shadow-[0_15px_15px_rgba(0,0,0,0.03)] dark:drop-shadow-none">
+                {/* --- B2B SECTION (Top, Light, Skewed Background) --- */}
+                <div className="relative bg-white dark:bg-neutral-950 pt-24 pb-32 lg:pb-40 z-10 
                                 [clip-path:polygon(0_0,100%_0,100%_95%,0_100%)] lg:[clip-path:polygon(0_0,100%_0,100%_88%,0_100%)]">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20">
                         <div className="mb-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                             <div className="lg:col-span-7 text-center lg:text-left">
-                                <motion.div
-                                    initial={{ opacity: 0, y: 8 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, margin: "-120px" }}
-                                    transition={{ duration: 0.35, ease: "easeOut" }}
-                                    className="mb-4 inline-flex items-center gap-2 rounded-full border border-secondary-400/40 bg-secondary-500/15 px-5 py-2 text-sm font-bold text-secondary-100 shadow-[0_10px_30px_-15px_rgba(56,189,248,0.55)]"
-                                >
-                                    <Building2 size={16} className="text-secondary-300" />
-                                    <span className="tracking-wide">Vous êtes une entreprise ?</span>
-                                </motion.div>
+                                <div className="mb-8 inline-flex flex-col items-center lg:items-start">
+                                    <span className="tracking-[0.25em] text-[11px] sm:text-xs font-black text-secondary-600 dark:text-secondary-400 uppercase">Espace Entreprise</span>
+                                    <motion.div initial={{ width: 0 }} whileInView={{ width: "100%" }} transition={{ duration: 0.8, ease: "easeOut" }} className="h-0.5 bg-gradient-to-r from-secondary-500 to-transparent mt-1.5" />
+                                </div>
                                 <EnterpriseTypewriterHeading />
-                                <p className="mt-6 text-lg text-neutral-400 max-w-2xl mx-auto lg:mx-0">
+                                <p className="mt-6 text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto lg:mx-0">
                                     Trouvez les meilleurs talents en République Centrafricaine grâce à une méthode ciblée en 4 étapes simples.
                                 </p>
                                 <div className="mt-8 hidden lg:block">
@@ -587,59 +397,62 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
 
                             {/* Creative Lottie Integration B2B */}
                             <motion.div
-                                className="lg:col-span-5 relative w-full aspect-square max-w-md mx-auto"
-                                initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-                                whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                                className="lg:col-span-5 relative w-full aspect-square max-w-md mx-auto flex items-center justify-center"
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.8, type: "spring" }}
                             >
                                 {/* Glowing neon backdrop */}
                                 <div className="absolute inset-0 bg-secondary-500/20 dark:bg-secondary-500/10 rounded-full blur-3xl scale-90 animate-pulse" />
-                                <div className="absolute inset-4 bg-gradient-to-tr from-neutral-900 to-neutral-800 rounded-full border border-neutral-700/50 shadow-2xl overflow-hidden shadow-secondary-500/10 flex items-center justify-center">
-                                    <DotLottieReact
-                                        src="/images/entreprisesearch.lottie"
-                                        loop
-                                        autoplay
-                                        className="w-3/4 h-3/4 object-contain"
-                                    />
-                                </div>
-                                {/* Floating decorative badges */}
-                                <motion.div
-                                    className="absolute top-0 right-0 sm:-top-4 sm:-right-4 bg-white dark:bg-neutral-800 p-3 rounded-2xl shadow-xl flex items-center justify-center border border-neutral-100 dark:border-neutral-700 text-secondary-500 z-20"
-                                    animate={{ y: [0, -10, 0] }}
-                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                >
-                                    <CheckCircle2 size={24} />
-                                </motion.div>
+                                <DotLottieReact
+                                    src="/images/entreprisesearch.lottie"
+                                    loop
+                                    autoplay
+                                    className="w-full h-full object-contain relative z-10"
+                                />
                             </motion.div>
                         </div>
 
-                        {/* B2B Steps */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
+                        {/* B2B Steps (Zigzag Roadmap) */}
+                        <div className="mt-24 lg:mt-32 flex flex-col gap-8 md:gap-16 relative lg:max-w-5xl lg:mx-auto">
                             {[
-                                { title: "Créez votre profil", desc: "Renseignez votre marque employeur.", icon: Building2 },
-                                { title: "Publiez l'offre", desc: "Détaillez vos besoins techniques.", icon: Edit },
-                                { title: "Recevez les CVs", desc: "Consultez les candidatures en un clic.", icon: Users },
-                                { title: "Embauchez", desc: "Prenez contact avec les meilleurs.", icon: CheckCircle },
+                                { title: "Créez votre profil", desc: "Renseignez votre marque employeur.", icon: Buildings },
+                                { title: "Publiez l'offre", desc: "Détaillez vos besoins techniques.", icon: PencilSimple },
+                                { title: "Recevez les CVs", desc: "Consultez les candidatures en un clic.", icon: UsersPhosphor },
+                                { title: "Embauchez", desc: "Prenez contact avec les meilleurs.", icon: HandshakePhosphor },
+                                { title: "Gérez tout au même endroit", desc: "Centralisez vos recrutements sur un seul espace.", icon: Desktop },
                             ].map((s, idx) => {
                                 const Icon = s.icon;
+                                const isLeft = idx % 2 === 0;
                                 return (
                                     <motion.div
                                         key={s.title}
-                                        initial={{ opacity: 0, scale: 0.95 }}
-                                        whileInView={{ opacity: 1, scale: 1 }}
-                                        viewport={{ once: true }}
-                                        transition={{ delay: idx * 0.15 + 1.2, duration: 0.6 }}
-                                        className="group relative p-8 rounded-3xl bg-neutral-900/40 border border-neutral-800 hover:bg-neutral-900 hover:border-neutral-700 transition-all duration-300"
+                                        initial={{ opacity: 0, y: 30 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true, margin: "-50px" }}
+                                        transition={{ delay: 0.1, duration: 0.6 }}
+                                        className={cn("relative flex w-full", isLeft ? "md:justify-start" : "md:justify-end")}
                                     >
-                                        <div className="absolute inset-0 bg-gradient-to-br from-secondary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl" />
-                                        <div className="relative z-10">
-                                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-800/80 text-secondary-400 mb-6 transition-transform group-hover:scale-110">
-                                                <Icon size={24} strokeWidth={1.5} />
+                                        <div className="md:bg-white md:dark:bg-neutral-900 md:rounded-[2rem] p-0 md:p-8 sm:p-10 md:border border-neutral-100 dark:border-neutral-800 md:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] md:w-[60%] w-full relative z-10 bg-transparent shadow-none border-none pl-6 border-l-[3px] border-secondary-200 dark:border-secondary-800/30 md:border-l-0 md:pl-0">
+                                            <div className="hidden md:flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary-50 dark:bg-secondary-900/20 text-secondary-600 dark:text-secondary-400 mb-6 border border-secondary-100 dark:border-secondary-800/50">
+                                                <Icon size={32} weight="duotone" />
                                             </div>
-                                            <h3 className="text-xl font-bold text-white mb-2 tracking-tight">{s.title}</h3>
-                                            <p className="text-neutral-400 text-sm leading-relaxed">{s.desc}</p>
+                                            <h3 className="text-xl md:text-2xl font-bold text-neutral-900 dark:text-white mb-2 md:mb-3 tracking-tight flex items-center">
+                                               <span className="md:hidden text-secondary-500 mr-3 font-black text-2xl">0{idx + 1}</span>{s.title}
+                                            </h3>
+                                            <p className="text-neutral-500 dark:text-neutral-400 text-base md:text-lg leading-relaxed">{s.desc}</p>
                                         </div>
+
+                                        {/* Zigzag SVG Arrow connecting to next card */}
+                                        {idx < 4 && (
+                                            <div className={cn("hidden md:block absolute top-[80%] w-40 h-32 pointer-events-none z-0", isLeft ? "left-[55%]" : "right-[55%] -scale-x-100")}>
+                                                <svg viewBox="0 0 100 100" className="w-full h-full text-secondary-200 dark:text-secondary-900/30" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeDasharray="6 6">
+                                                    <path d="M 0 0 C 50 0, 50 100, 100 100" />
+                                                    <polygon points="95,95 100,100 95,105" fill="currentColor" stroke="none" />
+                                                </svg>
+                                            </div>
+                                        )}
                                     </motion.div>
                                 );
                             })}
@@ -654,43 +467,34 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                         </div>
                     </div>
                 </div>
+                </div> {/* End of drop-shadow wrapper */}
 
                 {/* --- B2C SECTION (Bottom, Light) --- */}
-                <div className="relative bg-neutral-50 dark:bg-neutral-900 pt-32 lg:pt-40 pb-24 -mt-20 lg:-mt-24 z-0">
+                <div className="relative bg-gradient-to-b from-neutral-50 to-white dark:from-neutral-900 dark:to-neutral-950 pt-32 lg:pt-40 pb-24 -mt-20 lg:-mt-24 z-0">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20">
                         <div className="mb-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                             {/* Creative Lottie Integration B2C (Left Side) */}
                             <motion.div
-                                className="lg:col-span-5 relative w-full aspect-square max-w-md mx-auto order-2 lg:order-1"
-                                initial={{ opacity: 0, scale: 0.8, rotate: 5 }}
-                                whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                                className="lg:col-span-5 relative w-full aspect-square max-w-md mx-auto order-2 lg:order-1 flex items-center justify-center"
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.8, type: "spring" }}
                             >
                                 {/* Soft glowing backdrop */}
-                                <div className="absolute inset-0 bg-primary-500/20 dark:bg-primary-500/10 rounded-[3rem] blur-3xl scale-90" />
-                                <div className="absolute inset-4 bg-white dark:bg-neutral-800 rounded-[3rem] border border-neutral-100 dark:border-neutral-700 shadow-2xl overflow-hidden flex items-center justify-center p-8">
-                                    <DotLottieReact
-                                        src="/images/annonces.lottie"
-                                        loop
-                                        autoplay
-                                        className="w-full h-full object-contain"
-                                    />
-                                </div>
-                                {/* Floating decorative badges */}
-                                <motion.div
-                                    className="absolute bottom-0 left-0 sm:-bottom-4 sm:-left-4 bg-white dark:bg-neutral-800 p-4 rounded-full shadow-xl flex items-center justify-center border border-neutral-100 dark:border-neutral-700 text-primary-500 z-20"
-                                    animate={{ y: [0, 10, 0] }}
-                                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                                >
-                                    <Zap size={24} className="fill-primary-500/20" />
-                                </motion.div>
+                                <div className="absolute inset-0 bg-primary-500/20 dark:bg-primary-500/10 rounded-full blur-3xl scale-90" />
+                                <DotLottieReact
+                                    src="/images/annonces.lottie"
+                                    loop={false}
+                                    autoplay
+                                    className="w-full h-full object-contain relative z-10"
+                                />
                             </motion.div>
 
                             <div className="lg:col-span-7 text-center lg:text-left order-1 lg:order-2">
-                                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary-200 bg-primary-50 px-4 py-1.5 text-sm font-semibold text-primary-700 dark:border-primary-900/50 dark:bg-primary-900/20 dark:text-primary-400">
-                                    <Search size={16} />
-                                    <span>Vous êtes un particulier ?</span>
+                                <div className="mb-8 inline-flex flex-col items-center lg:items-start">
+                                    <span className="tracking-[0.25em] text-[11px] sm:text-xs font-black text-primary-600 dark:text-primary-400 uppercase">Espace Particulier</span>
+                                    <motion.div initial={{ width: 0 }} whileInView={{ width: "100%" }} transition={{ duration: 0.8, ease: "easeOut" }} className="h-0.5 bg-gradient-to-r from-primary-500 to-transparent mt-1.5" />
                                 </div>
                                 <h2 className="font-heading text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-neutral-900 dark:text-white sm:text-4xl tracking-tight leading-none mt-2">
                                     Décrochez <br className="hidden lg:block" />
@@ -717,32 +521,45 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                             </div>
                         </div>
 
-                        {/* B2C Steps */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
+                        {/* B2C Steps (Zigzag Roadmap) */}
+                        <div className="mt-24 lg:mt-32 flex flex-col gap-8 md:gap-16 relative lg:max-w-5xl lg:mx-auto">
                             {[
-                                { title: "Créez votre CV", desc: "Mettez en avant vos diplômes et expériences.", icon: UserPlus },
-                                { title: "Explorez", desc: "Parcourez les offres de votre secteur.", icon: Search },
-                                { title: "Postulez", desc: "Envoyez votre profil en un seul clic sécurisé.", icon: Send },
-                                { title: "Suivez l'avancée", desc: "Restez informé de vos démarches.", icon: Activity },
+                                { title: "Créez votre profil", desc: "Mettez en avant vos compétences et expériences.", icon: UserCirclePlus },
+                                { title: "Explorez", desc: "Parcourez les offres pertinentes de votre secteur.", icon: MagnifyingGlass },
+                                { title: "Postulez", desc: "Envoyez votre candidature en un seul clic sécurisé.", icon: PaperPlaneRight },
+                                { title: "Suivez l'avancée", desc: "Restez informé du traitement de vos démarches.", icon: ChartLineUp },
                             ].map((s, idx) => {
                                 const Icon = s.icon;
+                                const isLeft = idx % 2 === 0;
                                 return (
                                     <motion.div
                                         key={s.title}
-                                        initial={{ opacity: 0, scale: 0.95 }}
-                                        whileInView={{ opacity: 1, scale: 1 }}
-                                        viewport={{ once: true }}
-                                        transition={{ delay: idx * 0.15 + 0.5, duration: 0.6 }}
-                                        className="group relative p-8 rounded-3xl bg-white dark:bg-neutral-800/50 border border-neutral-100 dark:border-neutral-800 hover:shadow-xl hover:shadow-neutral-200/40 dark:hover:shadow-none transition-all duration-300"
+                                        initial={{ opacity: 0, y: 30 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true, margin: "-50px" }}
+                                        transition={{ delay: 0.1, duration: 0.6 }}
+                                        className={cn("relative flex w-full", isLeft ? "md:justify-start" : "md:justify-end")}
                                     >
-                                        <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl" />
-                                        <div className="relative z-10">
-                                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 dark:bg-neutral-800 text-primary-600 dark:text-primary-400 mb-6 transition-transform group-hover:scale-110">
-                                                <Icon size={24} strokeWidth={1.5} />
+                                        <div className={cn(
+                                            "w-full relative z-10 flex flex-col p-4",
+                                            isLeft ? "md:items-start md:text-left items-center text-center" : "md:items-end md:text-right items-center text-center"
+                                        )}>
+                                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 mb-6 border border-primary-100 dark:border-primary-800/50">
+                                                <Icon size={32} weight="duotone" />
                                             </div>
-                                            <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-2 tracking-tight">{s.title}</h3>
-                                            <p className="text-neutral-500 dark:text-neutral-400 text-sm leading-relaxed">{s.desc}</p>
+                                            <h3 className="text-2xl font-bold text-neutral-900 dark:text-white mb-3 tracking-tight">{s.title}</h3>
+                                            <p className="text-neutral-500 dark:text-neutral-400 text-lg leading-relaxed max-w-sm">{s.desc}</p>
                                         </div>
+
+                                        {/* Zigzag SVG Arrow connecting to next card */}
+                                        {idx < 3 && (
+                                            <div className={cn("hidden md:block absolute top-[80%] w-40 h-32 pointer-events-none z-0", isLeft ? "left-[55%]" : "right-[55%] -scale-x-100")}>
+                                                <svg viewBox="0 0 100 100" className="w-full h-full text-primary-200 dark:text-primary-900/30" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeDasharray="6 6">
+                                                    <path d="M 0 0 C 50 0, 50 100, 100 100" />
+                                                    <polygon points="95,95 100,100 95,105" fill="currentColor" stroke="none" />
+                                                </svg>
+                                            </div>
+                                        )}
                                     </motion.div>
                                 );
                             })}
@@ -768,52 +585,91 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
             </section>
 
             {/* ==================================================================
-          MEMBERS & VISION SECTION (Stats Equivalent)
+          KUSSALA AI ENGINE (V3 - Split Layout with Lottie)
           ================================================================== */}
-            <section className="bg-neutral-950 py-24 relative overflow-hidden">
-                {/* Deep tech glowing effect */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
-                    <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-primary-500 to-transparent" />
+            <section className="relative overflow-hidden z-10 bg-gradient-to-b from-white to-neutral-50 dark:from-neutral-950 dark:to-neutral-900">
+                {/* Magic Color Flux Background */}
+                <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                    <motion.div 
+                        animate={{ x: [0, 50, 0], y: [0, 30, 0] }}
+                        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                        className="absolute top-0 right-[10%] w-[500px] h-[500px] bg-secondary-100/40 blur-[120px] rounded-full" 
+                    />
+                    <motion.div 
+                        animate={{ x: [0, -50, 0], y: [0, -30, 0] }}
+                        transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+                        className="absolute top-[20%] right-[0%] w-[400px] h-[400px] bg-accent-100/30 blur-[100px] rounded-full" 
+                    />
                 </div>
 
-                <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        className="grid grid-cols-2 gap-8 sm:grid-cols-4"
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                    >
-                        {[
-                            { value: "Amorçage", label: "Phase de lancement" },
-                            { value: "100+", label: "Premiers pionniers" },
-                            { value: "Vision 26", label: "Structuration nationale" },
-                            { value: "100%", label: "Focus qualité & expérience" },
-                        ].map((stat, idx) => (
-                            <motion.div
-                                key={stat.label}
-                                className="text-center group"
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: idx * 0.1, duration: 0.5 }}
-                            >
-                                <p className="font-heading text-[clamp(1.8rem,4vw,3rem)] font-extrabold text-white tracking-tight group-hover:text-primary-400 transition-colors duration-500">
-                                    {stat.value}
-                                </p>
-                                <p className="mt-3 text-sm font-medium uppercase tracking-widest text-neutral-500 group-hover:text-neutral-300 transition-colors">
-                                    {stat.label}
-                                </p>
-                            </motion.div>
-                        ))}
-                    </motion.div>
+                <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-8 lg:pb-32">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center lg:items-start relative">
+                        
+                        {/* Left Column: Typography & Open Features */}
+                        <div className="lg:col-span-7 flex flex-col items-start text-left relative z-10 pt-8 lg:pt-24">
+                            <h2 className="font-heading text-[clamp(2.5rem,5vw,4.5rem)] font-extrabold text-neutral-900 tracking-tight leading-[1.05]">
+                                L'Intelligence Artificielle. <br/>
+                                <span className="text-neutral-400">Le cœur de l'écosystème.</span>
+                            </h2>
+                            <p className="mt-6 text-xl text-neutral-500 max-w-2xl leading-relaxed">
+                                Notre algorithme propriétaire lit, trie et connecte les exigences avec une précision chirurgicale, sans que vous n'ayez à faire le moindre effort.
+                            </p>
+
+                            <div className="mt-16 flex flex-col gap-12">
+                                {[
+                                    {
+                                        title: "Analyse intelligente des profils",
+                                        desc: "Le système lit les documents comme un humain. Il repère immédiatement les profils qualifiés qui correspondent exactement à ce que cherche l'employeur."
+                                    },
+                                    {
+                                        title: "Mise en avant automatique",
+                                        desc: "Fini d'attendre. L'algorithme propose directement les profils pertinents sur le tableau de bord des recruteurs au moment même où ils expriment un besoin."
+                                    },
+                                    {
+                                        title: "Réponses et suivis automatiques",
+                                        desc: "La plateforme gère les retours à votre place. Elle génère et envoie des messages personnalisés et courtois aux personnes non retenues, protégeant ainsi votre image."
+                                    },
+                                    {
+                                        title: "Recommandations sur mesure",
+                                        desc: "Recevez en permanence de nouvelles suggestions d'opportunités ou de talents basées sur vos précédentes actions, pour toujours avoir un coup d'avance."
+                                    }
+                                ].map((item, idx) => (
+                                    <div key={idx} className="relative">
+                                        <h3 className="text-2xl font-bold text-neutral-900 mb-3">
+                                            {item.title}
+                                        </h3>
+                                        <p className="text-lg text-neutral-600 leading-relaxed max-w-2xl font-medium">
+                                            {item.desc}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Right Column: Interactive Lottie */}
+                        <div className="absolute inset-0 z-0 opacity-15 scale-150 pointer-events-none lg:relative lg:opacity-100 lg:scale-100 lg:col-span-5 lg:w-full lg:min-h-[500px] lg:h-[900px] lg:flex lg:items-center lg:justify-center lg:sticky lg:top-24">
+                            <DotLottieReact
+                                src="/ialotties.lottie"
+                                loop
+                                autoplay
+                                className="w-full h-full object-contain relative z-20 mix-blend-multiply"
+                            />
+                        </div>
+
+                    </div>
                 </div>
             </section>
 
             {/* ==================================================================
           RECENT LISTINGS (Soft Edition)
           ================================================================== */}
-            <section className="bg-white py-32 dark:bg-neutral-950 relative">
+            <section className="bg-white pt-24 pb-12 lg:pt-32 lg:pb-32 dark:bg-neutral-950 relative">
+                {/* Cloud / Wave Separator from previous section */}
+                <div className="absolute top-0 left-0 right-0 w-full overflow-hidden leading-none rotate-180 -translate-y-full">
+                    <svg className="relative block w-[calc(100%+1.3px)] h-[50px] sm:h-[100px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-white dark:fill-neutral-950"></path>
+                    </svg>
+                </div>
                 <motion.div
                     className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
                     initial={{ opacity: 0, y: 40 }}
@@ -971,56 +827,24 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
             </section>
 
             {/* ==================================================================
-          PRICING SECTION (SaaS 4-Tier Model)
+          PRICING SECTION (Animated Glassy WebGL)
           ================================================================== */}
-            <section className="relative overflow-hidden bg-neutral-50 py-16 sm:py-20 lg:py-24 xl:py-32 dark:bg-neutral-900/40" id="tarifs">
-                <motion.div
-                    className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.6 }}
-                >
-                    <div className="mx-auto mb-12 max-w-3xl text-center sm:mb-16 lg:mb-24">
-                        <Badge variant="outline" className="mb-4 border-primary-500/30 bg-primary-50 px-3 py-1.5 text-xs text-primary-700 dark:bg-primary-900/20 dark:text-primary-400 sm:mb-6 sm:px-4 sm:py-2 sm:text-sm">
-                            Tarification Flexible
-                        </Badge>
-                        <h2 className="font-heading text-[clamp(1.9rem,6vw,4rem)] font-extrabold tracking-tight leading-tight text-neutral-900 dark:text-neutral-50 sm:leading-none">
-                            Investissez dans votre <span className="bg-gradient-to-r from-primary-500 to-primary-300 bg-clip-text text-transparent">succès</span>
-                        </h2>
-                        <p className="mt-4 text-base text-neutral-500 dark:text-neutral-400 sm:mt-6 sm:text-lg lg:text-xl">
-                            Des forfaits ultra-complets, pensés pour maximiser votre visibilité professionnelle et optimiser vos recrutements.
-                        </p>
-                    </div>
+            <ModernPricingPage
+                title={
+                    <>
+                        Investissez dans votre <span className="bg-gradient-to-r from-primary-500 to-primary-300 bg-clip-text text-transparent">succès</span>
+                    </>
+                }
+                subtitle="Des forfaits ultra-complets, pensés pour maximiser votre visibilité professionnelle et optimiser vos recrutements."
+                plans={myPricingPlans}
+                showAnimatedBackground={true}
+            />
 
-                    {/* PRICING CAROUSEL */}
-                    <PricingCarousel whatsapp={CONTACT.WHATSAPP} />
-
-                    {/* PAYMENT METHODS & ANNOUNCEMENTS BANNER */}
-                    <div className="mx-auto mt-12 max-w-5xl sm:mt-16 lg:mt-20">
-                        {/* Guarantees Banner */}
-                        <div className="mb-6 rounded-2xl bg-gradient-to-r from-primary-600 via-indigo-600 to-primary-600 p-[2px] shadow-xl shadow-primary-500/20 sm:mb-8 sm:rounded-[2rem] sm:p-1 sm:shadow-2xl">
-                            <div className="flex flex-col items-center justify-between gap-5 rounded-[1.3rem] bg-white px-4 py-5 dark:bg-neutral-950 sm:rounded-[1.8rem] sm:px-6 sm:py-8 md:flex-row md:gap-6 md:px-10">
-                                <div className="flex items-start gap-3 sm:items-center sm:gap-4">
-                                    <div className="h-10 w-10 shrink-0 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center sm:h-14 sm:w-14">
-                                        <ShieldCheck className="h-5 w-5 text-primary-600 dark:text-primary-400 sm:h-7 sm:w-7" />
-                                    </div>
-                                    <div>
-                                        <h4 className="text-base font-bold leading-tight text-neutral-900 dark:text-white sm:text-lg">Gagnez à tous les coups</h4>
-                                        <p className="mt-1 text-xs font-medium text-neutral-500 dark:text-neutral-400 sm:text-sm">Profitez de nos offres exceptionnelles de lancement</p>
-                                    </div>
-                                </div>
-                                <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2.5 text-xs font-semibold text-neutral-700 dark:text-neutral-300 xs:grid-cols-2 sm:gap-x-6 sm:gap-y-3 sm:text-sm md:w-auto">
-                                    <div className="flex items-center gap-2 leading-snug"><CheckCircle size={16} className="text-green-500 sm:h-[18px] sm:w-[18px]" /> Satisfaction remboursée</div>
-                                    <div className="flex items-center gap-2 leading-snug"><Gift size={16} className="text-primary-500 sm:h-[18px] sm:w-[18px]" /> 3 mois d'essai offerts</div>
-                                    <div className="flex items-center gap-2 leading-snug"><Lock size={16} className="text-neutral-400 sm:h-[18px] sm:w-[18px]" /> Sans engagement</div>
-                                    <div className="flex items-center gap-2 leading-snug"><Handshake size={16} className="text-indigo-500 sm:h-[18px] sm:w-[18px]" /> Parrainage & Codes promo</div>
-                                </div>
-                            </div>
-                        </div>
-
+            {/* PAYMENT METHODS & ANNOUNCEMENTS BANNER */}
+            <section className="bg-neutral-50 dark:bg-neutral-950 pb-24">
+                <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
                         {/* Payment Methods */}
-                        <div className="flex flex-col items-center justify-center border-t border-neutral-200/60 pt-6 dark:border-neutral-800/60 sm:pt-8">
+                        <div className="flex flex-col items-center justify-center pt-2 sm:pt-4">
                             <p className="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-400 sm:mb-6 sm:text-sm">Paiements 100% sécurisés supportés</p>
                             <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 lg:gap-8">
                                 {/* Badges for Payment Methods */}
@@ -1057,26 +881,17 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                                     </div>
                                     <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300 sm:text-sm">Virement</span>
                                 </div>
-
-                                {/* Ticket Cash */}
-                                <div className="flex items-center gap-2 rounded-lg border border-neutral-100 bg-white px-3 py-2 shadow-sm transition-all duration-300 dark:border-neutral-800 dark:bg-neutral-900 sm:gap-3 sm:rounded-xl sm:px-5 sm:py-3 md:hover:scale-105">
-                                    <svg className="h-5 w-5 text-emerald-500 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
-                                    </svg>
-                                    <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300 sm:text-sm">Ticket Cash</span>
-                                </div>
                             </div>
                         </div>
                     </div>
-                </motion.div>
             </section>
 
             {/* ==================================================================
           FINAL CTA (Massive Footer Intro - Smart auth-aware)
           ================================================================== */}
-            <section className="relative overflow-hidden bg-neutral-900 py-32 dark:bg-neutral-950">
+            <section className="relative overflow-hidden bg-[#F5F2EB] py-32 dark:bg-neutral-950">
                 <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+                    <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] dark:[mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#fff_70%,transparent_100%)]" />
                 </div>
 
                 <motion.div
@@ -1089,21 +904,33 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                     {!isLoggedIn ? (
                         /* === Non-connecté : CTA standard === */
                         <>
-                            <h2 className="font-heading text-[clamp(2.5rem,5vw,4.5rem)] font-extrabold tracking-tight text-white leading-none">
+                            <h2 className="font-heading text-[clamp(2.5rem,5vw,4.5rem)] font-extrabold tracking-tight text-neutral-900 dark:text-white leading-none">
                                 Prêt à accélérer ?
                             </h2>
-                            <p className="mx-auto mt-6 max-w-2xl text-xl text-neutral-400">
-                                Rejoignez l'écosystème professionnel le plus dynamique de RCA.
-                                L'inscription prend littéralement 2 minutes.
-                            </p>
+                            <div className="flex justify-center w-full mt-4">
+                                <TypewriterEffectSmooth 
+                                    words={[
+                                        { text: "Rejoignez" },
+                                        { text: "le" },
+                                        { text: "réseau." },
+                                        { text: "Ça" },
+                                        { text: "prend" },
+                                        { text: "2" },
+                                        { text: "minutes.", className: "text-primary-600 dark:text-primary-400" }
+                                    ]}
+                                    className="my-0"
+                                    textClassName="text-xl sm:text-2xl font-medium text-neutral-600 dark:text-neutral-400"
+                                    cursorClassName="h-6 sm:h-8"
+                                />
+                            </div>
                             <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                                <Button asChild size="xl" className="w-full sm:w-auto h-16 px-10 rounded-2xl bg-white text-neutral-950 font-bold hover:bg-neutral-200 transition-all hover:scale-105">
+                                <Button asChild size="xl" className="w-full sm:w-auto h-16 px-10 rounded-2xl bg-neutral-950 text-white font-bold hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200 transition-all hover:scale-105">
                                     <Link href="/register" className="flex items-center">
                                         Créer mon compte gratuit
                                         <ArrowRight className="ml-2 w-5 h-5" />
                                     </Link>
                                 </Button>
-                                <Button asChild size="xl" variant="outline" className="w-full sm:w-auto h-16 px-10 rounded-2xl border-neutral-600 text-neutral-300 hover:border-neutral-400 hover:bg-neutral-800 hover:text-white transition-all">
+                                <Button asChild size="xl" variant="outline" className="w-full sm:w-auto h-16 px-10 rounded-2xl border-neutral-300 text-neutral-700 hover:bg-neutral-200 dark:border-neutral-600 dark:text-neutral-300 dark:hover:border-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white transition-all">
                                     <Link href="/register?type=employer" className="flex items-center">
                                         Je suis recruteur
                                     </Link>
@@ -1116,12 +943,21 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-secondary-500/40 bg-secondary-500/10 px-5 py-2 text-sm font-semibold text-secondary-300">
                                 <Building2 className="h-4 w-4" /> Espace Employeur actif
                             </div>
-                            <h2 className="font-heading text-[clamp(2rem,5vw,4rem)] font-extrabold tracking-tight text-white leading-none">
+                            <h2 className="font-heading text-[clamp(2rem,5vw,4rem)] font-extrabold tracking-tight text-neutral-900 dark:text-white leading-none">
                                 Tout est prêt pour votre prochain recrutement.
                             </h2>
-                            <p className="mx-auto mt-6 max-w-2xl text-xl text-neutral-400">
-                                Votre dashboard entreprise vous attend. Publiez vos offres, explorez la CVthèque et gérez vos candidatures.
-                            </p>
+                            <div className="flex justify-center w-full mt-4">
+                                <TypewriterEffectSmooth 
+                                    words={[
+                                        { text: "Publiez," },
+                                        { text: "explorez," },
+                                        { text: "recrutez.", className: "text-secondary-600 dark:text-secondary-400" }
+                                    ]}
+                                    className="my-0"
+                                    textClassName="text-xl sm:text-2xl font-medium text-neutral-600 dark:text-neutral-400"
+                                    cursorClassName="h-6 sm:h-8 bg-secondary-500"
+                                />
+                            </div>
                             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                                 <Button asChild size="xl" className="w-full sm:w-auto h-16 px-10 rounded-2xl bg-secondary-500 text-white font-bold hover:bg-secondary-400 transition-all hover:scale-105">
                                     <Link href="/dashboard" className="flex items-center">
@@ -1129,14 +965,14 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                                         <ArrowRight className="ml-2 w-5 h-5" />
                                     </Link>
                                 </Button>
-                                <Button asChild size="xl" variant="outline" className="w-full sm:w-auto h-16 px-10 rounded-2xl border-neutral-600 text-neutral-300 hover:border-primary-500 hover:bg-primary-950 hover:text-primary-300 transition-all">
+                                <Button asChild size="xl" variant="outline" className="w-full sm:w-auto h-16 px-10 rounded-2xl border-neutral-300 text-neutral-700 hover:bg-neutral-200 dark:border-neutral-600 dark:text-neutral-300 dark:hover:border-primary-500 dark:hover:bg-primary-950 dark:hover:text-primary-300 transition-all">
                                     <Link href="/register" className="flex items-center gap-2">
                                         <UserPlus className="w-4 h-4" />
                                         Créer un profil Candidat aussi
                                     </Link>
                                 </Button>
                             </div>
-                            <p className="mt-6 text-sm text-neutral-500">Vous pouvez avoir un compte employeur <strong className="text-neutral-400">+ un profil candidat</strong> en parallèle.</p>
+                            <p className="mt-6 text-sm text-neutral-600 dark:text-neutral-500">Vous pouvez avoir un compte employeur <strong className="text-neutral-900 dark:text-neutral-400">+ un profil candidat</strong> en parallèle.</p>
                         </>
                     ) : (
                         /* === Connecté en tant que Candidat / Seeker === */
@@ -1144,12 +980,23 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-500/40 bg-primary-500/10 px-5 py-2 text-sm font-semibold text-primary-300">
                                 <UserCircle className="h-4 w-4" /> Profil Candidat actif
                             </div>
-                            <h2 className="font-heading text-[clamp(2rem,5vw,4rem)] font-extrabold tracking-tight text-white leading-none">
+                            <h2 className="font-heading text-[clamp(2rem,5vw,4rem)] font-extrabold tracking-tight text-neutral-900 dark:text-white leading-none">
                                 Votre prochaine opportunité est à portée de clic.
                             </h2>
-                            <p className="mx-auto mt-6 max-w-2xl text-xl text-neutral-400">
-                                Explorez des offres qualifiées, postulez & suivez vos candidatures depuis votre espace personnel.
-                            </p>
+                            <div className="flex justify-center w-full mt-4">
+                                <TypewriterEffectSmooth 
+                                    words={[
+                                        { text: "Postulez" },
+                                        { text: "et" },
+                                        { text: "suivez" },
+                                        { text: "vos" },
+                                        { text: "candidatures.", className: "text-primary-600 dark:text-primary-400" }
+                                    ]}
+                                    className="my-0"
+                                    textClassName="text-xl sm:text-2xl font-medium text-neutral-600 dark:text-neutral-400"
+                                    cursorClassName="h-6 sm:h-8"
+                                />
+                            </div>
                             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                                 <Button asChild size="xl" className="w-full sm:w-auto h-16 px-10 rounded-2xl bg-primary-600 text-white font-bold hover:bg-primary-500 transition-all hover:scale-105">
                                     <Link href="/dashboard" className="flex items-center">
@@ -1157,7 +1004,7 @@ export default function HomeClient({ isLoggedIn = false, userType = null }: Home
                                         <ArrowRight className="ml-2 w-5 h-5" />
                                     </Link>
                                 </Button>
-                                <Button asChild size="xl" variant="outline" className="w-full sm:w-auto h-16 px-10 rounded-2xl border-neutral-600 text-neutral-300 hover:border-secondary-500 hover:bg-secondary-950 hover:text-secondary-300 transition-all">
+                                <Button asChild size="xl" variant="outline" className="w-full sm:w-auto h-16 px-10 rounded-2xl border-neutral-300 text-neutral-700 hover:bg-neutral-200 dark:border-neutral-600 dark:text-neutral-300 dark:hover:border-secondary-500 dark:hover:bg-secondary-950 dark:hover:text-secondary-300 transition-all">
                                     <Link href="/register?type=employer" className="flex items-center gap-2">
                                         <Building2 className="w-4 h-4" />
                                         Créer un espace Entreprise aussi

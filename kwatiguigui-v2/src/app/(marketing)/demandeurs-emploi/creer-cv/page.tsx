@@ -14,7 +14,7 @@ import {
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Créer un CV efficace en RCA - Guide pratique KWATIGUIGUI",
+  title: "Créer un CV efficace en RCA - Guide pratique KUSSALA",
   description:
     "Construisez un CV clair, credible et adapte aux réalités du marche de l'emploi en République centrafricaine.",
   alternates: { canonical: "/demandeurs-emploi/creer-cv" },
@@ -60,7 +60,6 @@ export default function CreerCvPage() {
         <div className="container-main">
           <div className="mx-auto max-w-4xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary-100 bg-primary-50 px-4 py-2 text-fluid-sm font-medium text-primary-700 dark:border-primary-800 dark:bg-primary-950 dark:text-primary-300">
-              <Sparkles className="h-4 w-4" />
               Guide CV adapt? au marché RCA
             </div>
             <h1 className="font-heading text-fluid-5xl font-bold text-neutral-900 dark:text-neutral-100">
@@ -92,9 +91,7 @@ export default function CreerCvPage() {
           <div className="grid gap-4 md:grid-cols-2">
             {sections.map((item) => (
               <div key={item} className="flex items-start gap-3 rounded-2xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900">
-                <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-600 dark:bg-primary-950 dark:text-primary-400">
-                  <ClipboardCheck className="h-4 w-4" />
-                </div>
+                
                 <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{item}</p>
               </div>
             ))}
@@ -106,9 +103,7 @@ export default function CreerCvPage() {
         <div className="container-main">
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="rounded-2xl border border-secondary-200 bg-secondary-50/60 p-6 dark:border-secondary-800 dark:bg-secondary-950/20">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-secondary-600 dark:bg-neutral-900 dark:text-secondary-400">
-                <UserCheck className="h-5 w-5" />
-              </div>
+              
               <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">3 versions de CV selon votre cible</h3>
               <div className="mt-4 space-y-2">
                 {variants.map((v) => (
@@ -121,9 +116,7 @@ export default function CreerCvPage() {
             </div>
 
             <div className="rounded-2xl border border-warning-200 bg-warning-50/70 p-6 dark:border-warning-800 dark:bg-warning-950/20">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-warning-600 dark:bg-neutral-900 dark:text-warning-500">
-                <Lightbulb className="h-5 w-5" />
-              </div>
+              
               <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-neutral-100">Erreurs à éviter</h3>
               <ul className="mt-4 space-y-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
                 {mistakes.map((m) => (
@@ -151,9 +144,7 @@ export default function CreerCvPage() {
             ].map((s) => (
               <a key={s.href} href={s.href} target="_blank" rel="noopener noreferrer" className="group flex items-start justify-between gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 hover:border-primary-300 dark:border-neutral-700 dark:bg-neutral-900">
                 <div className="flex items-start gap-3">
-                  <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
-                    <FileText className="h-4 w-4" />
-                  </div>
+                  
                   <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{s.title}</p>
                 </div>
                 <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-neutral-400 group-hover:text-primary-500" />

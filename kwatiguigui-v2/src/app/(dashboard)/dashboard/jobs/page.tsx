@@ -6,7 +6,7 @@ import { PRICING } from "@/lib/constants";
 import { MyJobsClient } from "@/components/dashboard/my-jobs-client";
 
 export const metadata: Metadata = {
-  title: "Mes annonces — KWATIGUIGUI",
+  title: "Mes annonces — KUSSALA",
   robots: { index: false, follow: false },
 };
 

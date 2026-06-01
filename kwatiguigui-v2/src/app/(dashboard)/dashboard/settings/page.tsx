@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SettingsClient } from "@/components/dashboard/settings-client";
 
 export const metadata: Metadata = {
-  title: "Paramètres — KWATIGUIGUI",
+  title: "Paramètres — KUSSALA",
   robots: { index: false, follow: false },
 };
 

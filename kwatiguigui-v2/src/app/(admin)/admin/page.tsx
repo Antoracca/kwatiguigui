@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Dashboard Admin — KWATIGUIGUI",
+  title: "Dashboard Admin — KUSSALA",
   robots: { index: false, follow: false },
 };
 
@@ -169,7 +169,7 @@ export default async function AdminDashboardPage() {
             Dashboard
           </h1>
           <p className="mt-1 text-fluid-sm text-neutral-500 dark:text-neutral-400">
-            Vue d&apos;ensemble de la plateforme KWATIGUIGUI
+            Vue d&apos;ensemble de la plateforme KUSSALA
           </p>
         </div>
         {(pendingJobs ?? 0) > 0 && (

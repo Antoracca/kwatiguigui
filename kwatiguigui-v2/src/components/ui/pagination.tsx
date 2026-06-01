@@ -158,7 +158,7 @@ export function PaginationWithLinks({
   if (totalPages <= 1) return null;
 
   function getPageUrl(page: number) {
-    const url = new URL(baseUrl, "https://kwatiguigui.org");
+    const url = new URL(baseUrl, "https://kussala.org");
     url.searchParams.set(pageParam, String(page));
     return `${url.pathname}?${url.searchParams.toString()}`;
   }

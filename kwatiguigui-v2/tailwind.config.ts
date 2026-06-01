@@ -194,6 +194,8 @@ const config: Config = {
         "scale-in": "scaleIn 0.2s ease-out",
         "spin-slow": "spin 3s linear infinite",
         shimmer: "shimmer 2s linear infinite",
+        marquee: "marquee var(--duration) infinite linear",
+        "marquee-vertical": "marquee-vertical var(--duration) linear infinite",
       },
       keyframes: {
         fadeIn: {
@@ -219,6 +221,14 @@ const config: Config = {
         shimmer: {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
+        },
+        marquee: {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(calc(-100% - var(--gap)))" },
+        },
+        "marquee-vertical": {
+          from: { transform: "translateY(0)" },
+          to: { transform: "translateY(calc(-100% - var(--gap)))" },
         },
       },
     },

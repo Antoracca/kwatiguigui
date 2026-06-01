@@ -117,14 +117,14 @@ export async function generateMetadata({
   const description =
     job.experience
       ? `${title}. ${job.experience.slice(0, 150)}`
-      : `Annonce d'emploi : ${title}. Publiee sur KWATIGUIGUI — Plateforme d'emploi de la RCA.`;
+      : `Annonce d'emploi : ${title}. Publiee sur KUSSALA — Plateforme d'emploi de la RCA.`;
 
   return {
     title,
     description,
     alternates: { canonical: `/jobs/${id}` },
     openGraph: {
-      title: `${title} | KWATIGUIGUI`,
+      title: `${title} | KUSSALA`,
       description,
       type: "article",
       publishedTime: job.created_at,
@@ -147,8 +147,8 @@ function JobPostingJsonLd({ job }: { job: NonNullable<Awaited<ReturnType<typeof 
     employmentType: "OTHER",
     hiringOrganization: {
       "@type": "Organization",
-      name: "KWATIGUIGUI",
-      sameAs: process.env.NEXT_PUBLIC_APP_URL ?? "https://kwatiguigui.org",
+      name: "KUSSALA",
+      sameAs: process.env.NEXT_PUBLIC_APP_URL ?? "https://kussala.org",
     },
     jobLocation: {
       "@type": "Place",
@@ -292,7 +292,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                   {/* Share */}
                   <div className="flex gap-2">
                     <a
-                      href={`https://wa.me/?text=${encodeURIComponent(`Offre d'emploi sur KWATIGUIGUI : ${process.env.NEXT_PUBLIC_APP_URL ?? "https://kwatiguigui.org"}/jobs/${id}`)}`}
+                      href={`https://wa.me/?text=${encodeURIComponent(`Offre d'emploi sur KUSSALA : ${process.env.NEXT_PUBLIC_APP_URL ?? "https://kussala.org"}/jobs/${id}`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 text-neutral-500 transition-colors hover:border-secondary-300 hover:bg-secondary-50 hover:text-secondary-600 dark:border-neutral-700"

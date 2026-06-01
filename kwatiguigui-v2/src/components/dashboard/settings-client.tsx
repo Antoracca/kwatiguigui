@@ -501,7 +501,7 @@ export function SettingsClient({ isGoogleUser }: { isGoogleUser: boolean }) {
           <ToggleSwitch
             id="notif-newsletter"
             label="Actualités et conseils"
-            description="Recevoir les actualités et conseils emploi publiés par KWATIGUIGUI."
+            description="Recevoir les actualités et conseils emploi publiés par KUSSALA."
             checked={notifications.newsletter}
             onChange={(v) => setNotifications((p) => ({ ...p, newsletter: v }))}
           />

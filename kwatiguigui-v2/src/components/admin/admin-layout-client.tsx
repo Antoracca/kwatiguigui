@@ -66,7 +66,7 @@ export function AdminLayoutClient({
         </div>
         <div>
           <p className="font-heading text-sm font-bold text-white">
-            KWATIGUIGUI
+            KUSSALA
           </p>
           <p className="text-[10px] uppercase tracking-widest text-neutral-500">
             Administration
@@ -173,7 +173,7 @@ export function AdminLayoutClient({
               {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
             <span className="font-heading text-sm font-semibold text-neutral-500 dark:text-neutral-400 lg:hidden">
-              KWATIGUIGUI Admin
+              KUSSALA Admin
             </span>
           </div>
 

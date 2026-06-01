@@ -21,7 +21,7 @@ import { NetworkLottiePanel } from "@/components/marketing/enterprise/network-lo
 export const metadata: Metadata = {
   title: "Espace Entreprises RCA - Recrutement, marque employeur et performance",
   description:
-    "Espace Entreprises KWATIGUIGUI: CVthèque africaine, gestion des offres, marque employeur et solutions de recrutement adaptées à la République centrafricaine.",
+    "Espace Entreprises KUSSALA: CVthèque africaine, gestion des offres, marque employeur et solutions de recrutement adaptées à la République centrafricaine.",
   alternates: { canonical: "/entreprises" },
 };
 
@@ -72,7 +72,6 @@ export default function EntreprisesPage() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white/90 px-4 py-2 text-fluid-sm font-semibold text-primary-700 shadow-sm dark:border-primary-800 dark:bg-neutral-900/80 dark:text-primary-300">
-                <Sparkles className="h-4 w-4" />
                 Espace Entreprises - Version premium
               </div>
 
@@ -82,7 +81,7 @@ export default function EntreprisesPage() {
               </h1>
 
               <p className="mt-5 max-w-2xl text-fluid-lg text-neutral-600 dark:text-neutral-300">
-                KWATIGUIGUI accompagne les entreprises en République centrafricaine avec un système complet:
+                KUSSALA accompagne les entreprises en République centrafricaine avec un système complet:
                 sourcing, publication, sélection et conversion des candidats en recrutements effectifs.
               </p>
 
@@ -167,7 +166,6 @@ export default function EntreprisesPage() {
 
           <div className="mt-6 rounded-2xl border border-primary-200 bg-primary-50/70 p-5 dark:border-primary-800 dark:bg-primary-950/25">
             <p className="flex items-start gap-2 text-fluid-sm text-primary-900 dark:text-primary-200">
-              <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0" />
               Bon standard d’équipe: un délai court de feedback candidat, une grille d’évaluation commune et une décision tracée.
             </p>
           </div>
@@ -211,9 +209,7 @@ export default function EntreprisesPage() {
                 className="group flex items-start justify-between gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 transition-colors hover:border-primary-300 dark:border-neutral-700 dark:bg-neutral-900"
               >
                 <div className="flex items-start gap-3">
-                  <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
-                    <FileText className="h-4 w-4" />
-                  </div>
+                  
                   <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{source.title}</p>
                 </div>
                 <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-neutral-400 transition-colors group-hover:text-primary-500" />
@@ -239,14 +235,12 @@ export default function EntreprisesPage() {
                 className="inline-flex min-h-[46px] items-center gap-2 rounded-full bg-secondary-600 px-6 py-2.5 text-fluid-sm font-semibold text-white transition-colors hover:bg-secondary-700"
               >
                 Explorer la CVthèque
-                <Users className="h-4 w-4" />
               </Link>
               <Link
                 href="/entreprises/gestion-offres"
                 className="inline-flex min-h-[46px] items-center gap-2 rounded-full border border-neutral-300 bg-white px-6 py-2.5 text-fluid-sm font-semibold text-neutral-700 transition-colors hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200"
               >
                 Structurer mes offres
-                <Layers className="h-4 w-4" />
               </Link>
             </div>
           </div>

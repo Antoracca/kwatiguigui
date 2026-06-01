@@ -1,5 +1,5 @@
 // ===========================================================================
-// KWATIGUIGUI V2 — Business Constants
+// KUSSALA V2 — Business Constants
 // Single source of truth for all business data
 // ===========================================================================
 
@@ -172,7 +172,7 @@ export const PRICING_PLANS = [
     name: "Gratuit",
     price: 0,
     period: null,
-    description: "Pour commencer sur KWATIGUIGUI",
+    description: "Pour commencer sur KUSSALA",
     featured: false,
     features: [
       "Creer un profil",
@@ -186,7 +186,7 @@ export const PRICING_PLANS = [
     name: "Premium",
     price: 2_500,
     period: "mois",
-    description: "Debloquez tout le potentiel de KWATIGUIGUI",
+    description: "Debloquez tout le potentiel de KUSSALA",
     featured: true,
     features: [
       "Annonces illimitees",
@@ -279,7 +279,7 @@ export const FEATURES = [
   {
     title: "Tous les secteurs",
     description:
-      "Du formel a l'informel, chaque metier a sa place sur KWATIGUIGUI.",
+      "Du formel a l'informel, chaque metier a sa place sur KUSSALA.",
     icon: "users",
   },
 ] as const;
@@ -288,7 +288,7 @@ export const FEATURES = [
 // Mission & Values
 // ---------------------------------------------------------------------------
 export const MISSION =
-  "KWATIGUIGUI a pour mission de revolutionner le marche de l'emploi en Republique Centrafricaine en creant un pont numerique entre les employeurs et les chercheurs d'emploi. Nous croyons que chaque Centrafricain merite d'avoir acces aux opportunites professionnelles, peu importe sa localisation ou son secteur d'activite.";
+  "KUSSALA a pour mission de revolutionner le marche de l'emploi en Republique Centrafricaine en creant un pont numerique entre les employeurs et les chercheurs d'emploi. Nous croyons que chaque Centrafricain merite d'avoir acces aux opportunites professionnelles, peu importe sa localisation ou son secteur d'activite.";
 
 export const VALUES = [
   {
@@ -354,25 +354,25 @@ export const TIMELINE = [
 // ---------------------------------------------------------------------------
 export const FAQ_ITEMS = [
   {
-    question: "KWATIGUIGUI est-il uniquement disponible a Bangui ?",
+    question: "KUSSALA est-il uniquement disponible a Bangui ?",
     answer:
-      "Non, KWATIGUIGUI couvre l'ensemble du territoire centrafricain, soit les 20 regions du pays. Que vous soyez a Bangui, Berberati, Bambari ou ailleurs, vous pouvez utiliser la plateforme.",
+      "Non, KUSSALA couvre l'ensemble du territoire centrafricain, soit les 20 regions du pays. Que vous soyez a Bangui, Berberati, Bambari ou ailleurs, vous pouvez utiliser la plateforme.",
   },
   {
     question: "La plateforme est-elle reservee aux diplomes ?",
     answer:
-      "Absolument pas. KWATIGUIGUI accueille tous les profils, du travailleur informel au cadre superieur. Chaque metier a sa place sur notre plateforme.",
+      "Absolument pas. KUSSALA accueille tous les profils, du travailleur informel au cadre superieur. Chaque metier a sa place sur notre plateforme.",
   },
   {
     question:
-      "Comment KWATIGUIGUI assure-t-il la fiabilite des annonces ?",
+      "Comment KUSSALA assure-t-il la fiabilite des annonces ?",
     answer:
       "Chaque annonce est soumise a un processus de moderation avant publication. Les utilisateurs peuvent egalement signaler les annonces suspectes.",
   },
   {
     question: "Peut-on utiliser la plateforme sans smartphone ?",
     answer:
-      "Oui, KWATIGUIGUI est accessible depuis tout navigateur web, sur telephone, tablette ou ordinateur. Pas besoin d'application a installer.",
+      "Oui, KUSSALA est accessible depuis tout navigateur web, sur telephone, tablette ou ordinateur. Pas besoin d'application a installer.",
   },
 ] as const;
 
@@ -384,6 +384,6 @@ export const CONTACT = {
   WHATSAPP_LINK: "https://wa.me/23674143434",
   ORANGE_MONEY: "74 14 34 34",
   TELECEL_MONEY: "76 16 90 90",
-  EMAIL: "support@kwatiguigui.org",
+  EMAIL: "support@kussala.org",
   ADDRESS: "Bangui, Republique Centrafricaine",
 } as const;

@@ -6,7 +6,7 @@ import { AdminJobsModerationClient } from "@/components/admin/admin-jobs-moderat
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Annonces — Admin KWATIGUIGUI",
+  title: "Annonces — Admin KUSSALA",
   robots: { index: false, follow: false },
 };
 

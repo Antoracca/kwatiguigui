@@ -12,7 +12,7 @@ import {
 import { NetworkLottiePanel } from "@/components/marketing/enterprise/network-lottie-panel";
 
 export const metadata: Metadata = {
-  title: "Flotte & Logistique - Partenariats KWATIGUIGUI RCA",
+  title: "Flotte & Logistique - Partenariats KUSSALA RCA",
   description:
     "Positionnez vos capacités logistiques dans un réseau d’opérations professionnelles : transport, livraison et support terrain.",
   alternates: { canonical: "/partenariats/logistique" },
@@ -40,7 +40,6 @@ export default function LogistiquePage() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-sky-200 bg-white/90 px-4 py-2 text-fluid-sm font-semibold text-sky-700 shadow-sm dark:border-sky-900 dark:bg-neutral-900/80 dark:text-sky-300">
-                <Sparkles className="h-4 w-4" />
                 Verticale Flotte & Logistique
               </div>
               <h1 className="font-heading text-fluid-5xl font-black leading-tight text-neutral-900 dark:text-white">
@@ -80,9 +79,7 @@ export default function LogistiquePage() {
           <div className="grid gap-4 md:grid-cols-2">
             {capacities.map((item) => (
               <div key={item} className="flex items-start gap-3 rounded-2xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900">
-                <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300">
-                  <Truck className="h-4 w-4" />
-                </div>
+                
                 <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{item}</p>
               </div>
             ))}
@@ -98,7 +95,6 @@ export default function LogistiquePage() {
               <ul className="mt-4 space-y-2">
                 {sla.map((item) => (
                   <li key={item} className="flex items-start gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-                    <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary-600 dark:text-primary-400" />
                     {item}
                   </li>
                 ))}
@@ -114,7 +110,6 @@ export default function LogistiquePage() {
               </ul>
               <div className="mt-4 rounded-xl border border-sky-200 bg-white p-4 dark:border-sky-800 dark:bg-neutral-900">
                 <p className="flex items-start gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-                  <Shield className="mt-0.5 h-4 w-4 shrink-0 text-sky-600 dark:text-sky-300" />
                   La fiabilité d’exécution est la base de la confiance et de la reconduction des missions.
                 </p>
               </div>
@@ -136,7 +131,6 @@ export default function LogistiquePage() {
             </Link>
             <Link href="/partenariats" className="inline-flex min-h-[46px] items-center gap-2 rounded-full border border-neutral-300 bg-white px-6 py-2.5 text-fluid-sm font-semibold text-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200">
               Retour à l’espace partenariats
-              <Target className="h-4 w-4" />
             </Link>
           </div>
         </div>

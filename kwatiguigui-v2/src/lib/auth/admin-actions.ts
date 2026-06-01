@@ -183,7 +183,7 @@ export async function setupAdminTotp(
   adminId: string,
 ): Promise<{ secret: string; otpauthUrl: string; qrDataUrl: string }> {
   const secret = speakeasy.generateSecret({
-    name: "KWATIGUIGUI Admin",
+    name: "KUSSALA Admin",
     length: 20,
   });
 

@@ -48,7 +48,6 @@ export default function GestionOffresPage() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/90 px-4 py-2 text-fluid-sm font-semibold text-emerald-700 shadow-sm dark:border-emerald-900 dark:bg-neutral-900/80 dark:text-emerald-300">
-                <Sparkles className="h-4 w-4" />
                 Module Gestion des Offres
               </div>
 
@@ -107,9 +106,7 @@ export default function GestionOffresPage() {
         <div className="container-main">
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="rounded-2xl border border-primary-200 bg-primary-50/70 p-6 dark:border-primary-800 dark:bg-primary-950/25">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-primary-600 dark:bg-neutral-900 dark:text-primary-400">
-                <ListChecks className="h-5 w-5" />
-              </div>
+              
               <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-white">Checklist offre performante</h3>
               <ul className="mt-4 space-y-2">
                 {checklist.map((item) => (
@@ -122,9 +119,7 @@ export default function GestionOffresPage() {
             </div>
 
             <div className="rounded-2xl border border-secondary-200 bg-secondary-50/70 p-6 dark:border-secondary-800 dark:bg-secondary-950/25">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-secondary-700 dark:bg-neutral-900 dark:text-secondary-400">
-                <Timer className="h-5 w-5" />
-              </div>
+              
               <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-white">SLA recrutement conseillé</h3>
               <ul className="mt-4 space-y-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
                 <li>- Feedback candidature sous 72h quand possible.</li>
@@ -135,7 +130,6 @@ export default function GestionOffresPage() {
 
               <div className="mt-4 rounded-xl border border-secondary-200 bg-white p-4 dark:border-secondary-800 dark:bg-neutral-900">
                 <p className="flex items-start gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-                  <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-secondary-600 dark:text-secondary-400" />
                   Un pipeline clair améliore aussi l’image employeur et la fidélisation des talents recrutés.
                 </p>
               </div>
@@ -144,7 +138,6 @@ export default function GestionOffresPage() {
 
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             <div className="rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
-              <ClipboardCheck className="h-5 w-5 text-neutral-600 dark:text-neutral-300" />
               <p className="mt-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">Évitez les offres vagues: elles produisent des candidatures hors cible.</p>
             </div>
             <div className="rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
@@ -177,7 +170,6 @@ export default function GestionOffresPage() {
 
           <div className="mt-8 rounded-2xl border border-neutral-200 bg-white p-4 text-left dark:border-neutral-700 dark:bg-neutral-900">
             <p className="flex items-start gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-              <FileText className="mt-0.5 h-4 w-4 shrink-0 text-neutral-500" />
               Références: OIT, Banque mondiale, Code du travail RCA, OHADA.
             </p>
           </div>

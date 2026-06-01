@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Newspaper, Calendar, Clock, ChevronRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Actualités & Conseils | KWATIGUIGUI",
+  title: "Actualités & Conseils | KUSSALA",
   description: "Lisez nos derniers articles sur les tendances du marché de l'emploi en République Centrafricaine, des astuces pour votre CV, et des conseils pour les recruteurs.",
   alternates: { canonical: "/blog" },
 };

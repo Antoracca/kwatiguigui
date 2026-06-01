@@ -59,7 +59,7 @@ export function AdminLoginForm() {
             type="email"
             autoComplete="email"
             required
-            placeholder="admin@kwatiguigui.org"
+            placeholder="admin@kussala.org"
             className={[
               "block min-h-[48px] w-full rounded-xl border bg-neutral-800 pl-11 pr-4 text-sm text-white placeholder-neutral-600 transition-all",
               "focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 focus:ring-offset-neutral-900",

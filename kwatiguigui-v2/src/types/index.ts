@@ -1,5 +1,5 @@
 // ===========================================================================
-// KWATIGUIGUI V2 — TypeScript Type Definitions
+// KUSSALA V2 — TypeScript Type Definitions
 // ===========================================================================
 
 import type {

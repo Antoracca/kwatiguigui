@@ -7,9 +7,9 @@ export function organizationJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "KWATIGUIGUI",
-    url: "https://kwatiguigui.org",
-    logo: "https://kwatiguigui.org/images/logo.png",
+    name: "KUSSALA",
+    url: "https://kussala.org",
+    logo: "https://kussala.org/images/logo.png",
     description:
       "Premiere plateforme d'emploi de la Republique Centrafricaine.",
     address: {
@@ -46,7 +46,7 @@ export function jobPostingJsonLd(job: {
     description: job.description,
     identifier: {
       "@type": "PropertyValue",
-      name: "KWATIGUIGUI",
+      name: "KUSSALA",
       value: job.id,
     },
     datePosted: job.datePosted,
@@ -54,8 +54,8 @@ export function jobPostingJsonLd(job: {
     employmentType: "FULL_TIME",
     hiringOrganization: {
       "@type": "Organization",
-      name: "KWATIGUIGUI",
-      sameAs: "https://kwatiguigui.org",
+      name: "KUSSALA",
+      sameAs: "https://kussala.org",
     },
     jobLocation: {
       "@type": "Place",
@@ -100,7 +100,7 @@ export function generatePageMetadata({
   path: string;
   ogImage?: string;
 }): Metadata {
-  const url = `https://kwatiguigui.org${path}`;
+  const url = `https://kussala.org${path}`;
   const image = ogImage ?? "/images/og-default.png";
 
   return {
@@ -108,14 +108,14 @@ export function generatePageMetadata({
     description,
     alternates: { canonical: path },
     openGraph: {
-      title: `${title} | KWATIGUIGUI`,
+      title: `${title} | KUSSALA`,
       description,
       url,
       images: [{ url: image, width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${title} | KWATIGUIGUI`,
+      title: `${title} | KUSSALA`,
       description,
       images: [image],
     },

@@ -3,8 +3,8 @@ import Link from "next/link";
 import { HelpCircle, MessagesSquare, ChevronDown } from "lucide-react";
 
 export const metadata: Metadata = {
-    title: "Centre d'aide & FAQ | KWATIGUIGUI",
-    description: "Trouvez les réponses à vos questions sur l'utilisation de KWATIGUIGUI : création de compte, publication d'offres de recrutement, tarifications, etc.",
+    title: "Centre d'aide & FAQ | KUSSALA",
+    description: "Trouvez les réponses à vos questions sur l'utilisation de KUSSALA : création de compte, publication d'offres de recrutement, tarifications, etc.",
     alternates: { canonical: "/faq" },
 };
 
@@ -23,7 +23,7 @@ const FAQS = [
     },
     {
         question: "Qu'est-ce que le Pack VIP Entrepreneur ?",
-        answer: "C'est un module payant qui permet aux entreprises d'accéder à notre CVthèque avec un vivier riche, de mettre leurs annonces en tête d'affiche, et de gérer leurs recrutements via un outil dédié (Kwatiguigui ATS).",
+        answer: "C'est un module payant qui permet aux entreprises d'accéder à notre CVthèque avec un vivier riche, de mettre leurs annonces en tête d'affiche, et de gérer leurs recrutements via un outil dédié (Kussala ATS).",
     },
     {
         question: "Puis-je modifier mon CV après l'avoir publié ?",
@@ -46,7 +46,7 @@ export default function FAQPage() {
                     </h1>
 
                     <p className="mx-auto mt-6 max-w-2xl text-fluid-lg text-neutral-600 dark:text-neutral-300">
-                        Tout ce qu'il faut savoir sur KWATIGUIGUI, son fonctionnement et ses services.
+                        Tout ce qu'il faut savoir sur KUSSALA, son fonctionnement et ses services.
                     </p>
                 </div>
             </section>

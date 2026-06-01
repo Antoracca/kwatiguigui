@@ -29,8 +29,8 @@ export default function AdminSettingsPage() {
           </CardHeader>
           <CardContent>
             <form className="max-w-lg space-y-4">
-              <Input label="Nom de la plateforme" defaultValue="KWATIGUIGUI" />
-              <Input label="Email de support" defaultValue="support@kwatiguigui.org" />
+              <Input label="Nom de la plateforme" defaultValue="KUSSALA" />
+              <Input label="Email de support" defaultValue="support@kussala.org" />
               <Input label="WhatsApp support" defaultValue="+236 74 14 34 34" />
               <Input label="Prix Premium mensuel (FCFA)" type="number" defaultValue="2500" />
               <Input label="Duree annonce (jours)" type="number" defaultValue="30" />

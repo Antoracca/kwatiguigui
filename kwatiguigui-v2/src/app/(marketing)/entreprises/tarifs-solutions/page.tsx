@@ -15,7 +15,7 @@ import {
 import { NetworkLottiePanel } from "@/components/marketing/enterprise/network-lottie-panel";
 
 export const metadata: Metadata = {
-  title: "Tarifs & Solutions Entreprises - KWATIGUIGUI RCA",
+  title: "Tarifs & Solutions Entreprises - KUSSALA RCA",
   description:
     "Découvrez des formules de recrutement adaptées aux PME, agences et grandes entreprises en République centrafricaine.",
   alternates: { canonical: "/entreprises/tarifs-solutions" },
@@ -73,7 +73,6 @@ export default function TarifsSolutionsPage() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent-200 bg-white/90 px-4 py-2 text-fluid-sm font-semibold text-accent-700 shadow-sm dark:border-accent-800 dark:bg-neutral-900/80 dark:text-accent-400">
-                <Sparkles className="h-4 w-4" />
                 Tarifs & Solutions Entreprises
               </div>
 
@@ -159,9 +158,7 @@ export default function TarifsSolutionsPage() {
         <div className="container-main">
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="rounded-2xl border border-secondary-200 bg-secondary-50/70 p-6 dark:border-secondary-800 dark:bg-secondary-950/25">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-secondary-700 dark:bg-neutral-900 dark:text-secondary-400">
-                <Calculator className="h-5 w-5" />
-              </div>
+              
               <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-white">Comment calculer votre retour</h3>
               <p className="mt-2 text-fluid-sm text-neutral-600 dark:text-neutral-300">
                 Suivez les indicateurs qui impactent vraiment votre coût de recrutement et votre vitesse d’exécution.
@@ -169,7 +166,6 @@ export default function TarifsSolutionsPage() {
               <ul className="mt-4 space-y-2">
                 {roiSignals.map((item) => (
                   <li key={item} className="flex items-start gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-                    <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-secondary-600 dark:text-secondary-400" />
                     {item}
                   </li>
                 ))}
@@ -177,9 +173,7 @@ export default function TarifsSolutionsPage() {
             </div>
 
             <div className="rounded-2xl border border-primary-200 bg-primary-50/70 p-6 dark:border-primary-800 dark:bg-primary-950/25">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-primary-600 dark:bg-neutral-900 dark:text-primary-400">
-                <CreditCard className="h-5 w-5" />
-              </div>
+              
               <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-white">Cadre commercial recommandé</h3>
               <ul className="mt-4 space-y-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
                 <li>- Objectifs de recrutement clarifiés dès le départ.</li>
@@ -197,9 +191,7 @@ export default function TarifsSolutionsPage() {
 
       <section className="section-padding section-alt">
         <div className="container-narrow text-center">
-          <div className="mx-auto mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-100 dark:bg-accent-900">
-            <Gem className="h-7 w-7 text-accent-700 dark:text-accent-400" />
-          </div>
+          
           <h2 className="font-heading text-fluid-2xl font-bold text-neutral-900 dark:text-white">Construisons votre plan entreprise</h2>
           <p className="mx-auto mt-3 max-w-2xl text-fluid-base text-neutral-600 dark:text-neutral-300">
             Nous vous aidons à cadrer une stratégie de recrutement rentable, adaptée à votre réalité opérationnelle en RCA.
@@ -216,7 +208,6 @@ export default function TarifsSolutionsPage() {
 
           <div className="mt-8 rounded-2xl border border-neutral-200 bg-white p-4 text-left dark:border-neutral-700 dark:bg-neutral-900">
             <p className="flex items-start gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-              <FileText className="mt-0.5 h-4 w-4 shrink-0 text-neutral-500" />
               Références: Banque mondiale, OIT, IFC, Code du travail RCA, OHADA.
             </p>
           </div>

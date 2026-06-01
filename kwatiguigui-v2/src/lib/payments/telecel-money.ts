@@ -61,7 +61,7 @@ export async function initiateTelecelPayment(
       amount: params.amount,
       currency: "XAF",
       reference: params.reference,
-      description: params.description ?? "Abonnement KWATIGUIGUI Premium",
+      description: params.description ?? "Abonnement KUSSALA Premium",
       callback_url: `${process.env.NEXT_PUBLIC_APP_URL}/api/payments/webhook`,
       timestamp,
     });

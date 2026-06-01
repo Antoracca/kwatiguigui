@@ -10,7 +10,7 @@ import { ProfileLottie } from "@/components/dashboard/profile-lottie";
 import type { Database } from "@/types/database";
 
 export const metadata: Metadata = {
-  title: "Mon CV et profil — KWATIGUIGUI",
+  title: "Mon CV et profil — KUSSALA",
   description: "Gérez vos informations personnelles et votre profil professionnel.",
   robots: { index: false, follow: false },
 };

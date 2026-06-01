@@ -14,7 +14,7 @@ import {
 import { NetworkLottiePanel } from "@/components/marketing/enterprise/network-lottie-panel";
 
 export const metadata: Metadata = {
-  title: "Sous-traitance & Prestations - Partenariats KWATIGUIGUI RCA",
+  title: "Sous-traitance & Prestations - Partenariats KUSSALA RCA",
   description:
     "Positionnez votre expertise technique sur des projets structurés avec des standards de qualité et de livraison clairs.",
   alternates: { canonical: "/partenariats/sous-traitance" },
@@ -43,7 +43,6 @@ export default function SousTraitancePage() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-rose-200 bg-white/90 px-4 py-2 text-fluid-sm font-semibold text-rose-700 shadow-sm dark:border-rose-900 dark:bg-neutral-900/80 dark:text-rose-300">
-                <Sparkles className="h-4 w-4" />
                 Verticale Sous-traitance & Prestations
               </div>
               <h1 className="font-heading text-fluid-5xl font-black leading-tight text-neutral-900 dark:text-white">
@@ -83,9 +82,7 @@ export default function SousTraitancePage() {
           <div className="grid gap-4 md:grid-cols-2">
             {standards.map((item) => (
               <div key={item} className="flex items-start gap-3 rounded-2xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900">
-                <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-300">
-                  <ClipboardCheck className="h-4 w-4" />
-                </div>
+                
                 <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{item}</p>
               </div>
             ))}
@@ -101,7 +98,6 @@ export default function SousTraitancePage() {
               <ul className="mt-4 space-y-2">
                 {riskControls.map((item) => (
                   <li key={item} className="flex items-start gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-                    <Shield className="mt-0.5 h-4 w-4 shrink-0 text-primary-600 dark:text-primary-400" />
                     {item}
                   </li>
                 ))}
@@ -118,7 +114,6 @@ export default function SousTraitancePage() {
               </ul>
               <div className="mt-4 rounded-xl border border-rose-200 bg-white p-4 dark:border-rose-800 dark:bg-neutral-900">
                 <p className="flex items-start gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-                  <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-rose-600 dark:text-rose-300" />
                   Les partenaires les plus demandés sont ceux qui livrent avec constance, pas ceux qui promettent le plus.
                 </p>
               </div>
@@ -127,7 +122,6 @@ export default function SousTraitancePage() {
 
           <div className="mt-6 rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
             <p className="flex items-start gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-              <FileText className="mt-0.5 h-4 w-4 shrink-0 text-neutral-500" />
               Références : Banque mondiale, OIT, IFC, OHADA, Code du travail RCA.
             </p>
           </div>
@@ -147,7 +141,6 @@ export default function SousTraitancePage() {
             </Link>
             <Link href="/partenariats" className="inline-flex min-h-[46px] items-center gap-2 rounded-full border border-neutral-300 bg-white px-6 py-2.5 text-fluid-sm font-semibold text-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200">
               Retour à l’espace partenariats
-              <Target className="h-4 w-4" />
             </Link>
           </div>
         </div>

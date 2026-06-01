@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { FileText, ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Conditions d'utilisation — KWATIGUIGUI",
+  title: "Conditions d'utilisation — KUSSALA",
   description:
-    "Conditions generales d'utilisation de la plateforme KWATIGUIGUI — service d'emploi de la Republique Centrafricaine.",
+    "Conditions generales d'utilisation de la plateforme KUSSALA — service d'emploi de la Republique Centrafricaine.",
   alternates: { canonical: "/terms" },
 };
 
@@ -30,7 +30,6 @@ export default function TermsPage() {
             <div className="sticky top-24">
               <div className="rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
                 <div className="mb-4 flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary-500" />
                   <p className="font-heading text-sm font-semibold text-neutral-700 dark:text-neutral-300">
                     Table des matieres
                   </p>
@@ -66,7 +65,7 @@ export default function TermsPage() {
               </p>
               <div className="mt-4 rounded-xl border border-primary-100 bg-primary-50 p-4 dark:border-primary-800 dark:bg-primary-950/30">
                 <p className="text-fluid-sm text-primary-700 dark:text-primary-300">
-                  En utilisant KWATIGUIGUI, vous acceptez les presentes conditions dans leur integralite.
+                  En utilisant KUSSALA, vous acceptez les presentes conditions dans leur integralite.
                   Si vous n&apos;acceptez pas ces conditions, veuillez ne pas utiliser notre service.
                 </p>
               </div>
@@ -76,12 +75,12 @@ export default function TermsPage() {
             <div className="space-y-12">
               <Section id="presentation" title="1. Presentation du service">
                 <p>
-                  KWATIGUIGUI (ci-apres &ldquo;le Service&rdquo;, &ldquo;la Plateforme&rdquo;) est une plateforme
+                  KUSSALA (ci-apres &ldquo;le Service&rdquo;, &ldquo;la Plateforme&rdquo;) est une plateforme
                   numerique de mise en relation entre employeurs et chercheurs d&apos;emploi en
                   Republique Centrafricaine, editee et exploitee depuis Bangui, RCA.
                 </p>
                 <p className="mt-3">
-                  L&apos;utilisation de KWATIGUIGUI implique l&apos;acceptation pleine et entiere des
+                  L&apos;utilisation de KUSSALA implique l&apos;acceptation pleine et entiere des
                   presentes conditions generales d&apos;utilisation (CGU). Ces conditions peuvent etre
                   modifiees a tout moment par l&apos;editeur ; les utilisateurs seront notifies des
                   changements significatifs.
@@ -99,7 +98,7 @@ export default function TermsPage() {
                     "Les informations fournies lors de l'inscription doivent etre exactes, completes et tenues a jour.",
                     "L'utilisateur est responsable de la confidentialite de ses identifiants de connexion.",
                     "Le numero WhatsApp sert d'identifiant unique — il ne peut pas etre modifie apres inscription.",
-                    "KWATIGUIGUI se reserve le droit de suspendre tout compte dont les informations seraient fausses ou trompeuses.",
+                    "KUSSALA se reserve le droit de suspendre tout compte dont les informations seraient fausses ou trompeuses.",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-2">
                       <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-primary-400" />
@@ -130,7 +129,7 @@ export default function TermsPage() {
 
               <Section id="premium" title="4. Offre Premium et paiements">
                 <p>
-                  KWATIGUIGUI propose un abonnement Premium payant donnant acces a des
+                  KUSSALA propose un abonnement Premium payant donnant acces a des
                   fonctionnalites avancees.
                 </p>
                 <div className="mt-4 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
@@ -178,7 +177,7 @@ export default function TermsPage() {
 
               <Section id="moderation" title="5. Contenu et moderation">
                 <p>
-                  Toute annonce publiee sur KWATIGUIGUI est soumise a une verification manuelle
+                  Toute annonce publiee sur KUSSALA est soumise a une verification manuelle
                   avant publication. L&apos;equipe de moderation peut, sans preavis ni indemnisation :
                 </p>
                 <ul className="mt-3 space-y-2">
@@ -201,7 +200,7 @@ export default function TermsPage() {
 
               <Section id="donnees" title="6. Protection des donnees personnelles">
                 <p>
-                  KWATIGUIGUI collecte et traite les donnees personnelles de ses utilisateurs
+                  KUSSALA collecte et traite les donnees personnelles de ses utilisateurs
                   conformement a la legislation en vigueur en Republique Centrafricaine.
                 </p>
                 <ul className="mt-3 space-y-2">
@@ -210,7 +209,7 @@ export default function TermsPage() {
                     "Les donnees ne sont jamais vendues a des tiers.",
                     "L'utilisateur peut demander la suppression de son compte et de ses donnees par WhatsApp.",
                     "Les donnees sont stockees sur des serveurs securises avec chiffrement en transit (HTTPS/TLS).",
-                    "Les mots de passe sont haches avec un algorithme securise (Argon2) — KWATIGUIGUI n'a pas acces aux mots de passe en clair.",
+                    "Les mots de passe sont haches avec un algorithme securise (Argon2) — KUSSALA n'a pas acces aux mots de passe en clair.",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-2">
                       <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-primary-400" />
@@ -222,7 +221,7 @@ export default function TermsPage() {
 
               <Section id="responsabilite" title="7. Limitation de responsabilite">
                 <p>
-                  KWATIGUIGUI agit en tant qu&apos;intermediaire technique et ne peut etre tenu
+                  KUSSALA agit en tant qu&apos;intermediaire technique et ne peut etre tenu
                   responsable :
                 </p>
                 <ul className="mt-3 space-y-2">
@@ -247,7 +246,7 @@ export default function TermsPage() {
                   et des annonces des resultats publics.
                 </p>
                 <p className="mt-3">
-                  KWATIGUIGUI se reserve le droit de resilier tout compte en cas de violation
+                  KUSSALA se reserve le droit de resilier tout compte en cas de violation
                   grave des presentes CGU, sans preavis et sans remboursement de l&apos;abonnement
                   en cours.
                 </p>
@@ -272,10 +271,10 @@ export default function TermsPage() {
                   <div className="flex items-center gap-3 text-fluid-base">
                     <span className="font-medium">Email :</span>
                     <a
-                      href="mailto:support@kwatiguigui.org"
+                      href="mailto:support@kussala.org"
                       className="text-primary-600 underline underline-offset-2 hover:text-primary-700 dark:text-primary-400"
                     >
-                      support@kwatiguigui.org
+                      support@kussala.org
                     </a>
                   </div>
                   <div className="flex items-center gap-3 text-fluid-base">

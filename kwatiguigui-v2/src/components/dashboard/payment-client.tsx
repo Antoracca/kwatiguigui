@@ -255,7 +255,7 @@ export function PaymentClient({
           Abonnement Premium
         </h1>
         <p className="mt-1 text-fluid-sm text-neutral-500 dark:text-neutral-400">
-          Debloquez toutes les fonctionnalites de KWATIGUIGUI
+          Debloquez toutes les fonctionnalites de KUSSALA
         </p>
       </div>
 
@@ -509,7 +509,7 @@ export function PaymentClient({
                 Vous avez sélectionné le plan Gratuit
               </h3>
               <p className="mb-8 text-fluid-sm text-neutral-500 leading-relaxed max-w-lg mx-auto">
-                Votre compte est déjà actif avec cette formule de base. Profitez de KWATIGUIGUI Standard, ou passez au pack VIP pour plus de visibilité.
+                Votre compte est déjà actif avec cette formule de base. Profitez de KUSSALA Standard, ou passez au pack VIP pour plus de visibilité.
               </p>
               <Button
                 variant="outline"

@@ -139,7 +139,7 @@ const NAV_CATEGORIES = [
     label: "Découvrir",
     href: "/about",
     highlight: {
-      title: "À propos de KWATIGUIGUI",
+      title: "À propos de KUSSALA",
       description: "Notre mission : dynamiser le marché de l'emploi en République Centrafricaine.",
       action: "Notre histoire",
       href: "/about",
@@ -291,7 +291,7 @@ export function Header() {
           <div className="relative h-11 w-[150px] sm:h-12 sm:w-[172px] lg:h-12 lg:w-[168px] xl:h-16 xl:w-[220px] 2xl:w-[240px]">
             <Image
               src="/images/logoprincipal.png"
-              alt="KWATIGUIGUI"
+              alt="KUSSALA"
               fill
               className="object-contain object-left"
               priority

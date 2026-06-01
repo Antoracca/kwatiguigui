@@ -13,7 +13,7 @@ import {
 import { NetworkLottiePanel } from "@/components/marketing/enterprise/network-lottie-panel";
 
 export const metadata: Metadata = {
-  title: "Vendeurs & Commerçants - Partenariats KWATIGUIGUI RCA",
+  title: "Vendeurs & Commerçants - Partenariats KUSSALA RCA",
   description:
     "Intégrez votre offre de produits et services à un réseau de demande professionnelle structuré en RCA.",
   alternates: { canonical: "/partenariats/vendeurs" },
@@ -41,7 +41,6 @@ export default function VendeursPage() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white/90 px-4 py-2 text-fluid-sm font-semibold text-orange-700 shadow-sm dark:border-orange-900 dark:bg-neutral-900/80 dark:text-orange-300">
-                <Sparkles className="h-4 w-4" />
                 Verticale Vendeurs & Commerçants
               </div>
               <h1 className="font-heading text-fluid-5xl font-black leading-tight text-neutral-900 dark:text-white">
@@ -81,9 +80,7 @@ export default function VendeursPage() {
           <div className="grid gap-4 md:grid-cols-2">
             {blocks.map((item) => (
               <div key={item} className="flex items-start gap-3 rounded-2xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900">
-                <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300">
-                  <Store className="h-4 w-4" />
-                </div>
+                
                 <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{item}</p>
               </div>
             ))}
@@ -99,7 +96,6 @@ export default function VendeursPage() {
               <ul className="mt-4 space-y-2">
                 {performance.map((item) => (
                   <li key={item} className="flex items-start gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-                    <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-300" />
                     {item}
                   </li>
                 ))}
@@ -115,7 +111,6 @@ export default function VendeursPage() {
               </ul>
               <div className="mt-4 rounded-xl border border-orange-200 bg-white p-4 dark:border-orange-800 dark:bg-neutral-900">
                 <p className="flex items-start gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-                  <Shield className="mt-0.5 h-4 w-4 shrink-0 text-orange-600 dark:text-orange-300" />
                   Plus votre qualité de service est stable, plus votre positionnement partenaire devient prioritaire.
                 </p>
               </div>
@@ -137,7 +132,6 @@ export default function VendeursPage() {
             </Link>
             <Link href="/partenariats" className="inline-flex min-h-[46px] items-center gap-2 rounded-full border border-neutral-300 bg-white px-6 py-2.5 text-fluid-sm font-semibold text-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200">
               Retour à l’espace partenariats
-              <Target className="h-4 w-4" />
             </Link>
           </div>
         </div>

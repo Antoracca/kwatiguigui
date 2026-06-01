@@ -3,7 +3,7 @@
 import { Toaster as SonnerToaster } from "sonner";
 
 /**
- * Toaster — KWATIGUIGUI-themed Sonner wrapper.
+ * Toaster — KUSSALA-themed Sonner wrapper.
  * Already included in src/components/providers.tsx.
  * Export this component if you need to mount it in a sub-layout.
  */

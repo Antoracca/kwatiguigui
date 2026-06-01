@@ -3,8 +3,8 @@ import { Mail, MapPin, Phone, MessageSquare, Send } from "lucide-react";
 import { CONTACT } from "@/lib/constants";
 
 export const metadata: Metadata = {
-    title: "Nous contacter | KWATIGUIGUI",
-    description: "Contactez l'équipe KWATIGUIGUI. Posez-nous vos questions, suggérez des améliorations, ou réclamez de l'aide pour votre profil candidat ou entreprise.",
+    title: "Nous contacter | KUSSALA",
+    description: "Contactez l'équipe KUSSALA. Posez-nous vos questions, suggérez des améliorations, ou réclamez de l'aide pour votre profil candidat ou entreprise.",
     alternates: { canonical: "/contact" },
 };
 

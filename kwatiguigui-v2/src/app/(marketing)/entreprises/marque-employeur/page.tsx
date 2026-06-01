@@ -57,7 +57,6 @@ export default function MarqueEmployeurPage() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-pink-200 bg-white/90 px-4 py-2 text-fluid-sm font-semibold text-pink-700 shadow-sm dark:border-pink-900 dark:bg-neutral-900/80 dark:text-pink-300">
-                <Sparkles className="h-4 w-4" />
                 Module Marque Employeur
               </div>
 
@@ -112,14 +111,11 @@ export default function MarqueEmployeurPage() {
         <div className="container-main">
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="rounded-2xl border border-primary-200 bg-primary-50/70 p-6 dark:border-primary-800 dark:bg-primary-950/25">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-primary-600 dark:bg-neutral-900 dark:text-primary-400">
-                <Megaphone className="h-5 w-5" />
-              </div>
+              
               <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-white">Assets à produire</h3>
               <ul className="mt-4 space-y-2">
                 {assets.map((item) => (
                   <li key={item} className="flex items-start gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-                    <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary-600 dark:text-primary-400" />
                     {item}
                   </li>
                 ))}
@@ -127,9 +123,7 @@ export default function MarqueEmployeurPage() {
             </div>
 
             <div className="rounded-2xl border border-secondary-200 bg-secondary-50/70 p-6 dark:border-secondary-800 dark:bg-secondary-950/25">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-secondary-700 dark:bg-neutral-900 dark:text-secondary-400">
-                <Rocket className="h-5 w-5" />
-              </div>
+              
               <h3 className="font-heading text-fluid-xl font-bold text-neutral-900 dark:text-white">Plan d’exécution 30 jours</h3>
               <ul className="mt-4 space-y-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
                 <li>- Semaine 1: cadrage du message employeur.</li>
@@ -181,7 +175,6 @@ export default function MarqueEmployeurPage() {
 
           <div className="mt-8 rounded-2xl border border-neutral-200 bg-white p-4 text-left dark:border-neutral-700 dark:bg-neutral-900">
             <p className="flex items-start gap-2 text-fluid-sm text-neutral-700 dark:text-neutral-300">
-              <FileText className="mt-0.5 h-4 w-4 shrink-0 text-neutral-500" />
               Références: Banque mondiale, OIT, IFC, Code du travail RCA.
             </p>
           </div>

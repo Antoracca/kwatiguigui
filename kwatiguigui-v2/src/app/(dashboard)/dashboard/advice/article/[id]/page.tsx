@@ -75,7 +75,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
                         </div>
                         <div>
                             <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
-                                {article.author?.name || "Équipe Kwatiguigui"}
+                                {article.author?.name || "Équipe Kussala"}
                             </p>
                             <p className="text-xs text-neutral-500 dark:text-neutral-400">
                                 {article.author?.role || "Expert RH"}

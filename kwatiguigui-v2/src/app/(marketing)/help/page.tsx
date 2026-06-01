@@ -16,7 +16,7 @@ import { CONTACT, FAQ_ITEMS, PRICING } from "@/lib/constants";
 import { FaqAccordion } from "@/components/marketing/faq-accordion";
 
 export const metadata: Metadata = {
-  title: "Centre d'aide — KWATIGUIGUI",
+  title: "Centre d'aide — KUSSALA",
   description:
     "Trouvez des reponses a vos questions sur l'inscription, les annonces, l'abonnement Premium et les paiements Mobile Money.",
   alternates: { canonical: "/help" },
@@ -123,7 +123,7 @@ export default function HelpPage() {
               <span className="text-gradient-primary">vous aider ?</span>
             </h1>
             <p className="mt-4 text-fluid-lg text-neutral-600 dark:text-neutral-400">
-              Retrouvez toutes les reponses sur l&apos;utilisation de KWATIGUIGUI,
+              Retrouvez toutes les reponses sur l&apos;utilisation de KUSSALA,
               les paiements Mobile Money et la gestion de votre compte.
             </p>
           </div>
@@ -219,7 +219,6 @@ export default function HelpPage() {
             <div className="rounded-2xl border border-secondary-200 bg-white p-6 dark:border-secondary-800 dark:bg-neutral-900">
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary-50 dark:bg-secondary-950">
-                  <Briefcase className="h-5 w-5 text-secondary-600 dark:text-secondary-400" />
                 </div>
                 <h3 className="font-heading text-fluid-lg font-bold text-neutral-900 dark:text-neutral-100">
                   Employeurs
@@ -229,7 +228,7 @@ export default function HelpPage() {
                 {[
                   "Creez votre compte employeur avec votre WhatsApp",
                   "Publiez votre offre d'emploi (type, region, salaire)",
-                  "Attendez la validation de l'equipe KWATIGUIGUI",
+                  "Attendez la validation de l'equipe KUSSALA",
                   "Contactez les candidats via leur profil (Premium)",
                 ].map((step, i) => (
                   <li key={i} className="flex items-start gap-3">
@@ -321,7 +320,6 @@ export default function HelpPage() {
               href="/register"
               className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-primary-600 px-6 py-2.5 text-fluid-sm font-semibold text-white shadow-md shadow-primary-600/25 transition-all hover:bg-primary-700 hover:shadow-lg hover:shadow-primary-600/30 dark:bg-primary-500 dark:hover:bg-primary-400"
             >
-              <BookOpen className="h-4 w-4" />
               Creer un compte gratuit
             </Link>
           </div>
@@ -347,9 +345,7 @@ export default function HelpPage() {
       <section className="section-padding section-alt">
         <div className="container-narrow">
           <div className="rounded-2xl border border-primary-200 bg-primary-50 p-8 text-center dark:border-primary-800 dark:bg-primary-950/30">
-            <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-100 dark:bg-primary-900">
-              <MessageCircle className="h-7 w-7 text-primary-600 dark:text-primary-400" />
-            </div>
+            
             <h2 className="font-heading text-fluid-2xl font-bold text-neutral-900 dark:text-neutral-100">
               Vous n&apos;avez pas trouve votre reponse ?
             </h2>

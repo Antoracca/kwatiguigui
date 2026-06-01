@@ -23,7 +23,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Missions et informel en RCA - Opportunités terrain et progression",
   description:
-    "Guide KWATIGUIGUI pour les missions et l'activité informelle en République centrafricaine: réalités terrain, secteurs actifs, securisation des paiements, et progression vers plus de stabilité.",
+    "Guide KUSSALA pour les missions et l'activité informelle en République centrafricaine: réalités terrain, secteurs actifs, securisation des paiements, et progression vers plus de stabilité.",
   alternates: { canonical: "/demandeurs-emploi/missions-informel" },
 };
 
@@ -98,7 +98,6 @@ export default function MissionsInformelPage() {
         <div className="container-main">
           <div className="mx-auto max-w-4xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent-100 bg-accent-50 px-4 py-2 text-fluid-sm font-medium text-accent-700 dark:border-accent-800 dark:bg-accent-950 dark:text-accent-500">
-              <Sparkles className="h-4 w-4" />
               Réalités terrain - Missions et informel en RCA
             </div>
 
@@ -142,9 +141,7 @@ export default function MissionsInformelPage() {
         <div className="container-main">
           <div className="grid gap-5 md:grid-cols-3">
             <div className="rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-700 dark:bg-neutral-900">
-              <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950 dark:text-primary-400">
-                <Target className="h-5 w-5" />
-              </div>
+              
               <h2 className="font-heading text-fluid-lg font-bold text-neutral-900 dark:text-neutral-100">
                 Clart? de mission
               </h2>
@@ -154,9 +151,7 @@ export default function MissionsInformelPage() {
             </div>
 
             <div className="rounded-2xl border border-secondary-200 bg-white p-6 dark:border-secondary-800 dark:bg-neutral-900">
-              <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-secondary-50 text-secondary-600 dark:bg-secondary-950 dark:text-secondary-400">
-                <Banknote className="h-5 w-5" />
-              </div>
+              
               <h2 className="font-heading text-fluid-lg font-bold text-neutral-900 dark:text-neutral-100">
                 Paiement plus sûr
               </h2>
@@ -166,9 +161,7 @@ export default function MissionsInformelPage() {
             </div>
 
             <div className="rounded-2xl border border-accent-200 bg-white p-6 dark:border-accent-800 dark:bg-neutral-900">
-              <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent-50 text-accent-700 dark:bg-accent-950 dark:text-accent-500">
-                <BadgeCheck className="h-5 w-5" />
-              </div>
+              
               <h2 className="font-heading text-fluid-lg font-bold text-neutral-900 dark:text-neutral-100">
                 Réputation locale
               </h2>
@@ -216,9 +209,7 @@ export default function MissionsInformelPage() {
           <div className="grid gap-4 md:grid-cols-2">
             {fieldRules.map((rule) => (
               <div key={rule} className="flex items-start gap-3 rounded-2xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900">
-                <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-600 dark:bg-primary-950 dark:text-primary-400">
-                  <ClipboardCheck className="h-4 w-4" />
-                </div>
+                
                 <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{rule}</p>
               </div>
             ))}
@@ -311,9 +302,7 @@ export default function MissionsInformelPage() {
                 className="group flex items-start justify-between gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 transition-colors hover:border-accent-300 dark:border-neutral-700 dark:bg-neutral-900"
               >
                 <div className="flex items-start gap-3">
-                  <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
-                    <FileText className="h-4 w-4" />
-                  </div>
+                  
                   <p className="text-fluid-sm text-neutral-700 dark:text-neutral-300">{source.title}</p>
                 </div>
                 <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-neutral-400 transition-colors group-hover:text-accent-500" />
@@ -326,9 +315,7 @@ export default function MissionsInformelPage() {
       <section className="section-padding">
         <div className="container-narrow">
           <div className="rounded-2xl border border-accent-200 bg-accent-50 p-8 text-center dark:border-accent-800 dark:bg-accent-950/30">
-            <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-100 dark:bg-accent-900">
-              <Briefcase className="h-7 w-7 text-accent-700 dark:text-accent-500" />
-            </div>
+            
             <h2 className="font-heading text-fluid-2xl font-bold text-neutral-900 dark:text-neutral-100">
               Passez à l'?tape suivante
             </h2>

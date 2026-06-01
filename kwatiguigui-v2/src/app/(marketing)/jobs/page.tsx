@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     "Parcourez les offres d'emploi disponibles en Republique Centrafricaine. Filtrez par ville, type d'emploi et profil.",
   alternates: { canonical: "/jobs" },
   openGraph: {
-    title: "Offres d'emploi | KWATIGUIGUI",
+    title: "Offres d'emploi | KUSSALA",
     description:
       "Parcourez les offres d'emploi disponibles en Republique Centrafricaine.",
   },
