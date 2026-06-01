@@ -160,9 +160,9 @@ export const PricingCard = ({
   planName, description, price, suffix = "/ mois", features, buttonText, buttonLink = "/register", isPopular = false, buttonVariant = 'primary'
 }: PricingCardProps) => {
   const cardClasses = `
-    bg-white dark:bg-neutral-900 rounded-3xl shadow-xl flex-1 w-full max-w-sm mx-auto px-6 py-8 md:px-8 md:py-10 flex flex-col transition-all duration-300
+    bg-white dark:bg-neutral-900 shadow-xl flex-1 w-full px-6 py-8 md:px-8 md:py-10 flex flex-col transition-all duration-300
     border border-neutral-200/50 dark:border-neutral-800/50
-    ${isPopular ? 'md:scale-105 relative ring-2 ring-primary-500/30 dark:ring-primary-500/50 shadow-2xl z-10' : 'z-0'}
+    ${isPopular ? 'md:scale-105 relative ring-2 ring-primary-500/30 dark:ring-primary-500/50 shadow-2xl z-10 rounded-3xl' : 'z-0 rounded-3xl lg:rounded-none lg:border-r-0 lg:last:border-r lg:first:rounded-l-3xl lg:last:rounded-r-3xl'}
   `;
   const buttonClasses = `
     mt-auto w-full py-3.5 rounded-xl font-bold text-sm transition-all
@@ -236,7 +236,7 @@ export const ModernPricingPage = ({
             {subtitle}
           </p>
         </div>
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-6 justify-center items-stretch w-full">
+        <div className="flex flex-col lg:flex-row gap-0 justify-center items-stretch w-full max-w-5xl mx-auto">
           {plans.map((plan) => <PricingCard key={plan.planName} {...plan} />)}
         </div>
       </div>
