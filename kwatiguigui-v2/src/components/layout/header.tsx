@@ -345,15 +345,7 @@ export function Header() {
 
 
 
-          {/* Theme toggle */}
-          <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="relative hidden lg:inline-flex rounded-full p-1.5 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white"
-            aria-label="Changer le theme"
-          >
-            <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          </button>
+          {/* Theme toggle removed per user request */}
 
           <div className="mx-0.5 hidden h-5 w-px bg-neutral-200 dark:bg-neutral-800 lg:block" />
           {/* Auth / User area */}
@@ -718,22 +710,7 @@ export function Header() {
                 ))}
               </div>
 
-              {/* Mobile Footer */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="mt-2 flex items-center justify-between border-t border-neutral-100 pt-4 dark:border-neutral-800 sm:mt-4 sm:pt-6"
-              >
-                <span className="text-xs font-medium text-neutral-500 sm:text-sm">Mode d'affichage</span>
-                <button
-                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  className="flex items-center gap-2 rounded-lg bg-neutral-100 px-3 py-2 text-xs font-medium text-neutral-900 dark:bg-neutral-800 dark:text-white sm:px-4 sm:py-2.5 sm:text-sm"
-                >
-                  {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-                  {theme === "dark" ? "Passer au clair" : "Passer au sombre"}
-                </button>
-              </motion.div>
+              {/* Mobile Footer removed per user request */}
 
             </div>
           </motion.div>
