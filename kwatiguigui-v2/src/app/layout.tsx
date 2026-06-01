@@ -88,7 +88,11 @@ export const viewport: Viewport = {
   ],
   width: "device-width",
   initialScale: 1,
-  maximumScale: 5,
+  // Comportement "application" : on bloque le zoom (notamment le zoom auto
+  // d'iOS au focus d'un input). Combiné avec les champs à 16px (globals.css),
+  // l'écran ne zoome plus jamais sur les inputs.
+  maximumScale: 1,
+  userScalable: false,
 };
 
 // ---------------------------------------------------------------------------

@@ -77,10 +77,8 @@ export const registerSchema = z
       .optional()
       .default(""),
     jobType: z.string().optional().default(""),
-    experience: z.enum(EXPERIENCE_VALUES, {
-      required_error: "Veuillez selectionner votre niveau d'experience",
-      invalid_type_error: "Valeur d'experience invalide",
-    }).optional(),
+    experience: z.enum(EXPERIENCE_VALUES).optional(),
+    interests: z.array(z.string()).optional().default([]),
     companyName: z.string().optional(),
     password: z
       .string()

@@ -110,6 +110,40 @@ export const EXPERIENCE_VALUES = EXPERIENCE_LEVELS.map((e) => e.value) as [
 export type ExperienceLevel = (typeof EXPERIENCE_LEVELS)[number]["value"];
 
 // ---------------------------------------------------------------------------
+// Centres d'intérêt / Domaines (facultatif à l'inscription)
+// Les meilleurs talents travaillent dans une infinité de domaines — l'utilisateur
+// choisit librement ceux qui l'intéressent. L'icône est mappée dans le composant.
+// ---------------------------------------------------------------------------
+export const INTEREST_DOMAINS = [
+  { value: "sante", label: "Médecine & Santé" },
+  { value: "tech", label: "Tech & Informatique" },
+  { value: "musique", label: "Musique" },
+  { value: "entrepreneuriat", label: "Entrepreneuriat" },
+  { value: "agriculture", label: "Agriculture & Élevage" },
+  { value: "education", label: "Éducation & Formation" },
+  { value: "art", label: "Art & Design" },
+  { value: "finance", label: "Banque & Finance" },
+  { value: "droit", label: "Droit & Juridique" },
+  { value: "btp", label: "Bâtiment & BTP" },
+  { value: "commerce", label: "Commerce & Vente" },
+  { value: "transport", label: "Transport & Logistique" },
+  { value: "communication", label: "Communication & Médias" },
+  { value: "cuisine", label: "Cuisine & Restauration" },
+  { value: "mode", label: "Mode & Beauté" },
+  { value: "securite", label: "Sécurité & Gardiennage" },
+  { value: "sport", label: "Sport & Fitness" },
+  { value: "tourisme", label: "Tourisme & Hôtellerie" },
+  { value: "energie", label: "Énergie & Environnement" },
+  { value: "science", label: "Sciences & Recherche" },
+  { value: "artisanat", label: "Artisanat & Métiers" },
+  { value: "social", label: "Social & Humanitaire" },
+] as const;
+
+export const INTEREST_VALUES = INTEREST_DOMAINS.map((d) => d.value) as string[];
+
+export type InterestDomain = (typeof INTEREST_DOMAINS)[number]["value"];
+
+// ---------------------------------------------------------------------------
 // User types
 // ---------------------------------------------------------------------------
 export const USER_TYPES = ["seeker", "employer"] as const;

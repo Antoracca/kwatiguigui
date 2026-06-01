@@ -24,20 +24,28 @@ export default async function OnboardingPage() {
   // Fetch profile to check completion & pre-fill name
   const { data: profile } = await supabase
     .from("profiles")
-    .select("first_name, last_name, city, job_type")
+    .select("first_name, last_name, city")
     .eq("id", user.id)
     .maybeSingle();
 
-  // If city and job_type are already set → onboarding already done
-  if (profile?.city?.trim() && profile?.job_type?.trim()) {
+  // Onboarding terminé dès que la ville est renseignée (poste recherché supprimé)
+  if (profile?.city?.trim()) {
     redirect("/dashboard");
   }
+
+  // Photo de profil Google récupérée depuis les métadonnées OAuth
+  const meta = user.user_metadata ?? {};
+  const avatarUrl =
+    (meta.avatar_url as string | undefined) ??
+    (meta.picture as string | undefined) ??
+    "";
 
   return (
     <OnboardingForm
       firstName={profile?.first_name ?? ""}
       lastName={profile?.last_name ?? ""}
       email={user.email ?? ""}
+      avatarUrl={avatarUrl}
     />
   );
 }

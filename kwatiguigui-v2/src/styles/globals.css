@@ -220,6 +220,19 @@
     transition-duration: 150ms;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
+
+  /* -------------------------------------------------------------------------
+     Anti-zoom iOS — Safari mobile zoome automatiquement au focus si la taille
+     de police d'un champ est < 16px. On force 16px sur tous les champs en
+     dessous de 640px (sans jamais désactiver le zoom manuel via le viewport).
+     -------------------------------------------------------------------------*/
+  @media (max-width: 639px) {
+    input:not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea {
+      font-size: 16px;
+    }
+  }
 }
 
 /* ============================================================================

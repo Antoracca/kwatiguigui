@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
+import { INTEREST_VALUES } from "@/lib/constants";
 import {
   loginSchema,
   registerSchema,
@@ -97,6 +98,18 @@ export async function signUp(
   const companyName = (formData.get("companyName") as string | null)?.trim();
   let neighborhood = (formData.get("neighborhood") as string | null)?.trim() || undefined;
 
+  // Centres d'intérêt — envoyés en JSON dans un champ caché (facultatif)
+  let interests: string[] = [];
+  try {
+    const rawInterests = formData.get("interests");
+    if (typeof rawInterests === "string" && rawInterests) {
+      const parsedInterests = JSON.parse(rawInterests);
+      if (Array.isArray(parsedInterests)) interests = parsedInterests.map(String);
+    }
+  } catch {
+    interests = [];
+  }
+
   if (companyName) {
     neighborhood = neighborhood ? `${neighborhood} (${companyName})` : companyName;
   }
@@ -114,6 +127,7 @@ export async function signUp(
     companyName,
     jobType: formData.get("jobType") || undefined,
     experience: formData.get("experience") || undefined,
+    interests,
     password: formData.get("password"),
     confirmPassword: formData.get("confirmPassword"),
   };
@@ -188,8 +202,9 @@ export async function signUp(
     phone: parsed.data.phone || null,
     city: parsed.data.city,
     neighborhood: parsed.data.neighborhood || "",
-    job_type: parsed.data.jobType || "",             // DB: string NOT NULL — required
-    experience: parsed.data.userType === "employer" ? "none" : (parsed.data.experience || "none") as "none" | "1+" | "3+" | "5+" | "10+" | "15+" | "20+" | "other",
+    job_type: parsed.data.jobType || "",             // poste recherché supprimé pour les candidats — secteur conservé pour les employeurs
+    experience: "none" as const,                     // niveau d'expérience supprimé du formulaire
+    interests: (parsed.data.interests ?? []).filter((v) => INTEREST_VALUES.includes(v)),
     user_type: parsed.data.userType,
     is_active: true,
     subscription_paid: false,

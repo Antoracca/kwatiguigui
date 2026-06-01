@@ -2,27 +2,25 @@
 
 import { useActionState, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   AlertCircle,
   ArrowLeft,
   ArrowRight,
   AtSign,
-  Briefcase,
-  Building2,
+  BriefcaseBusiness,
   CheckCircle2,
-  Layers,
   MapPin,
-  User,
+  UserSearch,
 } from "lucide-react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 import { completeOnboarding } from "@/lib/actions/onboarding";
 import type { ActionResult } from "@/lib/auth/actions";
-import { JOB_TYPES, SECTORS, EXPERIENCE_LEVELS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { DatePickerInput } from "@/components/ui/date-picker-input";
 import { PhoneNumberInput } from "@/components/ui/phone-number-input";
-import { SearchableSelect } from "@/components/ui/searchable-select";
+import { InterestsSelect } from "@/components/forms/interests-select";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -34,9 +32,6 @@ const MAX_DOB = (() => {
   d.setFullYear(d.getFullYear() - 18);
   return d.toISOString().slice(0, 10);
 })();
-
-const JOB_OPTIONS = JOB_TYPES.map((j) => ({ value: j, label: j }));
-const SECTOR_OPTIONS = SECTORS.map((s) => ({ value: s, label: s }));
 
 const initialState: ActionResult = { success: false };
 
@@ -63,31 +58,139 @@ function AvailabilityStatus({ status }: { status: CheckStatus }) {
 }
 
 // ---------------------------------------------------------------------------
+// AccountTypeAccordion — sélecteur fin horizontal (candidat / employeur)
+// ---------------------------------------------------------------------------
+type UserTypeValue = "seeker" | "employer";
+
+function AccountTypeRow({
+  active,
+  accent,
+  icon,
+  title,
+  subtitle,
+  onClick,
+}: {
+  active: boolean;
+  accent: "primary" | "secondary";
+  icon: React.ReactNode;
+  title: string;
+  subtitle: string;
+  onClick: () => void;
+}) {
+  const ring =
+    accent === "primary"
+      ? "border-primary-500 bg-primary-50/70 dark:border-primary-400 dark:bg-primary-950/30"
+      : "border-secondary-500 bg-secondary-50/70 dark:border-secondary-400 dark:bg-secondary-950/30";
+  const iconActive =
+    accent === "primary" ? "bg-primary-500 text-white" : "bg-secondary-500 text-white";
+  const dotActive =
+    accent === "primary"
+      ? "border-primary-500 bg-primary-500"
+      : "border-secondary-500 bg-secondary-500";
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={[
+        "flex w-full items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left transition-all",
+        active
+          ? ring
+          : "border-neutral-200 bg-white hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-neutral-600",
+      ].join(" ")}
+    >
+      <span
+        className={[
+          "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors",
+          active ? iconActive : "bg-neutral-100 text-neutral-500 dark:bg-neutral-800",
+        ].join(" ")}
+      >
+        {icon}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-body-sm font-semibold text-neutral-900 dark:text-neutral-100">
+          {title}
+        </span>
+        <span className="block truncate text-body-xs text-neutral-500 dark:text-neutral-400">
+          {subtitle}
+        </span>
+      </span>
+      <span
+        className={[
+          "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+          active ? dotActive : "border-neutral-300 dark:border-neutral-600",
+        ].join(" ")}
+      >
+        {active && <span className="h-2 w-2 rounded-full bg-white" />}
+      </span>
+    </button>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Avatar — photo Google si disponible, sinon initiale
+// ---------------------------------------------------------------------------
+function ProfileAvatar({
+  avatarUrl,
+  letter,
+  size = 40,
+}: {
+  avatarUrl: string;
+  letter: string;
+  size?: number;
+}) {
+  const [broken, setBroken] = useState(false);
+  if (avatarUrl && !broken) {
+    return (
+      <Image
+        src={avatarUrl}
+        alt="Photo de profil"
+        width={size}
+        height={size}
+        unoptimized
+        onError={() => setBroken(true)}
+        className="shrink-0 rounded-full object-cover"
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+  return (
+    <div
+      className="flex shrink-0 select-none items-center justify-center rounded-full bg-primary-500 font-heading font-bold text-white"
+      style={{ width: size, height: size }}
+    >
+      {letter}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Props
 // ---------------------------------------------------------------------------
 interface OnboardingFormProps {
   firstName: string;
   lastName: string;
   email: string;
+  avatarUrl?: string;
 }
 
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
-export function OnboardingForm({ firstName, lastName, email }: OnboardingFormProps) {
+export function OnboardingForm({ firstName, lastName, email, avatarUrl = "" }: OnboardingFormProps) {
   const router = useRouter();
 
   // ── Multi-step state ──────────────────────────────────────────────────────
   const [step, setStep] = useState<0 | 1>(0);
-  const [userType, setUserType] = useState<"seeker" | "employer" | "">("");
+  const [userType, setUserType] = useState<UserTypeValue | "">("");
 
   // ── Controlled fields (require hidden inputs for FormData) ─────────────────
   const [username, setUsername]       = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [phone, setPhone]             = useState("+236 ");
   const [city, setCity]               = useState("");
-  const [jobType, setJobType]         = useState("");
-  const [experience, setExperience]   = useState("");
+  const [interests, setInterests]     = useState<string[]>([]);
 
   // ── Disponibilité username + phone en temps réel ─────────────────────────
   const [usernameStatus, setUsernameStatus] = useState<CheckStatus>("idle");
@@ -183,14 +286,6 @@ export function OnboardingForm({ firstName, lastName, email }: OnboardingFormPro
       errs.city = "La ville est requise (2 caractères minimum)";
     }
 
-    // Poste / secteur
-    if (!jobType) {
-      errs.jobType =
-        userType === "employer"
-          ? "Le secteur d'activité est requis"
-          : "Le poste recherché est requis";
-    }
-
     setClientErrors(errs);
     return Object.keys(errs).length === 0;
   }
@@ -243,11 +338,9 @@ export function OnboardingForm({ firstName, lastName, email }: OnboardingFormPro
           </p>
         </div>
 
-        {/* Identité Google — lecture seule */}
+        {/* Identité Google — lecture seule (avec photo si disponible) */}
         <div className="flex items-center gap-3 rounded-2xl border border-primary-100 bg-primary-50/60 px-4 py-3 dark:border-primary-900/30 dark:bg-primary-950/20">
-          <div className="flex h-10 w-10 shrink-0 select-none items-center justify-center rounded-full bg-primary-500 font-heading text-body-md font-bold text-white">
-            {avatarLetter}
-          </div>
+          <ProfileAvatar avatarUrl={avatarUrl} letter={avatarLetter} size={40} />
           <div className="min-w-0 flex-1">
             <p className="truncate text-body-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {displayName}
@@ -263,74 +356,27 @@ export function OnboardingForm({ firstName, lastName, email }: OnboardingFormPro
           />
         </div>
 
-        {/* Sélection du type */}
-        <div className="space-y-3">
+        {/* Sélection du type — accordéons fins horizontaux */}
+        <div className="space-y-2.5">
           <p className="text-body-sm font-medium text-neutral-700 dark:text-neutral-300">
             Je suis <span className="text-error-500">*</span>
           </p>
-          <div className="grid grid-cols-2 gap-3">
-            {/* Candidat */}
-            <button
-              type="button"
-              onClick={() => setUserType("seeker")}
-              className={[
-                "flex flex-col items-center gap-3 rounded-2xl border-2 p-5 text-center transition-all",
-                userType === "seeker"
-                  ? "border-primary-500 bg-primary-50/60 dark:border-primary-400 dark:bg-primary-950/30"
-                  : "border-neutral-200 bg-white hover:border-primary-200 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-neutral-600",
-              ].join(" ")}
-            >
-              <div
-                className={[
-                  "flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
-                  userType === "seeker"
-                    ? "bg-primary-500 text-white"
-                    : "bg-neutral-100 text-neutral-500 dark:bg-neutral-800",
-                ].join(" ")}
-              >
-                <User size={24} />
-              </div>
-              <div>
-                <p className="text-body-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                  Candidat
-                </p>
-                <p className="mt-0.5 text-body-xs text-neutral-500">
-                  Je cherche du travail
-                </p>
-              </div>
-            </button>
-
-            {/* Employeur */}
-            <button
-              type="button"
-              onClick={() => setUserType("employer")}
-              className={[
-                "flex flex-col items-center gap-3 rounded-2xl border-2 p-5 text-center transition-all",
-                userType === "employer"
-                  ? "border-secondary-500 bg-secondary-50/60 dark:border-secondary-400 dark:bg-secondary-950/30"
-                  : "border-neutral-200 bg-white hover:border-secondary-200 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-neutral-600",
-              ].join(" ")}
-            >
-              <div
-                className={[
-                  "flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
-                  userType === "employer"
-                    ? "bg-secondary-500 text-white"
-                    : "bg-neutral-100 text-neutral-500 dark:bg-neutral-800",
-                ].join(" ")}
-              >
-                <Building2 size={24} />
-              </div>
-              <div>
-                <p className="text-body-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                  Employeur
-                </p>
-                <p className="mt-0.5 text-body-xs text-neutral-500">
-                  Je recrute du personnel
-                </p>
-              </div>
-            </button>
-          </div>
+          <AccountTypeRow
+            active={userType === "seeker"}
+            accent="primary"
+            icon={<UserSearch size={20} />}
+            title="Candidat"
+            subtitle="Je cherche du travail"
+            onClick={() => setUserType("seeker")}
+          />
+          <AccountTypeRow
+            active={userType === "employer"}
+            accent="secondary"
+            icon={<BriefcaseBusiness size={20} />}
+            title="Employeur"
+            subtitle="Je recrute du personnel"
+            onClick={() => setUserType("employer")}
+          />
         </div>
 
         <Button
@@ -379,11 +425,19 @@ export function OnboardingForm({ firstName, lastName, email }: OnboardingFormPro
         </p>
       </div>
 
+      {/* Identité + photo Google */}
+      <div className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50/60 px-4 py-2.5 dark:border-neutral-800 dark:bg-neutral-900/40">
+        <ProfileAvatar avatarUrl={avatarUrl} letter={avatarLetter} size={36} />
+        <p className="min-w-0 flex-1 truncate text-body-sm font-medium text-neutral-700 dark:text-neutral-300">
+          {displayName}
+        </p>
+      </div>
+
       {/* Hidden inputs — valeurs contrôlées envoyées via FormData */}
       <input type="hidden" name="userType" value={userType} />
       <input type="hidden" name="dateOfBirth" value={dateOfBirth} />
       <input type="hidden" name="phone" value={phone} />
-      <input type="hidden" name="experience" value={experience} />
+      <input type="hidden" name="interests" value={JSON.stringify(interests)} />
 
       {/* Erreur serveur globale */}
       {state.error && (
@@ -494,59 +548,8 @@ export function OnboardingForm({ firstName, lastName, email }: OnboardingFormPro
         )}
       </div>
 
-      {/* Poste recherché (candidat) OU secteur d'activité (employeur) */}
-      {userType === "seeker" ? (
-        <>
-          <SearchableSelect
-            label="Poste recherché"
-            name="jobType"
-            options={JOB_OPTIONS}
-            value={jobType}
-            onChange={setJobType}
-            placeholder="Sélectionner un poste"
-            required
-            icon={<Briefcase size={16} />}
-            error={clientErrors.jobType || state.fieldErrors?.jobType?.[0]}
-          />
-
-          {/* Expérience — pills, optionnel */}
-          <div className="space-y-2">
-            <p className="text-body-sm font-medium text-neutral-700 dark:text-neutral-300">
-              Expérience{" "}
-              <span className="font-normal text-neutral-400">(optionnel)</span>
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {EXPERIENCE_LEVELS.map(({ value, label }) => (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => setExperience(experience === value ? "" : value)}
-                  className={[
-                    "rounded-full border px-3.5 py-1.5 text-body-xs font-medium transition-all",
-                    experience === value
-                      ? "border-primary-500 bg-primary-500 text-white"
-                      : "border-neutral-200 bg-white text-neutral-600 hover:border-primary-300 hover:text-primary-600 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:border-primary-700",
-                  ].join(" ")}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </>
-      ) : (
-        <SearchableSelect
-          label="Secteur d'activité"
-          name="jobType"
-          options={SECTOR_OPTIONS}
-          value={jobType}
-          onChange={setJobType}
-          placeholder="Sélectionner un secteur"
-          required
-          icon={<Layers size={16} />}
-          error={clientErrors.jobType || state.fieldErrors?.jobType?.[0]}
-        />
-      )}
+      {/* Centres d'intérêt — facultatif */}
+      <InterestsSelect value={interests} onChange={setInterests} />
 
       <Button
         type="submit"

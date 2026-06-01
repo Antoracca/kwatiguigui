@@ -3,7 +3,7 @@
 import { z } from "zod";
 
 import { createClient } from "@/lib/supabase/server";
-import { EXPERIENCE_VALUES } from "@/lib/constants";
+import { INTEREST_VALUES } from "@/lib/constants";
 import type { ActionResult } from "@/lib/auth/actions";
 
 // ---------------------------------------------------------------------------
@@ -46,12 +46,12 @@ const onboardingSchema = z.object({
     .max(100)
     .optional()
     .default(""),
-  jobType: z
-    .string()
-    .min(1, "Ce champ est requis"),
-  experience: z
-    .enum(EXPERIENCE_VALUES)
-    .optional(),
+  // Centres d'intérêt — facultatif, on ne garde que les valeurs connues
+  interests: z
+    .array(z.string())
+    .optional()
+    .default([])
+    .transform((arr) => arr.filter((v) => INTEREST_VALUES.includes(v))),
 });
 
 export type OnboardingInput = z.infer<typeof onboardingSchema>;
@@ -75,6 +75,18 @@ export async function completeOnboarding(
     return { success: false, error: "Non authentifié. Veuillez vous reconnecter." };
   }
 
+  // Centres d'intérêt envoyés en JSON dans un champ caché
+  let interests: string[] = [];
+  try {
+    const rawInterests = formData.get("interests");
+    if (typeof rawInterests === "string" && rawInterests) {
+      const parsedInterests = JSON.parse(rawInterests);
+      if (Array.isArray(parsedInterests)) interests = parsedInterests.map(String);
+    }
+  } catch {
+    interests = [];
+  }
+
   const raw = {
     userType:     formData.get("userType"),
     username:     formData.get("username"),
@@ -82,8 +94,7 @@ export async function completeOnboarding(
     phone:        formData.get("phone"),
     city:         formData.get("city"),
     neighborhood: formData.get("neighborhood") || undefined,
-    jobType:      formData.get("jobType"),
-    experience:   formData.get("experience") || undefined,
+    interests,
   };
 
   const parsed = onboardingSchema.safeParse(raw);
@@ -136,8 +147,9 @@ export async function completeOnboarding(
         phone:         parsed.data.phone,
         city:          parsed.data.city,
         neighborhood:  parsed.data.neighborhood || "",
-        job_type:      parsed.data.jobType,
-        experience:    parsed.data.experience ?? "none",
+        job_type:      "",
+        experience:    "none",
+        interests:     parsed.data.interests,
         // Champs requis pour l'INSERT (si le profil n'existe pas encore) :
         first_name:        firstName,
         last_name:         lastName,

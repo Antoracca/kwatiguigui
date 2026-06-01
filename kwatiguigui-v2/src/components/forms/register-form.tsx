@@ -5,13 +5,12 @@ import {
   ArrowRight,
   AtSign,
   Briefcase,
+  BriefcaseBusiness,
   Building2,
-  Check,
   Eye,
   EyeOff,
   Lock,
   MapPin,
-  Phone,
   User,
   UserSearch,
   UserPlus,
@@ -32,8 +31,8 @@ import { PhoneNumberInput } from "@/components/ui/phone-number-input";
 
 import { signUp } from "@/lib/auth/actions";
 import type { ActionResult } from "@/lib/auth/actions";
-import { JOB_TYPES, EXPERIENCE_LEVELS, SECTORS } from "@/lib/constants";
-import { Badge } from "@/components/ui/badge";
+import { SECTORS } from "@/lib/constants";
+import { InterestsSelect } from "@/components/forms/interests-select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -41,66 +40,6 @@ import { Input } from "@/components/ui/input";
 // Types
 // ---------------------------------------------------------------------------
 type UserTypeChoice = "seeker" | "employer" | "company" | "";
-
-// ---------------------------------------------------------------------------
-// Step labels — differ by profile type
-// ---------------------------------------------------------------------------
-function getSteps(userType: UserTypeChoice) {
-  const step2Label =
-    userType === "company" ? "Entreprise" :
-      userType === "employer" ? "Recrutement" :
-        "Informations";
-
-  return [
-    { label: "Profil" },
-    { label: step2Label },
-    { label: "Localisation" },
-    { label: "Sécurité" },
-  ];
-}
-
-// ---------------------------------------------------------------------------
-// Step indicator
-// ---------------------------------------------------------------------------
-function StepIndicator({ current, userType }: { current: number; userType: UserTypeChoice }) {
-  const steps = getSteps(userType);
-  return (
-    <div className="mb-8 flex items-center justify-center">
-      {steps.map((step, index) => (
-        <div key={step.label} className="flex items-center">
-          <div className="flex flex-col items-center gap-1">
-            <div
-              className={`flex h-8 w-8 items-center justify-center rounded-full text-body-xs font-bold transition-all ${index < current
-                ? "bg-secondary-500 text-white"
-                : index === current
-                  ? "bg-primary-500 text-white shadow-lg shadow-primary-500/30"
-                  : "bg-neutral-200 text-neutral-400 dark:bg-neutral-700"
-                }`}
-            >
-              {index < current ? <Check size={14} /> : index + 1}
-            </div>
-            <span
-              className={`hidden text-[10px] font-medium sm:block ${index === current
-                ? "text-primary-500"
-                : index < current
-                  ? "text-secondary-500"
-                  : "text-neutral-400"
-                }`}
-            >
-              {step.label}
-            </span>
-          </div>
-          {index < steps.length - 1 && (
-            <div
-              className={`mx-2 h-px w-8 transition-all sm:w-12 ${index < current ? "bg-secondary-500" : "bg-neutral-200 dark:bg-neutral-700"
-                }`}
-            />
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // Inline field error component
@@ -116,55 +55,73 @@ function FieldError({ message }: { message?: string }) {
 }
 
 // ---------------------------------------------------------------------------
-// ExperienceSelect — premium pill-chip experience level selector
+// AccountTypeRow — sélecteur fin horizontal (candidat / employeur)
 // ---------------------------------------------------------------------------
-function ExperienceSelect({
-  label,
-  value,
-  onChange,
-  error,
+function AccountTypeRow({
+  active,
+  accent,
+  icon,
+  title,
+  subtitle,
+  onClick,
 }: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  accentClass?: string;
-  error?: string;
+  active: boolean;
+  accent: "primary" | "secondary";
+  icon: React.ReactNode;
+  title: string;
+  subtitle: string;
+  onClick: () => void;
 }) {
+  const ring =
+    accent === "primary"
+      ? "border-primary-500 bg-primary-50/70 dark:border-primary-400 dark:bg-primary-950/30"
+      : "border-secondary-500 bg-secondary-50/70 dark:border-secondary-400 dark:bg-secondary-950/30";
+  const iconActive =
+    accent === "primary" ? "bg-primary-500 text-white" : "bg-secondary-500 text-white";
+  const dotActive =
+    accent === "primary"
+      ? "border-primary-500 bg-primary-500"
+      : "border-secondary-500 bg-secondary-500";
+
   return (
-    <div className="space-y-2">
-      <label className="block text-body-sm font-medium text-neutral-700 dark:text-neutral-300">
-        {label} <span className="text-error-500">*</span>
-      </label>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {EXPERIENCE_LEVELS.map(({ value: v, label: l }) => {
-          const selected = value === v;
-          return (
-            <button
-              key={v}
-              type="button"
-              onClick={() => onChange(v)}
-              className={[
-                "relative flex flex-col items-center justify-center rounded-xl border-2 px-3 py-3 text-center text-body-xs font-semibold transition-all duration-200 select-none",
-                selected
-                  ? "border-primary-500 bg-primary-50 text-primary-700 shadow-sm ring-1 ring-primary-500/20 dark:border-primary-400 dark:bg-primary-950/30 dark:text-primary-300"
-                  : "border-neutral-100 bg-white text-neutral-500 hover:border-primary-200 hover:bg-primary-50/40 hover:text-primary-600 dark:border-neutral-800 dark:bg-neutral-900/50 dark:text-neutral-400 dark:hover:border-primary-800 dark:hover:bg-primary-950/20",
-              ].join(" ")}
-            >
-              {selected && (
-                <span className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-primary-500">
-                  <Check size={10} className="text-white" strokeWidth={3} />
-                </span>
-              )}
-              {l}
-            </button>
-          );
-        })}
-      </div>
-      <FieldError message={error} />
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={[
+        "flex w-full items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left transition-all",
+        active
+          ? ring
+          : "border-neutral-200 bg-white hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-neutral-600",
+      ].join(" ")}
+    >
+      <span
+        className={[
+          "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors",
+          active ? iconActive : "bg-neutral-100 text-neutral-500 dark:bg-neutral-800",
+        ].join(" ")}
+      >
+        {icon}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-body-sm font-semibold text-neutral-900 dark:text-neutral-100">
+          {title}
+        </span>
+        <span className="block text-body-xs text-neutral-500 dark:text-neutral-400">
+          {subtitle}
+        </span>
+      </span>
+      <span
+        className={[
+          "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+          active ? dotActive : "border-neutral-300 dark:border-neutral-600",
+        ].join(" ")}
+      >
+        {active && <span className="h-2 w-2 rounded-full bg-white" />}
+      </span>
+    </button>
   );
 }
-
 
 // ---------------------------------------------------------------------------
 // AvailabilityStatus — feedback temps réel email / username
@@ -306,6 +263,9 @@ export function RegisterForm() {
     confirmPassword: "",
   });
 
+  // Centres d'intérêt (candidat) — facultatif, tableau séparé
+  const [interests, setInterests] = useState<string[]>([]);
+
   const update = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (attemptedNext) setAttemptedNext(false);
@@ -358,17 +318,10 @@ export function RegisterForm() {
       if (!formData.phone.trim() || formData.phone.replace(/\D/g, "").length < 7)
         e.phone = "Veuillez entrer un numéro de téléphone valide.";
 
-      // jobType
-      if (!formData.jobType) {
-        if (isCompany || formData.userType === "employer")
-          e.jobType = "Veuillez sélectionner votre secteur d'activité.";
-        else
-          e.jobType = "Veuillez sélectionner le métier que vous recherchez.";
-      }
-
-      // experience (uniquement pour les chercheurs d'emploi)
-      if (formData.userType === "seeker" && !formData.experience)
-        e.experience = "Veuillez sélectionner le niveau d'expérience.";
+      // Secteur d'activité — requis uniquement pour employeur / entreprise
+      // (le poste recherché et le niveau d'expérience ont été supprimés)
+      if ((isCompany || formData.userType === "employer") && !formData.jobType)
+        e.jobType = "Veuillez sélectionner votre secteur d'activité.";
     }
 
     if (step === 2) {
@@ -476,7 +429,6 @@ export function RegisterForm() {
   return (
     <>
       <FullScreenLoader isVisible={isPending} text="Création de votre compte..." />
-      <StepIndicator current={step} userType={formData.userType} />
 
       {/* Global server error */}
       {state.error && (
@@ -498,7 +450,7 @@ export function RegisterForm() {
         <input type="hidden" name="neighborhood" value={formData.neighborhood} />
         <input type="hidden" name="companyName" value={formData.companyName} />
         <input type="hidden" name="jobType" value={formData.jobType} />
-        <input type="hidden" name="experience" value={formData.experience} />
+        <input type="hidden" name="interests" value={JSON.stringify(interests)} />
         <input type="hidden" name="password" value={formData.password} />
         <input type="hidden" name="confirmPassword" value={formData.confirmPassword} />
 
@@ -506,73 +458,23 @@ export function RegisterForm() {
         {/* STEP 0 — Choisir son profil                                      */}
         {/* ================================================================ */}
         {step === 0 && (
-          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="text-center space-y-2">
-              <h2 className="text-xl font-heading font-bold text-neutral-900 dark:text-white">
-                Bienvenue sur Kussala
-              </h2>
-              <p className="text-body-sm text-neutral-500 dark:text-neutral-400">
-                Sélectionnez le type de compte qui correspond à vos besoins :
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {/* Candidat */}
-              <button
-                type="button"
-                onClick={() => update("userType", "seeker")}
-                className={`flex flex-col items-start gap-4 rounded-2xl border-2 p-5 transition-all duration-300 relative group overflow-hidden text-left ${formData.userType === "seeker"
-                  ? "border-primary-500 bg-primary-50/50 dark:border-primary-400 dark:bg-primary-950/30 shadow-md ring-1 ring-primary-500/20 scale-[1.02]"
-                  : "border-neutral-100 bg-white hover:border-primary-300 hover:bg-primary-50/30 hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900/50 dark:hover:border-primary-500/50 dark:hover:bg-primary-950/20"
-                  }`}
-              >
-                <div className="flex w-full items-center justify-between">
-                  <div className={`p-3 rounded-xl transition-colors ${formData.userType === "seeker" ? "bg-primary-500 text-white shadow-inner" : "bg-neutral-50 text-neutral-400 group-hover:bg-primary-100 group-hover:text-primary-600 dark:bg-neutral-800 dark:group-hover:bg-primary-900/50 dark:group-hover:text-primary-400"}`}>
-                    <UserSearch size={24} />
-                  </div>
-                  <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${formData.userType === "seeker" ? "bg-primary-500 border-primary-500 dark:border-primary-400 dark:bg-primary-500" : "border-neutral-200 group-hover:border-primary-300 dark:border-neutral-700 dark:group-hover:border-primary-500/50"}`}>
-                    {formData.userType === "seeker" && <Check size={12} className="text-white" />}
-                  </div>
-                </div>
-
-                <div className="space-y-1.5 mt-2">
-                  <span className="block font-heading text-body-base font-bold text-neutral-900 dark:text-neutral-100">
-                    Candidat
-                  </span>
-                  <p className="text-body-xs text-neutral-500 dark:text-neutral-400 leading-snug">
-                    Je recherche un emploi, une mission ou un stage.
-                  </p>
-                </div>
-              </button>
-
-              {/* Employeur particulier */}
-              <button
-                type="button"
-                onClick={() => update("userType", "employer")}
-                className={`flex flex-col items-start gap-4 rounded-2xl border-2 p-5 transition-all duration-300 relative group overflow-hidden text-left ${formData.userType === "employer"
-                  ? "border-secondary-500 bg-secondary-50/50 dark:border-secondary-400 dark:bg-secondary-950/30 shadow-md ring-1 ring-secondary-500/20 scale-[1.02]"
-                  : "border-neutral-100 bg-white hover:border-secondary-300 hover:bg-secondary-50/30 hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900/50 dark:hover:border-secondary-500/50 dark:hover:bg-secondary-950/20"
-                  }`}
-              >
-                <div className="flex w-full items-center justify-between">
-                  <div className={`p-3 rounded-xl transition-colors ${formData.userType === "employer" ? "bg-secondary-500 text-white shadow-inner" : "bg-neutral-50 text-neutral-400 group-hover:bg-secondary-100 group-hover:text-secondary-600 dark:bg-neutral-800 dark:group-hover:bg-secondary-900/50 dark:group-hover:text-secondary-400"}`}>
-                    <UserPlus size={24} />
-                  </div>
-                  <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${formData.userType === "employer" ? "bg-secondary-500 border-secondary-500 dark:border-secondary-400 dark:bg-secondary-500" : "border-neutral-200 group-hover:border-secondary-300 dark:border-neutral-700 dark:group-hover:border-secondary-500/50"}`}>
-                    {formData.userType === "employer" && <Check size={12} className="text-white" />}
-                  </div>
-                </div>
-
-                <div className="space-y-1.5 mt-2">
-                  <span className="block font-heading text-body-base font-bold text-neutral-900 dark:text-neutral-100">
-                    Employeur
-                  </span>
-                  <p className="text-body-xs text-neutral-500 dark:text-neutral-400 leading-snug">
-                    Je recrute pour mes besoins domestiques ou personnels.
-                  </p>
-                </div>
-              </button>
-            </div>
+          <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <AccountTypeRow
+              active={formData.userType === "seeker"}
+              accent="primary"
+              icon={<UserSearch size={20} />}
+              title="Je suis candidat"
+              subtitle="Je recherche un emploi, une mission ou un stage."
+              onClick={() => update("userType", "seeker")}
+            />
+            <AccountTypeRow
+              active={formData.userType === "employer"}
+              accent="secondary"
+              icon={<BriefcaseBusiness size={20} />}
+              title="Je suis employeur"
+              subtitle="Je recrute pour mes besoins domestiques ou personnels."
+              onClick={() => update("userType", "employer")}
+            />
           </div>
         )}
 
@@ -660,27 +562,8 @@ export function RegisterForm() {
                   <AvailabilityStatus status={phoneStatus} />
                 </div>
 
-                {/* Métier recherché */}
-                <SearchableSelect
-                  label="Emploi recherché"
-                  required
-                  options={JOB_TYPES.map((t) => ({ value: t, label: t }))}
-                  value={formData.jobType}
-                  onChange={(v) => update("jobType", v)}
-                  placeholder="Sélectionnez le type d'emploi"
-                  searchPlaceholder="Rechercher un métier..."
-                  icon={<UserSearch size={17} />}
-                  error={state.fieldErrors?.jobType?.[0] ?? stepErrors.jobType}
-                />
-
-                {/* Niveau d'expérience */}
-                <ExperienceSelect
-                  label="Niveau d'expérience"
-                  value={formData.experience}
-                  onChange={(v) => update("experience", v)}
-                  accentClass="focus:border-primary-500 focus:ring-primary-500/20"
-                  error={state.fieldErrors?.experience?.[0] ?? stepErrors.experience}
-                />
+                {/* Centres d'intérêt — facultatif */}
+                <InterestsSelect value={interests} onChange={setInterests} />
               </>
             )}
 
@@ -1027,14 +910,15 @@ export function RegisterForm() {
         {/* ================================================================ */}
         {/* Navigation                                                        */}
         {/* ================================================================ */}
-        <div className={`mt-6 flex flex-col gap-4 ${step > 0 ? "" : ""}`}>
-          <div className={`flex gap-3 ${step > 0 ? "justify-between" : "justify-end"}`}>
+        <div className="mt-6 flex flex-col gap-4">
+          <div className={`flex flex-wrap gap-3 ${step > 0 ? "justify-between" : "justify-end"}`}>
             {step > 0 && (
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => { setAttemptedNext(false); setStep(step - 1); }}
                 disabled={isPending}
+                className="shrink-0"
               >
                 <ArrowLeft size={18} />
                 Retour
@@ -1047,7 +931,7 @@ export function RegisterForm() {
                 onClick={tryProceed}
                 disabled={step === 0 && !formData.userType}
                 className={[
-                  step === 0 ? "w-full" : "",
+                  step === 0 ? "w-full" : "flex-1 min-w-[150px]",
                   formData.userType === "employer"
                     ? "bg-secondary-500 hover:bg-secondary-600 text-white border-none shadow-md"
                     : formData.userType === "company"
@@ -1061,7 +945,7 @@ export function RegisterForm() {
             ) : (
               <Button
                 type="submit"
-                className="bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200 border-none shadow-md font-bold tracking-wide"
+                className="flex-1 min-w-[150px] bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200 border-none shadow-md font-bold tracking-wide"
                 disabled={isPending || !canProceed()}
               >
                 {isPending ? (

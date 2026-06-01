@@ -31,6 +31,7 @@ export type Database = {
           neighborhood: string | null;
           job_type: string;
           experience: string | null;
+          interests: string[];
           user_type: "seeker" | "employer";
           is_active: boolean;
           subscription_paid: boolean;
@@ -69,8 +70,9 @@ export type Database = {
           phone?: string | null;
           city: string;
           neighborhood?: string | null;
-          job_type: string;
+          job_type?: string;
           experience?: string | null;
+          interests?: string[];
           user_type: "seeker" | "employer";
           is_active?: boolean;
           subscription_paid?: boolean;
@@ -110,6 +112,7 @@ export type Database = {
           neighborhood?: string | null;
           job_type?: string;
           experience?: string | null;
+          interests?: string[];
           user_type?: "seeker" | "employer";
           is_active?: boolean;
           subscription_paid?: boolean;
