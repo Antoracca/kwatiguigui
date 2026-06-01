@@ -38,6 +38,16 @@ function isRateLimited(ip: string): boolean {
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // 0. Callback OAuth — on NE touche PAS aux cookies ici.
+  //    L'échange du code PKCE (exchangeCodeForSession) dans la route handler
+  //    doit être le SEUL à lire le code-verifier et écrire les cookies de
+  //    session. Si updateSession()/getUser() tourne aussi sur cette requête,
+  //    les deux écritures de cookies se télescopent et provoquent un
+  //    "Session invalide" aléatoire (qui disparaît au 2e essai).
+  if (pathname === "/api/auth/callback") {
+    return NextResponse.next();
+  }
+
   // 1. Rate limiting on API routes
   if (pathname.startsWith(API_PREFIX)) {
     const ip =

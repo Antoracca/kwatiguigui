@@ -1,6 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
+
+// Jamais de cache / pré-rendu : chaque code OAuth est à usage unique.
+export const dynamic = "force-dynamic";
+
 function getSafeNextPath(raw: string | null): string {
   if (!raw) return "/dashboard";
   const value = raw.trim();
@@ -45,14 +49,23 @@ export async function GET(request: NextRequest) {
   const { data: sessionData, error: exchangeError } =
     await supabase.auth.exchangeCodeForSession(code);
 
-  if (exchangeError || !sessionData?.user) {
-    console.error("[OAuth callback] exchangeCodeForSession:", exchangeError?.message);
-    return NextResponse.redirect(
-      new URL("/login?oauthError=Session+invalide.+Réessayez.", origin),
-    );
+  let user = sessionData?.user ?? null;
+
+  // Repli : si l'échange échoue, c'est souvent parce que ce code a déjà été
+  // consommé (double appel du callback) et qu'une session est DÉJÀ active.
+  // On vérifie alors la session existante avant de renvoyer l'utilisateur au login.
+  if (exchangeError || !user) {
+    const { data: { user: existingUser } } = await supabase.auth.getUser();
+    if (existingUser) {
+      user = existingUser;
+    } else {
+      console.error("[OAuth callback] exchangeCodeForSession:", exchangeError?.message);
+      return NextResponse.redirect(
+        new URL("/login?oauthError=Session+invalide.+Réessayez.", origin),
+      );
+    }
   }
 
-  const user = sessionData.user;
   const destination = getSafeNextPath(next);
 
   // ── Vérifier si le profil existe déjà ────────────────────────────────────
