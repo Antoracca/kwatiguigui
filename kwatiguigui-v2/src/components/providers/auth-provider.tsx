@@ -46,6 +46,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const redirectIfPendingOAuthNext = () => {
       const next = consumePendingOAuthNext();
       if (!next) return;
+      // Ne JAMAIS court-circuiter l'onboarding : si le serveur a placé
+      // l'utilisateur sur /onboarding (profil incomplet), on l'y laisse.
+      // Sinon on provoquait un aller-retour /onboarding → /dashboard visible
+      // (flash de 2 s) au lieu d'enchaîner directement sur l'onboarding.
+      if (window.location.pathname.startsWith("/onboarding")) return;
       const current = `${window.location.pathname}${window.location.search}`;
       if (current !== next) {
         window.location.replace(next);

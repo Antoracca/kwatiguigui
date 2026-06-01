@@ -76,8 +76,10 @@ export async function GET(request: NextRequest) {
     .maybeSingle();
 
   if (existingProfile) {
-    // Utilisateur connu — rediriger vers la destination demandée (ou dashboard)
-    return NextResponse.redirect(new URL(destination, origin));
+    // Profil complet (ville renseignée) → destination demandée (dashboard).
+    // Profil incomplet → directement /onboarding (pas de détour par le dashboard).
+    const target = existingProfile.city?.trim() ? destination : "/onboarding";
+    return NextResponse.redirect(new URL(target, origin));
   }
 
   // ── Nouveau utilisateur OAuth — créer un profil minimal ──────────────────
@@ -142,5 +144,6 @@ export async function GET(request: NextRequest) {
     // On continue quand même — l'onboarding détectera le profil absent ou incomplet
   }
 
-  return NextResponse.redirect(new URL(destination, origin));
+  // Nouvel utilisateur — profil minimal incomplet → onboarding directement.
+  return NextResponse.redirect(new URL("/onboarding", origin));
 }
