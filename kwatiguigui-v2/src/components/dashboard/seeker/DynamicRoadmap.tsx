@@ -18,6 +18,12 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+
+const CandidatureIcon = ({ className, size = 18 }: { className?: string; size?: number }) => (
+  <Image src="/images/candidature.png" alt="Candidatures" width={size} height={size} className={className} />
+);
+
 
 const ROADMAP_STEPS = [
     {
@@ -35,7 +41,7 @@ const ROADMAP_STEPS = [
         id: "applications",
         title: "Mes candidatures",
         description: "Suivez l'état d'avancement de toutes vos requêtes. Voyez qui a consulté votre profil et qui souhaite vous rencontrer.",
-        icon: Briefcase,
+        icon: CandidatureIcon,
         color: "from-emerald-500 to-teal-600",
         bgLight: "bg-emerald-50 dark:bg-emerald-950/30",
         iconColor: "text-emerald-600 dark:text-emerald-400",

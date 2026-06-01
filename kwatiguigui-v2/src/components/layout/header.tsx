@@ -72,6 +72,11 @@ function unlockBodyScroll() {
 
   body.setAttribute(SCROLL_LOCK_ATTR, String(nextCount));
 }
+
+const CandidatureIcon = ({ className, size = 18 }: { className?: string; size?: number }) => (
+  <Image src="/images/candidature.png" alt="Candidatures" width={size} height={size} className={className} />
+);
+
 // --- MEGA MENU DATA (Indeed Inspired) ---
 const NAV_CATEGORIES = [
   {
@@ -384,7 +389,7 @@ export function Header() {
                     {[
                       { href: "/dashboard", icon: Target, label: "Tableau de bord" },
                       { href: "/dashboard/profile", icon: User, label: "Mon profil" },
-                      { href: "/dashboard/jobs", icon: Briefcase, label: "Mes annonces" },
+                      { href: "/dashboard/applications", label: "Mes candidatures", icon: CandidatureIcon },
                       { href: "/dashboard/messages", icon: MessageSquare, label: "Messages" },
                     ].map(item => (
                       <Link
@@ -447,7 +452,7 @@ export function Header() {
                         {[
                           { href: "/dashboard", icon: Target, label: "Tableau de bord" },
                           { href: "/dashboard/profile", icon: User, label: "Mon profil" },
-                          { href: "/dashboard/jobs", icon: Briefcase, label: "Mes annonces" },
+                          { href: "/dashboard/applications", label: "Mes candidatures", icon: CandidatureIcon },
                           { href: "/dashboard/messages", icon: MessageSquare, label: "Messages" },
                         ].map(item => (
                           <Link
@@ -636,7 +641,7 @@ export function Header() {
                     {[
                       { href: "/dashboard", icon: Target, label: "Tableau de bord" },
                       { href: "/dashboard/profile", icon: User, label: "Mon profil" },
-                      { href: "/dashboard/jobs", icon: Briefcase, label: "Mes annonces" },
+                      { href: "/dashboard/applications", label: "Mes candidatures", icon: CandidatureIcon },
                       { href: "/dashboard/messages", icon: MessageSquare, label: "Messages" },
                     ].map(item => (
                       <Button key={item.href} asChild variant="outline" className="w-full justify-start gap-2.5 rounded-lg border-neutral-200 py-3.5 text-sm dark:border-neutral-800">
